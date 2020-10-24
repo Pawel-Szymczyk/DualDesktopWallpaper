@@ -381,6 +381,7 @@ namespace WallpaperManager
         //}
 
 
+
         string wallpaperFileName1 = string.Empty;
         string wallpaperFileName2 = string.Empty;
 
