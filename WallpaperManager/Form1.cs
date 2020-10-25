@@ -286,6 +286,7 @@ namespace WallpaperManager
 
         private async void detectScreenBtn_Click(object sender, EventArgs e)
         {
+            this.detectScreenBtn.Enabled = false;
 
             int monitor = 0;
             List<Form> formList = new List<Form>();
@@ -296,12 +297,15 @@ namespace WallpaperManager
                 formList.Add(form);
             }
 
+            // wait 3 seconds before close forms.
             await Task.Delay(3000);
 
             foreach (var form in formList)
             {
                 await this.CloseForm(form);
             }
+
+            this.detectScreenBtn.Enabled = true;
         }
 
 
