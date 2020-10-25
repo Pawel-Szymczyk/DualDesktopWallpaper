@@ -9,8 +9,11 @@ using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
+using System.Timers;
 using System.Windows.Forms;
+using Timer = System.Windows.Forms.Timer;
 
 namespace WallpaperManager
 {
@@ -51,77 +54,77 @@ namespace WallpaperManager
             Stretched
         }
 
-        public static void Set()
-        {
+        //public static void Set()
+        //{
 
-            //using (var virtualScreenBitmap = new Bitmap((int)System.Windows.Forms.SystemInformation.VirtualScreen.Width, (int)System.Windows.Forms.SystemInformation.VirtualScreen.Height))
-            //{
-            //    using (var virtualScreenGraphic = Graphics.FromImage(virtualScreenBitmap))
-            //    {
+        //    //using (var virtualScreenBitmap = new Bitmap((int)System.Windows.Forms.SystemInformation.VirtualScreen.Width, (int)System.Windows.Forms.SystemInformation.VirtualScreen.Height))
+        //    //{
+        //    //    using (var virtualScreenGraphic = Graphics.FromImage(virtualScreenBitmap))
+        //    //    {
 
-            //        //System.IO.Stream s = new System.Net.WebClient().OpenRead(uri.ToString());
+        //    //        //System.IO.Stream s = new System.Net.WebClient().OpenRead(uri.ToString());
 
-            //        //System.Drawing.Image img = System.Drawing.Image.FromStream(s);
-            //        //string tempPath = Path.Combine(Path.GetTempPath(), "wallpaper.bmp");
-            //        //img.Save(tempPath, System.Drawing.Imaging.ImageFormat.Bmp);
-
-
-
-
-            //        //gets the image which we want to place in virtualScreenGraphic
-            //        //var image2 = images["all"];
-
-            //        //sets the position and size where the images will go
-            //        Rectangle rectangle2 = new Rectangle(0, 0, virtualScreenBitmap.Width, virtualScreenBitmap.Height);
-
-            //        // fill with the desired image... centered                            
-            //        //if (image2 != null)
-            //        //    DrawImageCentered(virtualScreenGraphic, image2, rectangle2);
-
-            //        //draws the picture at the right place in virtualScreenGraphic
-            //        virtualScreenGraphic.DrawImage(virtualScreenBitmap, rectangle2);
-
-            //        string fileName = Path.GetFileNameWithoutExtension(defaultBackgroundFile);
-            //        virtualScreenBitmap.Save(fileName, ImageFormat.Jpeg);
+        //    //        //System.Drawing.Image img = System.Drawing.Image.FromStream(s);
+        //    //        //string tempPath = Path.Combine(Path.GetTempPath(), "wallpaper.bmp");
+        //    //        //img.Save(tempPath, System.Drawing.Imaging.ImageFormat.Bmp);
 
 
 
 
-            //    }
-            //}
+        //    //        //gets the image which we want to place in virtualScreenGraphic
+        //    //        //var image2 = images["all"];
 
-            //RegistryKey key = Registry.CurrentUser.OpenSubKey(@"Control Panel\Desktop", true);
-            //if (style == Style.Stretched)
-            //{
-            //    key.SetValue(@"WallpaperStyle", 2.ToString());
-            //    key.SetValue(@"TileWallpaper", 0.ToString());
-            //}
+        //    //        //sets the position and size where the images will go
+        //    //        Rectangle rectangle2 = new Rectangle(0, 0, virtualScreenBitmap.Width, virtualScreenBitmap.Height);
 
-            //if (style == Style.Tiled)
-            //{
-            //    key.SetValue(@"WallpaperStyle", 0.ToString());
-            //    key.SetValue(@"TileWallpaper", 1.ToString());
-            //}
-            //if (style == Style.Centered)
-            //{
-            //    key.SetValue(@"WallpaperStyle", 0.ToString());
-            //    key.SetValue(@"TileWallpaper", 0.ToString());
-            //}
+        //    //        // fill with the desired image... centered                            
+        //    //        //if (image2 != null)
+        //    //        //    DrawImageCentered(virtualScreenGraphic, image2, rectangle2);
 
+        //    //        //draws the picture at the right place in virtualScreenGraphic
+        //    //        virtualScreenGraphic.DrawImage(virtualScreenBitmap, rectangle2);
 
-            System.Drawing.Image img = System.Drawing.Image.FromFile(defaultBackgroundFile);
-            string tempPath = Path.Combine(Path.GetTempPath(), "wallpaper.bmp");
-            img.Save(tempPath, System.Drawing.Imaging.ImageFormat.Bmp);
+        //    //        string fileName = Path.GetFileNameWithoutExtension(defaultBackgroundFile);
+        //    //        virtualScreenBitmap.Save(fileName, ImageFormat.Jpeg);
 
 
 
-            RegistryKey key = Registry.CurrentUser.OpenSubKey(@"Control Panel\Desktop", true);
-            key.SetValue(@"WallpaperStyle", 0.ToString());
-            key.SetValue(@"TileWallpaper", 1.ToString());
-            //SystemParametersInfo(SetDeskWallpaper, 0, defaultBackgroundFile, UpdateIniFile | SendWinIniChange);
-            SystemParametersInfo(SPI_SETDESKWALLPAPER,0, tempPath, SPIF_UPDATEINIFILE | SPIF_SENDWININICHANGE);
 
-        }
+        //    //    }
+        //    //}
+
+        //    //RegistryKey key = Registry.CurrentUser.OpenSubKey(@"Control Panel\Desktop", true);
+        //    //if (style == Style.Stretched)
+        //    //{
+        //    //    key.SetValue(@"WallpaperStyle", 2.ToString());
+        //    //    key.SetValue(@"TileWallpaper", 0.ToString());
+        //    //}
+
+        //    //if (style == Style.Tiled)
+        //    //{
+        //    //    key.SetValue(@"WallpaperStyle", 0.ToString());
+        //    //    key.SetValue(@"TileWallpaper", 1.ToString());
+        //    //}
+        //    //if (style == Style.Centered)
+        //    //{
+        //    //    key.SetValue(@"WallpaperStyle", 0.ToString());
+        //    //    key.SetValue(@"TileWallpaper", 0.ToString());
+        //    //}
+
+
+        //    System.Drawing.Image img = System.Drawing.Image.FromFile(defaultBackgroundFile);
+        //    string tempPath = Path.Combine(Path.GetTempPath(), "wallpaper.bmp");
+        //    img.Save(tempPath, System.Drawing.Imaging.ImageFormat.Bmp);
+
+
+
+        //    RegistryKey key = Registry.CurrentUser.OpenSubKey(@"Control Panel\Desktop", true);
+        //    key.SetValue(@"WallpaperStyle", 0.ToString());
+        //    key.SetValue(@"TileWallpaper", 1.ToString());
+        //    //SystemParametersInfo(SetDeskWallpaper, 0, defaultBackgroundFile, UpdateIniFile | SendWinIniChange);
+        //    SystemParametersInfo(SPI_SETDESKWALLPAPER,0, tempPath, SPIF_UPDATEINIFILE | SPIF_SENDWININICHANGE);
+
+        //}
 
 
         public Form1()
@@ -164,62 +167,154 @@ namespace WallpaperManager
 
         }
 
-        private void button1_Click(object sender, EventArgs e)
+        Timer formCloseTimer = new Timer();
+
+        void timer_Tick(object sender, EventArgs e)
+        {
+            //formCloseTimer.Stop();
+            //formCloseTimer.Tick -= new EventHandler(timer_Tick);
+            //this.Close();
+
+
+            //int monitor = 0;
+
+            //List<Form> forms = new List<Form>();
+
+
+            //// For each screen, add the screen properties to a list box.
+            //foreach (var screen in System.Windows.Forms.Screen.AllScreens)
+            //{
+            //    //listBox1.Items.Add("Device Name: " + screen.DeviceName);
+            //    //listBox1.Items.Add("Bounds: " +
+            //    //    screen.Bounds.ToString());
+            //    //listBox1.Items.Add("Type: " +
+            //    //    screen.GetType().ToString());
+            //    //listBox1.Items.Add("Working Area: " +
+            //    //    screen.WorkingArea.ToString());
+            //    //listBox1.Items.Add("Primary Screen: " +
+            //    //    screen.Primary.ToString());
+            //    monitor++;
+
+
+            //    Form form = new Form();
+            //    form.BackColor = Color.FromArgb(0, 102, 204);
+            //    form.FormBorderStyle = FormBorderStyle.None;
+            //    form.Text = $"form {monitor}";
+            //    form.StartPosition = FormStartPosition.Manual;
+
+
+            //    form.Bounds = new Rectangle(
+            //        screen.Bounds.X + 100, screen.Bounds.Y + 100, 
+            //        screen.Bounds.Width, screen.Bounds.Height);
+            //    form.Size = new Size(300, 300);
+            //    form.Padding = new Padding(100);
+            //    form.TopMost = true;
+
+            //    forms.Add(form);
+            //    form.Show();
+
+
+            //    Label label = new Label()
+            //    {
+            //        AutoSize = false,
+            //        TextAlign = ContentAlignment.MiddleCenter,
+            //        Dock = DockStyle.Fill
+            //    };
+            //    label.Font = new Font("Serif", 60, FontStyle.Bold);
+            //    label.Text = monitor.ToString();
+            //    label.ForeColor = Color.White;
+
+
+            //    form.Controls.Add(label);
+
+
+            //}
+
+
+            //formCloseTimer.Stop();
+            ////formCloseTimer.Tick -= new EventHandler(timer_Tick);
+            //foreach(var form in forms)
+            //{
+            //    form.Close();
+            //}
+        }
+
+
+        private async Task<Form> CreateForm(Screen screen, int monitor)
         {
 
+            // ----------FORM--------------
+            Form form = new Form();
+            form.BackColor = Color.FromArgb(0, 102, 204);
+            form.FormBorderStyle = FormBorderStyle.None;
+            form.Text = $"form ";
+            form.StartPosition = FormStartPosition.Manual;
 
+            form.Bounds = new Rectangle(
+                screen.Bounds.X + 100, screen.Bounds.Y + 100,
+                screen.Bounds.Width, screen.Bounds.Height);
+            form.Size = new Size(300, 300);
+            form.Padding = new Padding(100);
+            form.TopMost = true;
+
+            await Task.Delay(50);
+
+            // ---------LABEL--------------
+            Label label = new Label()
+            {
+                AutoSize = false,
+                TextAlign = ContentAlignment.MiddleCenter,
+                Dock = DockStyle.Fill
+            };
+            label.Font = new Font("Serif", 60, FontStyle.Bold);
+            label.Text = monitor.ToString();
+            label.ForeColor = Color.White;
+
+            form.Controls.Add(label);
+
+            form.Show();
+
+            return form;
+        }
+
+        private async Task CloseForm(Form form)
+        {
+            await Task.Delay(0);
+            form.Close();
+        }
+
+
+        private async void detectScreenBtn_Click(object sender, EventArgs e)
+        {
 
             int monitor = 0;
-
-            // For each screen, add the screen properties to a list box.
-            foreach (var screen in System.Windows.Forms.Screen.AllScreens)
+            List<Form> formList = new List<Form>();
+            foreach (var screen in Screen.AllScreens)
             {
-                //listBox1.Items.Add("Device Name: " + screen.DeviceName);
-                //listBox1.Items.Add("Bounds: " +
-                //    screen.Bounds.ToString());
-                //listBox1.Items.Add("Type: " +
-                //    screen.GetType().ToString());
-                //listBox1.Items.Add("Working Area: " +
-                //    screen.WorkingArea.ToString());
-                //listBox1.Items.Add("Primary Screen: " +
-                //    screen.Primary.ToString());
                 monitor++;
-
-                
-                Form form = new Form();
-                form.BackColor = Color.FromArgb(0, 102, 204);
-                form.FormBorderStyle = System.Windows.Forms.FormBorderStyle.None;
-                form.Text = $"form {monitor}";
-                form.StartPosition = FormStartPosition.Manual;
-
-
-                form.Bounds = new Rectangle(screen.Bounds.X + 100, screen.Bounds.Y + 100, screen.Bounds.Width, screen.Bounds.Height);
-                form.Size = new Size(300, 300);
-                form.Padding = new Padding(100);
-                form.TopMost = true;
-                form.Show();
-
-
-                Label label = new Label()
-                {
-                    AutoSize = false,
-                    TextAlign = ContentAlignment.MiddleCenter,
-                    Dock = DockStyle.Fill
-                };
-                label.Font = new Font("Serif", 60, FontStyle.Bold);
-                label.Text = monitor.ToString();
-                label.ForeColor = System.Drawing.Color.White;
-
-
-                form.Controls.Add(label);
+                var form = await this.CreateForm(screen, monitor);
+                formList.Add(form);
             }
 
+            await Task.Delay(3000);
 
+            foreach (var form in formList)
+            {
+                await this.CloseForm(form);
+            }
         }
 
 
 
-
+        //listBox1.Items.Add("Device Name: " + screen.DeviceName);
+        //listBox1.Items.Add("Bounds: " +
+        //    screen.Bounds.ToString());
+        //listBox1.Items.Add("Type: " +
+        //    screen.GetType().ToString());
+        //listBox1.Items.Add("Working Area: " +
+        //    screen.WorkingArea.ToString());
+        //listBox1.Items.Add("Primary Screen: " +
+        //    screen.Primary.ToString());
 
 
 
