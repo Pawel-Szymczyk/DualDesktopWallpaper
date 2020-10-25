@@ -29,47 +29,56 @@
         private void InitializeComponent()
         {
             this.detectScreenBtn = new System.Windows.Forms.Button();
-            this.pictureBox1 = new System.Windows.Forms.PictureBox();
-            this.pictureBox2 = new System.Windows.Forms.PictureBox();
+            this.wallpaper1 = new System.Windows.Forms.PictureBox();
+            this.wallpaper2 = new System.Windows.Forms.PictureBox();
             this.button2 = new System.Windows.Forms.Button();
             this.closeBtn = new System.Windows.Forms.Button();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBox2)).BeginInit();
+            this.freeSpaceArea = new System.Windows.Forms.Panel();
+            this.label1 = new System.Windows.Forms.Label();
+            ((System.ComponentModel.ISupportInitialize)(this.wallpaper1)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.wallpaper2)).BeginInit();
+            this.freeSpaceArea.SuspendLayout();
             this.SuspendLayout();
             // 
             // detectScreenBtn
             // 
-            this.detectScreenBtn.Location = new System.Drawing.Point(247, 55);
+            this.detectScreenBtn.BackColor = System.Drawing.Color.LightGray;
+            this.detectScreenBtn.FlatAppearance.BorderSize = 0;
+            this.detectScreenBtn.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.detectScreenBtn.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.detectScreenBtn.Location = new System.Drawing.Point(662, 433);
             this.detectScreenBtn.Name = "detectScreenBtn";
-            this.detectScreenBtn.Size = new System.Drawing.Size(177, 72);
+            this.detectScreenBtn.Size = new System.Drawing.Size(95, 32);
             this.detectScreenBtn.TabIndex = 0;
-            this.detectScreenBtn.Text = "Detect Screens";
-            this.detectScreenBtn.UseVisualStyleBackColor = true;
+            this.detectScreenBtn.Text = "Identify";
+            this.detectScreenBtn.UseVisualStyleBackColor = false;
             this.detectScreenBtn.Click += new System.EventHandler(this.detectScreenBtn_Click);
             // 
-            // pictureBox1
+            // wallpaper1
             // 
-            this.pictureBox1.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.pictureBox1.Location = new System.Drawing.Point(122, 193);
-            this.pictureBox1.Name = "pictureBox1";
-            this.pictureBox1.Size = new System.Drawing.Size(335, 121);
-            this.pictureBox1.TabIndex = 3;
-            this.pictureBox1.TabStop = false;
-            this.pictureBox1.Click += new System.EventHandler(this.pictureBox1_Click);
+            this.wallpaper1.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(204)))), ((int)(((byte)(65)))), ((int)(((byte)(41)))));
+            this.wallpaper1.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.wallpaper1.Location = new System.Drawing.Point(169, 57);
+            this.wallpaper1.Name = "wallpaper1";
+            this.wallpaper1.Size = new System.Drawing.Size(229, 94);
+            this.wallpaper1.TabIndex = 3;
+            this.wallpaper1.TabStop = false;
+            this.wallpaper1.Click += new System.EventHandler(this.pictureBox1_Click);
             // 
-            // pictureBox2
+            // wallpaper2
             // 
-            this.pictureBox2.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.pictureBox2.Location = new System.Drawing.Point(555, 193);
-            this.pictureBox2.Name = "pictureBox2";
-            this.pictureBox2.Size = new System.Drawing.Size(144, 235);
-            this.pictureBox2.TabIndex = 4;
-            this.pictureBox2.TabStop = false;
-            this.pictureBox2.Click += new System.EventHandler(this.pictureBox2_Click);
+            this.wallpaper2.BackColor = System.Drawing.Color.LightGray;
+            this.wallpaper2.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.wallpaper2.Location = new System.Drawing.Point(404, 57);
+            this.wallpaper2.Name = "wallpaper2";
+            this.wallpaper2.Size = new System.Drawing.Size(70, 126);
+            this.wallpaper2.TabIndex = 4;
+            this.wallpaper2.TabStop = false;
+            this.wallpaper2.Click += new System.EventHandler(this.pictureBox2_Click);
             // 
             // button2
             // 
-            this.button2.Location = new System.Drawing.Point(177, 500);
+            this.button2.Location = new System.Drawing.Point(331, 610);
             this.button2.Name = "button2";
             this.button2.Size = new System.Drawing.Size(323, 76);
             this.button2.TabIndex = 5;
@@ -79,13 +88,41 @@
             // 
             // closeBtn
             // 
-            this.closeBtn.Location = new System.Drawing.Point(638, 12);
+            this.closeBtn.FlatAppearance.BorderSize = 0;
+            this.closeBtn.FlatAppearance.MouseDownBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(128)))), ((int)(((byte)(128)))));
+            this.closeBtn.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(232)))), ((int)(((byte)(17)))), ((int)(((byte)(35)))));
+            this.closeBtn.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.closeBtn.Font = new System.Drawing.Font("Segoe UI Light", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.closeBtn.ForeColor = System.Drawing.SystemColors.WindowFrame;
+            this.closeBtn.Location = new System.Drawing.Point(739, -1);
+            this.closeBtn.Margin = new System.Windows.Forms.Padding(0);
             this.closeBtn.Name = "closeBtn";
-            this.closeBtn.Size = new System.Drawing.Size(75, 23);
+            this.closeBtn.Size = new System.Drawing.Size(48, 34);
             this.closeBtn.TabIndex = 6;
-            this.closeBtn.Text = "close";
+            this.closeBtn.Text = "x";
             this.closeBtn.UseVisualStyleBackColor = true;
             this.closeBtn.Click += new System.EventHandler(this.closeBtn_Click);
+            // 
+            // freeSpaceArea
+            // 
+            this.freeSpaceArea.BackColor = System.Drawing.Color.WhiteSmoke;
+            this.freeSpaceArea.Controls.Add(this.wallpaper1);
+            this.freeSpaceArea.Controls.Add(this.wallpaper2);
+            this.freeSpaceArea.Location = new System.Drawing.Point(29, 178);
+            this.freeSpaceArea.Margin = new System.Windows.Forms.Padding(20, 3, 20, 3);
+            this.freeSpaceArea.Name = "freeSpaceArea";
+            this.freeSpaceArea.Size = new System.Drawing.Size(728, 249);
+            this.freeSpaceArea.TabIndex = 7;
+            // 
+            // label1
+            // 
+            this.label1.AutoSize = true;
+            this.label1.Font = new System.Drawing.Font("Segoe UI", 21.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label1.Location = new System.Drawing.Point(22, 42);
+            this.label1.Name = "label1";
+            this.label1.Size = new System.Drawing.Size(212, 40);
+            this.label1.TabIndex = 8;
+            this.label1.Text = "Dual Wallpaper";
             // 
             // Form1
             // 
@@ -93,28 +130,32 @@
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.White;
             this.ClientSize = new System.Drawing.Size(786, 786);
+            this.Controls.Add(this.label1);
+            this.Controls.Add(this.freeSpaceArea);
             this.Controls.Add(this.closeBtn);
             this.Controls.Add(this.button2);
-            this.Controls.Add(this.pictureBox2);
-            this.Controls.Add(this.pictureBox1);
             this.Controls.Add(this.detectScreenBtn);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.None;
             this.Name = "Form1";
             this.Text = "Form1";
             this.MouseDown += new System.Windows.Forms.MouseEventHandler(this.Form1_MouseDown);
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBox2)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.wallpaper1)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.wallpaper2)).EndInit();
+            this.freeSpaceArea.ResumeLayout(false);
             this.ResumeLayout(false);
+            this.PerformLayout();
 
         }
 
         #endregion
 
         private System.Windows.Forms.Button detectScreenBtn;
-        private System.Windows.Forms.PictureBox pictureBox1;
-        private System.Windows.Forms.PictureBox pictureBox2;
+        private System.Windows.Forms.PictureBox wallpaper1;
+        private System.Windows.Forms.PictureBox wallpaper2;
         private System.Windows.Forms.Button button2;
         private System.Windows.Forms.Button closeBtn;
+        private System.Windows.Forms.Panel freeSpaceArea;
+        private System.Windows.Forms.Label label1;
     }
 }
 

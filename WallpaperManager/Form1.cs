@@ -497,8 +497,8 @@ namespace WallpaperManager
                 wallpaperFileName1 = dialog.FileName;
 
                 Image img = Image.FromFile(wallpaperFileName1);
-                this.pictureBox1.Image = img;
-                this.pictureBox1.SizeMode = PictureBoxSizeMode.StretchImage;
+                this.wallpaper1.Image = img;
+                this.wallpaper1.SizeMode = PictureBoxSizeMode.StretchImage;
 
             }
         }
@@ -515,8 +515,8 @@ namespace WallpaperManager
                 wallpaperFileName2 = dialog.FileName;
 
                 Image img = Image.FromFile(wallpaperFileName2);
-                this.pictureBox2.Image = img;
-                this.pictureBox2.SizeMode = PictureBoxSizeMode.Zoom;
+                this.wallpaper2.Image = img;
+                this.wallpaper2.SizeMode = PictureBoxSizeMode.Zoom;
 
             }
         }
