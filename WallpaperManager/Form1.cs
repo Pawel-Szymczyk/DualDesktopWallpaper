@@ -485,7 +485,9 @@ namespace WallpaperManager
         string wallpaperFileName2 = string.Empty;
 
 
-
+        /// <summary>
+        /// Pick image for 1st monitor.
+        /// </summary>
         private void pictureBox1_Click(object sender, EventArgs e)
         {
             OpenFileDialog dialog = new OpenFileDialog();
@@ -501,6 +503,9 @@ namespace WallpaperManager
             }
         }
 
+        /// <summary>
+        /// Pick image for 2nd monitor.
+        /// </summary>
         private void pictureBox2_Click(object sender, EventArgs e)
         {
             OpenFileDialog dialog = new OpenFileDialog();
@@ -516,7 +521,12 @@ namespace WallpaperManager
             }
         }
 
-
+        /// <summary>
+        /// Combine two images into one and return it in form of bitmap.
+        /// </summary>
+        /// <param name="firstImage">Image 1.</param>
+        /// <param name="secondImage">Image 2.</param>
+        /// <returns>Bitmap.</returns>
         public static Bitmap MergeTwoImages(Image firstImage, Image secondImage)
         {
             
@@ -532,6 +542,7 @@ namespace WallpaperManager
             return outputImage;
         }
 
+        // Merge images and store them in the windows registry.
         private void button2_Click(object sender, EventArgs e)
         {
             if(!string.IsNullOrEmpty(this.wallpaperFileName1) 
@@ -595,6 +606,9 @@ namespace WallpaperManager
             }
         }
 
+        /// <summary>
+        /// Close form.
+        /// </summary>
         private void closeBtn_Click(object sender, EventArgs e)
         {
             this.Dispose();
