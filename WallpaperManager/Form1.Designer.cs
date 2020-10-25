@@ -63,7 +63,7 @@
             this.wallpaper1.Size = new System.Drawing.Size(229, 94);
             this.wallpaper1.TabIndex = 3;
             this.wallpaper1.TabStop = false;
-            this.wallpaper1.Click += new System.EventHandler(this.wallpaper1_Click);
+            this.wallpaper1.DoubleClick += new System.EventHandler(this.wallpaper1_DoubleClick);
             // 
             // wallpaper2
             // 
@@ -74,7 +74,10 @@
             this.wallpaper2.Size = new System.Drawing.Size(70, 126);
             this.wallpaper2.TabIndex = 4;
             this.wallpaper2.TabStop = false;
-            this.wallpaper2.Click += new System.EventHandler(this.wallpaper2_Click);
+            this.wallpaper2.DoubleClick += new System.EventHandler(this.wallpaper2_DoubleClick);
+            this.wallpaper2.MouseDown += new System.Windows.Forms.MouseEventHandler(this.wallpaper2_MouseDown);
+            this.wallpaper2.MouseMove += new System.Windows.Forms.MouseEventHandler(this.wallpaper2_MouseMove);
+            this.wallpaper2.MouseUp += new System.Windows.Forms.MouseEventHandler(this.wallpaper2_MouseUp);
             // 
             // button2
             // 
@@ -105,6 +108,7 @@
             // 
             // freeSpaceArea
             // 
+            this.freeSpaceArea.AllowDrop = true;
             this.freeSpaceArea.BackColor = System.Drawing.Color.WhiteSmoke;
             this.freeSpaceArea.Controls.Add(this.wallpaper1);
             this.freeSpaceArea.Controls.Add(this.wallpaper2);

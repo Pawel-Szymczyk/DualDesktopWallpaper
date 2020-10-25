@@ -21,24 +21,7 @@ namespace WallpaperManager
     {
         // https://devblogs.microsoft.com/oldnewthing/?p=25003 
 
-        //const int SetDeskWallpaper = 20;
-        //const int UpdateIniFile = 0x01;
-        //const int SendWinIniChange = 0x02;
-        //[DllImport("user32.dll", CharSet = CharSet.Auto)]
-        //static extern int SystemParametersInfo(int uAction, int uParam, string lpvParam, int fuWinIni);
 
-
-
-
-        //Point primaryMonitorPoint = new Point(0, 0);
-        const string defaultBackgroundFile = @"C:\ProgramData\Pics\x.jpg";
-        //Dictionary<string, Image> images = new Dictionary<string, Image>();
-
-
-
-
-        //List<string> screenos = new List<string>();
-        //int index = 0;
 
         const int SPI_SETDESKWALLPAPER = 20;
         const int SPIF_UPDATEINIFILE = 0x01;
@@ -47,193 +30,12 @@ namespace WallpaperManager
         [DllImport("user32.dll", CharSet = CharSet.Auto)]
         static extern int SystemParametersInfo(int uAction, int uParam, string lpvParam, int fuWinIni);
 
-        public enum Style : int
-        {
-            Tiled,
-            Centered,
-            Stretched
-        }
-
-        //public static void Set()
-        //{
-
-        //    //using (var virtualScreenBitmap = new Bitmap((int)System.Windows.Forms.SystemInformation.VirtualScreen.Width, (int)System.Windows.Forms.SystemInformation.VirtualScreen.Height))
-        //    //{
-        //    //    using (var virtualScreenGraphic = Graphics.FromImage(virtualScreenBitmap))
-        //    //    {
-
-        //    //        //System.IO.Stream s = new System.Net.WebClient().OpenRead(uri.ToString());
-
-        //    //        //System.Drawing.Image img = System.Drawing.Image.FromStream(s);
-        //    //        //string tempPath = Path.Combine(Path.GetTempPath(), "wallpaper.bmp");
-        //    //        //img.Save(tempPath, System.Drawing.Imaging.ImageFormat.Bmp);
+     
 
 
 
-
-        //    //        //gets the image which we want to place in virtualScreenGraphic
-        //    //        //var image2 = images["all"];
-
-        //    //        //sets the position and size where the images will go
-        //    //        Rectangle rectangle2 = new Rectangle(0, 0, virtualScreenBitmap.Width, virtualScreenBitmap.Height);
-
-        //    //        // fill with the desired image... centered                            
-        //    //        //if (image2 != null)
-        //    //        //    DrawImageCentered(virtualScreenGraphic, image2, rectangle2);
-
-        //    //        //draws the picture at the right place in virtualScreenGraphic
-        //    //        virtualScreenGraphic.DrawImage(virtualScreenBitmap, rectangle2);
-
-        //    //        string fileName = Path.GetFileNameWithoutExtension(defaultBackgroundFile);
-        //    //        virtualScreenBitmap.Save(fileName, ImageFormat.Jpeg);
-
-
-
-
-        //    //    }
-        //    //}
-
-        //    //RegistryKey key = Registry.CurrentUser.OpenSubKey(@"Control Panel\Desktop", true);
-        //    //if (style == Style.Stretched)
-        //    //{
-        //    //    key.SetValue(@"WallpaperStyle", 2.ToString());
-        //    //    key.SetValue(@"TileWallpaper", 0.ToString());
-        //    //}
-
-        //    //if (style == Style.Tiled)
-        //    //{
-        //    //    key.SetValue(@"WallpaperStyle", 0.ToString());
-        //    //    key.SetValue(@"TileWallpaper", 1.ToString());
-        //    //}
-        //    //if (style == Style.Centered)
-        //    //{
-        //    //    key.SetValue(@"WallpaperStyle", 0.ToString());
-        //    //    key.SetValue(@"TileWallpaper", 0.ToString());
-        //    //}
-
-
-        //    System.Drawing.Image img = System.Drawing.Image.FromFile(defaultBackgroundFile);
-        //    string tempPath = Path.Combine(Path.GetTempPath(), "wallpaper.bmp");
-        //    img.Save(tempPath, System.Drawing.Imaging.ImageFormat.Bmp);
-
-
-
-        //    RegistryKey key = Registry.CurrentUser.OpenSubKey(@"Control Panel\Desktop", true);
-        //    key.SetValue(@"WallpaperStyle", 0.ToString());
-        //    key.SetValue(@"TileWallpaper", 1.ToString());
-        //    //SystemParametersInfo(SetDeskWallpaper, 0, defaultBackgroundFile, UpdateIniFile | SendWinIniChange);
-        //    SystemParametersInfo(SPI_SETDESKWALLPAPER,0, tempPath, SPIF_UPDATEINIFILE | SPIF_SENDWININICHANGE);
-
-        //}
-
-
-
-
-        //        [DllImport("Gdi32.dll", EntryPoint = "CreateRoundRectRgn")]
-        //        private static extern IntPtr CreateRoundRectRgn
-        //(
-        //    int nLeftRect, // x-coordinate of upper-left corner
-        //    int nTopRect, // y-coordinate of upper-left corner
-        //    int nRightRect, // x-coordinate of lower-right corner
-        //    int nBottomRect, // y-coordinate of lower-right corner
-        //    int nWidthEllipse, // height of ellipse
-        //    int nHeightEllipse // width of ellipse
-        // );
-
-        //        [DllImport("dwmapi.dll")]
-        //        public static extern int DwmExtendFrameIntoClientArea(IntPtr hWnd, ref MARGINS pMarInset);
-
-        //        [DllImport("dwmapi.dll")]
-        //        public static extern int DwmSetWindowAttribute(IntPtr hwnd, int attr, ref int attrValue, int attrSize);
-
-        //        [DllImport("dwmapi.dll")]
-        //        public static extern int DwmIsCompositionEnabled(ref int pfEnabled);
-
-        //        private bool m_aeroEnabled;                     // variables for box shadow
-        //        private const int CS_DROPSHADOW = 0x00020000;
-        //        private const int WM_NCPAINT = 0x0085;
-        //        private const int WM_ACTIVATEAPP = 0x001C;
-
-        //        public struct MARGINS                           // struct for box shadow
-        //        {
-        //            public int leftWidth;
-        //            public int rightWidth;
-        //            public int topHeight;
-        //            public int bottomHeight;
-        //        }
-
-        //        private const int WM_NCHITTEST = 0x84;          // variables for dragging the form
-        //        private const int HTCLIENT = 0x1;
-        //        private const int HTCAPTION = 0x2;
-
-        //        protected override CreateParams CreateParams
-        //        {
-        //            get
-        //            {
-        //                m_aeroEnabled = CheckAeroEnabled();
-
-        //                CreateParams cp = base.CreateParams;
-        //                if (!m_aeroEnabled)
-        //                    cp.ClassStyle |= CS_DROPSHADOW;
-
-        //                return cp;
-        //            }
-        //        }
-
-        //        private bool CheckAeroEnabled()
-        //        {
-        //            if (Environment.OSVersion.Version.Major >= 6)
-        //            {
-        //                int enabled = 0;
-        //                DwmIsCompositionEnabled(ref enabled);
-        //                return (enabled == 1) ? true : false;
-        //            }
-        //            return false;
-        //        }
-
-        //        protected override void WndProc(ref Message m)
-        //        {
-        //            switch (m.Msg)
-        //            {
-        //                case WM_NCPAINT:                        // box shadow
-        //                    if (m_aeroEnabled)
-        //                    {
-        //                        var v = 2;
-        //                        DwmSetWindowAttribute(this.Handle, 2, ref v, 4);
-        //                        MARGINS margins = new MARGINS()
-        //                        {
-        //                            bottomHeight = 1,
-        //                            leftWidth = 1,
-        //                            rightWidth = 1,
-        //                            topHeight = 1
-        //                        };
-        //                        DwmExtendFrameIntoClientArea(this.Handle, ref margins);
-
-        //                    }
-        //                    break;
-        //                default:
-        //                    break;
-        //            }
-        //            base.WndProc(ref m);
-
-        //            if (m.Msg == WM_NCHITTEST && (int)m.Result == HTCLIENT)     // drag the form
-        //                m.Result = (IntPtr)HTCAPTION;
-
-        //        }
-
-
-
-
-        //private const int CS_DropShadow = 0x00020000;
-        //protected override CreateParams CreateParams
-        //{
-        //    get
-        //    {
-        //        CreateParams cp = base.CreateParams;
-        //        cp.ClassStyle |= CS_DropShadow;
-        //        return cp;
-        //    }
-        //}
+        private bool isDragging = false;
+        Point move;
 
 
         public Form1()
@@ -244,36 +46,7 @@ namespace WallpaperManager
 
             new DropShadow().ApplyShadows(this);
 
-            ////figure out where the main monitor is in relation to the virtualScreenBitmap
-            //foreach (Screen scr in Screen.AllScreens)
-            //{
-            //    images.Add(scr.DeviceName, null);
-            //    screenos.Add(scr.DeviceName);
-            //    if (scr.Bounds.Left < primaryMonitorPoint.X)
-            //        primaryMonitorPoint.X = scr.Bounds.Left;
-            //    if (scr.Bounds.Top < primaryMonitorPoint.Y)
-            //        primaryMonitorPoint.Y = scr.Bounds.Top;
-            //}
-            //primaryMonitorPoint.X *= -1;
-            //primaryMonitorPoint.Y *= -1;
 
-            ////Image for multiple screens
-            //images.Add("all", null);
-
-            ////set Images in Dictionary in case there are previous Images
-            //if (File.Exists(defaultBackgroundFile))
-            //{
-            //    using (var old = new Bitmap(defaultBackgroundFile))
-            //    {
-            //        foreach (Screen scr in Screen.AllScreens)
-            //        {
-            //            Rectangle rectangle = new Rectangle(primaryMonitorPoint.X + scr.Bounds.Left, primaryMonitorPoint.Y + scr.Bounds.Top, scr.Bounds.Width, scr.Bounds.Height);
-            //            if (old.Width >= (rectangle.X + rectangle.Width) &&
-            //                old.Height >= (rectangle.Y + rectangle.Height))
-            //                images[scr.DeviceName] = (Bitmap)old.Clone(rectangle, old.PixelFormat);
-            //        }
-            //    }
-            //}
 
 
         }
@@ -341,7 +114,7 @@ namespace WallpaperManager
             }
 
             // wait 3 seconds before close forms.
-            await Task.Delay(3000);
+            await Task.Delay(2000);
 
             foreach (var form in formList)
             {
@@ -369,161 +142,6 @@ namespace WallpaperManager
 
 
 
-
-        //public void setAlternatingWalls(string file)
-        //{
-        //    images[screenos[index]] = Image.FromFile(file);
-        //    index++;
-        //    if (index == screenos.Count)
-        //        index = 0;
-
-        //    CreateBackgroundImage(Method.multiple);
-        //    GC.Collect();
-        //}
-
-        ////public void setWallforScreen(Screen screen, string file)
-        ////{
-        ////    images[screen.DeviceName] = Image.FromFile(file);
-        ////    CreateBackgroundImage(Method.multiple);
-        ////    GC.Collect();
-        ////}
-        //public void setWallforScreen(string screenName, string file)
-        //{
-        //    images[screenName] = Image.FromFile(file);
-        //    CreateBackgroundImage(Method.multiple);
-        //    GC.Collect();
-        //}
-
-        //public void setWallforAllScreen(string file)
-        //{
-        //    images["all"] = Image.FromFile(file);
-        //    CreateBackgroundImage(Method.single);
-        //    GC.Collect();
-        //}
-
-
-        //private enum Method
-        //{
-        //    multiple,
-        //    single
-        //}
-        //private void CreateBackgroundImage(Method method)
-        //{
-
-        //    using (var virtualScreenBitmap = new Bitmap((int)System.Windows.Forms.SystemInformation.VirtualScreen.Width, (int)System.Windows.Forms.SystemInformation.VirtualScreen.Height))
-        //    {
-        //        using (var virtualScreenGraphic = Graphics.FromImage(virtualScreenBitmap))
-        //        {
-
-        //            switch (method)
-        //            {
-        //                // alternated Screen Images
-        //                case Method.multiple:
-        //                    foreach (var screen in System.Windows.Forms.Screen.AllScreens)
-        //                    {
-        //                        // gets the image which we want to place in virtualScreenGraphic
-        //                        var image = (images.ContainsKey(screen.DeviceName)) ? images[screen.DeviceName] : null;
-
-        //                        //sets the position and size where the images will go
-        //                        Rectangle rectangle = new Rectangle(primaryMonitorPoint.X + screen.Bounds.Left, primaryMonitorPoint.Y + screen.Bounds.Top, screen.Bounds.Width, screen.Bounds.Height);
-
-        //                        // produce a image for the screen and fill it with the desired image... centered
-        //                        var monitorBitmap = new Bitmap(rectangle.Width, rectangle.Height);
-        //                        if (image != null)
-        //                            DrawImageCentered(Graphics.FromImage(monitorBitmap), image, rectangle);
-
-        //                        //draws the picture at the right place in virtualScreenGraphic
-        //                        virtualScreenGraphic.DrawImage(monitorBitmap, rectangle);
-        //                    }
-        //                    break;
-
-        //                //Single screen Image
-        //                case Method.single:
-        //                    // gets the image which we want to place in virtualScreenGraphic
-        //                    var image2 = images["all"];
-
-        //                    //sets the position and size where the images will go
-        //                    Rectangle rectangle2 = new Rectangle(0, 0, virtualScreenBitmap.Width, virtualScreenBitmap.Height);
-
-        //                    // fill with the desired image... centered                            
-        //                    if (image2 != null)
-        //                        DrawImageCentered(virtualScreenGraphic, image2, rectangle2);
-
-        //                    //draws the picture at the right place in virtualScreenGraphic
-        //                    virtualScreenGraphic.DrawImage(virtualScreenBitmap, rectangle2);
-        //                    break;
-        //            }
-
-        //            string fileName = Path.GetFileNameWithoutExtension(defaultBackgroundFile);
-        //            virtualScreenBitmap.Save(fileName, ImageFormat.Jpeg);
-        //        }
-        //    }
-
-        //    RegistryKey key = Registry.CurrentUser.OpenSubKey(@"Control Panel\Desktop", true);
-        //    key.SetValue(@"WallpaperStyle", 0.ToString());
-        //    key.SetValue(@"TileWallpaper", 1.ToString());
-        //    SystemParametersInfo(SetDeskWallpaper, 0, defaultBackgroundFile, UpdateIniFile | SendWinIniChange);
-        //}
-
-
-        //private void DrawImageCentered(Graphics g, Image img, Rectangle monitorRect)
-        //{
-        //    double ratiodev = (1.0 * monitorRect.Width / monitorRect.Height) - (1.0 * img.Width / img.Height);
-        //    if (((1.0 * monitorRect.Width / monitorRect.Height > 1) && ratiodev > -0.25 && ratiodev < 0.25))
-        //    {
-        //        img = getsnappedIMG(img, monitorRect);
-        //    }
-
-
-        //    float heightRatio = (float)monitorRect.Height / (float)img.Height;
-        //    float widthRatio = (float)monitorRect.Width / (float)img.Width;
-        //    int height = monitorRect.Height;
-        //    int width = monitorRect.Width;
-        //    int x = 0;
-        //    int y = 0;
-
-        //    if (heightRatio < widthRatio)
-        //    {
-        //        width = (int)((float)img.Width * heightRatio);
-        //        height = (int)((float)img.Height * heightRatio);
-        //        x = (int)((float)(monitorRect.Width - width) / 2f);
-        //    }
-        //    else
-        //    {
-        //        width = (int)((float)img.Width * widthRatio);
-        //        height = (int)((float)img.Height * widthRatio);
-        //        y = (int)((float)(monitorRect.Height - height) / 2f);
-        //    }
-        //    Rectangle rect = new Rectangle(x, y, width, height);
-        //    g.DrawImage(img, rect);
-        //}
-
-        //private Image getsnappedIMG(Image img, Rectangle monitorRect)
-        //{
-        //    double ratiodev = (1.0 * monitorRect.Width / monitorRect.Height) - (1.0 * img.Width / img.Height);
-        //    int height = img.Height;
-        //    int width = img.Width;
-
-        //    Rectangle rect;
-        //    if (ratiodev < 0)
-        //    {
-        //        rect = new Rectangle(0, 0, (int)((1.0 * monitorRect.Width / monitorRect.Height) * height), height);
-        //        rect.X = (width - rect.Width) / 2;
-        //    }
-        //    else
-        //    {
-        //        rect = new Rectangle(0, 0, width, (int)(1.0 * width / (1.0 * monitorRect.Width / monitorRect.Height)));
-        //        rect.Y = (height - rect.Height) / 2;
-        //    }
-
-
-        //    var img2 = (Bitmap)img;
-        //    return (Bitmap)img2.Clone(rect, img.PixelFormat);
-
-        //}
-
-
-
         string wallpaperFileName1 = string.Empty;
         string wallpaperFileName2 = string.Empty;
 
@@ -531,7 +149,7 @@ namespace WallpaperManager
         /// <summary>
         /// Pick image for 1st monitor.
         /// </summary>
-        private void wallpaper1_Click(object sender, EventArgs e)
+        private void wallpaper1_DoubleClick(object sender, EventArgs e)
         {
             OpenFileDialog dialog = new OpenFileDialog();
 
@@ -541,7 +159,7 @@ namespace WallpaperManager
 
                 Image img = Image.FromFile(wallpaperFileName1);
                 this.wallpaper1.Image = img;
-                this.wallpaper1.SizeMode = PictureBoxSizeMode.StretchImage;
+                this.wallpaper1.SizeMode = PictureBoxSizeMode.Zoom;
 
             }
         }
@@ -549,7 +167,7 @@ namespace WallpaperManager
         /// <summary>
         /// Pick image for 2nd monitor.
         /// </summary>
-        private void wallpaper2_Click(object sender, EventArgs e)
+        private void wallpaper2_DoubleClick(object sender, EventArgs e)
         {
             OpenFileDialog dialog = new OpenFileDialog();
 
@@ -660,14 +278,39 @@ namespace WallpaperManager
             }
         }
 
+        private void wallpaper2_MouseDown(object sender, MouseEventArgs e)
+        {
+            Control c = sender as Control;
+            isDragging = true;
+            move = e.Location;
+        }
 
+        private void wallpaper2_MouseMove(object sender, MouseEventArgs e)
+        {
+            if (isDragging == true)
+            {
+                Control c = sender as Control;
 
+                this.wallpaper2.Left += e.X - move.X;
+                this.wallpaper2.Top += e.Y - move.Y;
 
+                //for (int i = 0; i < pictureBoxList.Count(); i++)
+                //{
+                //    if (c.Equals(pictureBoxList[i]))
+                //    {
+                //        pictureBoxList[i].Left += e.X - move.X;
+                //        pictureBoxList[i].Top += e.Y - move.Y;
+                //    }
+                //}
+            }
+        }
 
+        private void wallpaper2_MouseUp(object sender, MouseEventArgs e)
+        {
+            isDragging = false;
+        }
 
-        //protected override void OnPaint(PaintEventArgs e)
-        //{
-        //    e.Graphics.DrawRectangle(Pens.Black, this.Bounds);
-        //}
+     
+
     }
 }
