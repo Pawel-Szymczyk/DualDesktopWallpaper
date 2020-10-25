@@ -63,7 +63,7 @@
             this.wallpaper1.Size = new System.Drawing.Size(229, 94);
             this.wallpaper1.TabIndex = 3;
             this.wallpaper1.TabStop = false;
-            this.wallpaper1.Click += new System.EventHandler(this.pictureBox1_Click);
+            this.wallpaper1.Click += new System.EventHandler(this.wallpaper1_Click);
             // 
             // wallpaper2
             // 
@@ -74,7 +74,7 @@
             this.wallpaper2.Size = new System.Drawing.Size(70, 126);
             this.wallpaper2.TabIndex = 4;
             this.wallpaper2.TabStop = false;
-            this.wallpaper2.Click += new System.EventHandler(this.pictureBox2_Click);
+            this.wallpaper2.Click += new System.EventHandler(this.wallpaper2_Click);
             // 
             // button2
             // 

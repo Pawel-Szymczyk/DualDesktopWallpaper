@@ -127,11 +127,122 @@ namespace WallpaperManager
         //}
 
 
+
+
+        //        [DllImport("Gdi32.dll", EntryPoint = "CreateRoundRectRgn")]
+        //        private static extern IntPtr CreateRoundRectRgn
+        //(
+        //    int nLeftRect, // x-coordinate of upper-left corner
+        //    int nTopRect, // y-coordinate of upper-left corner
+        //    int nRightRect, // x-coordinate of lower-right corner
+        //    int nBottomRect, // y-coordinate of lower-right corner
+        //    int nWidthEllipse, // height of ellipse
+        //    int nHeightEllipse // width of ellipse
+        // );
+
+        //        [DllImport("dwmapi.dll")]
+        //        public static extern int DwmExtendFrameIntoClientArea(IntPtr hWnd, ref MARGINS pMarInset);
+
+        //        [DllImport("dwmapi.dll")]
+        //        public static extern int DwmSetWindowAttribute(IntPtr hwnd, int attr, ref int attrValue, int attrSize);
+
+        //        [DllImport("dwmapi.dll")]
+        //        public static extern int DwmIsCompositionEnabled(ref int pfEnabled);
+
+        //        private bool m_aeroEnabled;                     // variables for box shadow
+        //        private const int CS_DROPSHADOW = 0x00020000;
+        //        private const int WM_NCPAINT = 0x0085;
+        //        private const int WM_ACTIVATEAPP = 0x001C;
+
+        //        public struct MARGINS                           // struct for box shadow
+        //        {
+        //            public int leftWidth;
+        //            public int rightWidth;
+        //            public int topHeight;
+        //            public int bottomHeight;
+        //        }
+
+        //        private const int WM_NCHITTEST = 0x84;          // variables for dragging the form
+        //        private const int HTCLIENT = 0x1;
+        //        private const int HTCAPTION = 0x2;
+
+        //        protected override CreateParams CreateParams
+        //        {
+        //            get
+        //            {
+        //                m_aeroEnabled = CheckAeroEnabled();
+
+        //                CreateParams cp = base.CreateParams;
+        //                if (!m_aeroEnabled)
+        //                    cp.ClassStyle |= CS_DROPSHADOW;
+
+        //                return cp;
+        //            }
+        //        }
+
+        //        private bool CheckAeroEnabled()
+        //        {
+        //            if (Environment.OSVersion.Version.Major >= 6)
+        //            {
+        //                int enabled = 0;
+        //                DwmIsCompositionEnabled(ref enabled);
+        //                return (enabled == 1) ? true : false;
+        //            }
+        //            return false;
+        //        }
+
+        //        protected override void WndProc(ref Message m)
+        //        {
+        //            switch (m.Msg)
+        //            {
+        //                case WM_NCPAINT:                        // box shadow
+        //                    if (m_aeroEnabled)
+        //                    {
+        //                        var v = 2;
+        //                        DwmSetWindowAttribute(this.Handle, 2, ref v, 4);
+        //                        MARGINS margins = new MARGINS()
+        //                        {
+        //                            bottomHeight = 1,
+        //                            leftWidth = 1,
+        //                            rightWidth = 1,
+        //                            topHeight = 1
+        //                        };
+        //                        DwmExtendFrameIntoClientArea(this.Handle, ref margins);
+
+        //                    }
+        //                    break;
+        //                default:
+        //                    break;
+        //            }
+        //            base.WndProc(ref m);
+
+        //            if (m.Msg == WM_NCHITTEST && (int)m.Result == HTCLIENT)     // drag the form
+        //                m.Result = (IntPtr)HTCAPTION;
+
+        //        }
+
+
+
+
+        //private const int CS_DropShadow = 0x00020000;
+        //protected override CreateParams CreateParams
+        //{
+        //    get
+        //    {
+        //        CreateParams cp = base.CreateParams;
+        //        cp.ClassStyle |= CS_DropShadow;
+        //        return cp;
+        //    }
+        //}
+
+
         public Form1()
         {
+            //m_aeroEnabled = true;
+
             InitializeComponent();
 
-
+            new DropShadow().ApplyShadows(this);
 
             ////figure out where the main monitor is in relation to the virtualScreenBitmap
             //foreach (Screen scr in Screen.AllScreens)
@@ -169,75 +280,7 @@ namespace WallpaperManager
 
         Timer formCloseTimer = new Timer();
 
-        void timer_Tick(object sender, EventArgs e)
-        {
-            //formCloseTimer.Stop();
-            //formCloseTimer.Tick -= new EventHandler(timer_Tick);
-            //this.Close();
-
-
-            //int monitor = 0;
-
-            //List<Form> forms = new List<Form>();
-
-
-            //// For each screen, add the screen properties to a list box.
-            //foreach (var screen in System.Windows.Forms.Screen.AllScreens)
-            //{
-            //    //listBox1.Items.Add("Device Name: " + screen.DeviceName);
-            //    //listBox1.Items.Add("Bounds: " +
-            //    //    screen.Bounds.ToString());
-            //    //listBox1.Items.Add("Type: " +
-            //    //    screen.GetType().ToString());
-            //    //listBox1.Items.Add("Working Area: " +
-            //    //    screen.WorkingArea.ToString());
-            //    //listBox1.Items.Add("Primary Screen: " +
-            //    //    screen.Primary.ToString());
-            //    monitor++;
-
-
-            //    Form form = new Form();
-            //    form.BackColor = Color.FromArgb(0, 102, 204);
-            //    form.FormBorderStyle = FormBorderStyle.None;
-            //    form.Text = $"form {monitor}";
-            //    form.StartPosition = FormStartPosition.Manual;
-
-
-            //    form.Bounds = new Rectangle(
-            //        screen.Bounds.X + 100, screen.Bounds.Y + 100, 
-            //        screen.Bounds.Width, screen.Bounds.Height);
-            //    form.Size = new Size(300, 300);
-            //    form.Padding = new Padding(100);
-            //    form.TopMost = true;
-
-            //    forms.Add(form);
-            //    form.Show();
-
-
-            //    Label label = new Label()
-            //    {
-            //        AutoSize = false,
-            //        TextAlign = ContentAlignment.MiddleCenter,
-            //        Dock = DockStyle.Fill
-            //    };
-            //    label.Font = new Font("Serif", 60, FontStyle.Bold);
-            //    label.Text = monitor.ToString();
-            //    label.ForeColor = Color.White;
-
-
-            //    form.Controls.Add(label);
-
-
-            //}
-
-
-            //formCloseTimer.Stop();
-            ////formCloseTimer.Tick -= new EventHandler(timer_Tick);
-            //foreach(var form in forms)
-            //{
-            //    form.Close();
-            //}
-        }
+        
 
 
         private async Task<Form> CreateForm(Screen screen, int monitor)
@@ -488,7 +531,7 @@ namespace WallpaperManager
         /// <summary>
         /// Pick image for 1st monitor.
         /// </summary>
-        private void pictureBox1_Click(object sender, EventArgs e)
+        private void wallpaper1_Click(object sender, EventArgs e)
         {
             OpenFileDialog dialog = new OpenFileDialog();
 
@@ -506,7 +549,7 @@ namespace WallpaperManager
         /// <summary>
         /// Pick image for 2nd monitor.
         /// </summary>
-        private void pictureBox2_Click(object sender, EventArgs e)
+        private void wallpaper2_Click(object sender, EventArgs e)
         {
             OpenFileDialog dialog = new OpenFileDialog();
 
@@ -597,14 +640,7 @@ namespace WallpaperManager
         [System.Runtime.InteropServices.DllImport("user32.dll")]
         public static extern bool ReleaseCapture();
 
-        private void Form1_MouseDown(object sender, MouseEventArgs e)
-        {
-            if (e.Button == MouseButtons.Left)
-            {
-                ReleaseCapture();
-                SendMessage(Handle, WM_NCLBUTTONDOWN, HT_CAPTION, 0);
-            }
-        }
+ 
 
         /// <summary>
         /// Close form.
@@ -614,5 +650,24 @@ namespace WallpaperManager
             this.Dispose();
             this.Close();
         }
+
+        private void Form1_MouseDown(object sender, MouseEventArgs e)
+        {
+            if (e.Button == MouseButtons.Left)
+            {
+                ReleaseCapture();
+                SendMessage(Handle, WM_NCLBUTTONDOWN, HT_CAPTION, 0);
+            }
+        }
+
+
+
+
+
+
+        //protected override void OnPaint(PaintEventArgs e)
+        //{
+        //    e.Graphics.DrawRectangle(Pens.Black, this.Bounds);
+        //}
     }
 }
