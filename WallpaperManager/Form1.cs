@@ -34,7 +34,8 @@ namespace WallpaperManager
 
 
 
-        private bool isDragging = false;
+        private bool isDraggingWallpaper1 = false;
+        private bool isDraggingWallpaper2 = false;
         Point move;
 
 
@@ -51,7 +52,6 @@ namespace WallpaperManager
 
         }
 
-        Timer formCloseTimer = new Timer();
 
         
 
@@ -278,21 +278,61 @@ namespace WallpaperManager
             }
         }
 
+
+
+
+
+
+
+
         private void wallpaper2_MouseDown(object sender, MouseEventArgs e)
         {
             Control c = sender as Control;
-            isDragging = true;
+            isDraggingWallpaper2 = true;
             move = e.Location;
         }
 
         private void wallpaper2_MouseMove(object sender, MouseEventArgs e)
         {
-            if (isDragging == true)
+            // get wallpaper1 width and height
+            var wallpaper1Height = this.wallpaper1.Bounds.Height;
+            var wallpaper1Width = this.wallpaper1.Bounds.Width;
+
+
+
+            if (wallpaper2.Bounds.IntersectsWith(wallpaper1.Bounds)) 
+            {
+                wallpaper2.BackColor = Color.Pink;           
+            }
+            else
+            {
+                wallpaper2.BackColor = Color.LightGray;
+            }
+
+
+
+
+
+
+            if (isDraggingWallpaper2 == true)
             {
                 Control c = sender as Control;
 
                 this.wallpaper2.Left += e.X - move.X;
                 this.wallpaper2.Top += e.Y - move.Y;
+
+
+
+
+                // walpaper2 corners
+                //var bottomLeftY = this.wallpaper2.Bounds.Bottom;
+                //var bottomLeftX = this.wallpaper2.Bounds.X;
+                //var bottomRightY =
+                //var topLeft =
+                //var topRight =
+
+
+
 
                 //for (int i = 0; i < pictureBoxList.Count(); i++)
                 //{
@@ -307,10 +347,23 @@ namespace WallpaperManager
 
         private void wallpaper2_MouseUp(object sender, MouseEventArgs e)
         {
-            isDragging = false;
+            isDraggingWallpaper2 = false;
         }
 
-     
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
     }
 }

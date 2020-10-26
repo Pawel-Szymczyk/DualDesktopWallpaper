@@ -35,6 +35,8 @@
             this.closeBtn = new System.Windows.Forms.Button();
             this.freeSpaceArea = new System.Windows.Forms.Panel();
             this.label1 = new System.Windows.Forms.Label();
+            this.label2 = new System.Windows.Forms.Label();
+            this.label3 = new System.Windows.Forms.Label();
             ((System.ComponentModel.ISupportInitialize)(this.wallpaper1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.wallpaper2)).BeginInit();
             this.freeSpaceArea.SuspendLayout();
@@ -58,9 +60,9 @@
             // 
             this.wallpaper1.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(204)))), ((int)(((byte)(65)))), ((int)(((byte)(41)))));
             this.wallpaper1.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.wallpaper1.Location = new System.Drawing.Point(169, 57);
+            this.wallpaper1.Location = new System.Drawing.Point(236, 83);
             this.wallpaper1.Name = "wallpaper1";
-            this.wallpaper1.Size = new System.Drawing.Size(229, 94);
+            this.wallpaper1.Size = new System.Drawing.Size(220, 80);
             this.wallpaper1.TabIndex = 3;
             this.wallpaper1.TabStop = false;
             this.wallpaper1.DoubleClick += new System.EventHandler(this.wallpaper1_DoubleClick);
@@ -69,7 +71,7 @@
             // 
             this.wallpaper2.BackColor = System.Drawing.Color.LightGray;
             this.wallpaper2.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.wallpaper2.Location = new System.Drawing.Point(404, 57);
+            this.wallpaper2.Location = new System.Drawing.Point(462, 83);
             this.wallpaper2.Name = "wallpaper2";
             this.wallpaper2.Size = new System.Drawing.Size(70, 126);
             this.wallpaper2.TabIndex = 4;
@@ -128,12 +130,35 @@
             this.label1.TabIndex = 8;
             this.label1.Text = "Dual Wallpaper";
             // 
+            // label2
+            // 
+            this.label2.AutoSize = true;
+            this.label2.Font = new System.Drawing.Font("Segoe UI Semibold", 14.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label2.Location = new System.Drawing.Point(24, 102);
+            this.label2.Name = "label2";
+            this.label2.Size = new System.Drawing.Size(239, 25);
+            this.label2.TabIndex = 9;
+            this.label2.Text = "Rearrange your wallpapers";
+            // 
+            // label3
+            // 
+            this.label3.AutoSize = true;
+            this.label3.Font = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label3.Location = new System.Drawing.Point(25, 137);
+            this.label3.Name = "label3";
+            this.label3.Size = new System.Drawing.Size(589, 21);
+            this.label3.TabIndex = 12;
+            this.label3.Text = "Press and hold a wallpaper, then drag to rearrange it. Double click to pick wallp" +
+    "aper.";
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.White;
             this.ClientSize = new System.Drawing.Size(786, 786);
+            this.Controls.Add(this.label3);
+            this.Controls.Add(this.label2);
             this.Controls.Add(this.label1);
             this.Controls.Add(this.freeSpaceArea);
             this.Controls.Add(this.closeBtn);
@@ -160,6 +185,8 @@
         private System.Windows.Forms.Button closeBtn;
         private System.Windows.Forms.Panel freeSpaceArea;
         private System.Windows.Forms.Label label1;
+        private System.Windows.Forms.Label label2;
+        private System.Windows.Forms.Label label3;
     }
 }
 
