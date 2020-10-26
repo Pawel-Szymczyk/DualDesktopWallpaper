@@ -295,25 +295,25 @@ namespace WallpaperManager
         private void wallpaper2_MouseMove(object sender, MouseEventArgs e)
         {
             // get wallpaper1 width and height
-            var wallpaper1Height = this.wallpaper1.Bounds.Height;
-            var wallpaper1Width = this.wallpaper1.Bounds.Width;
+            //var wallpaper1Height = this.wallpaper1.Bounds.Height;
+            //var wallpaper1Width = this.wallpaper1.Bounds.Width;
 
 
-
+            // raczej tego nie potrzebuje... (do usuniecia)
             if (wallpaper2.Bounds.IntersectsWith(wallpaper1.Bounds)) 
             {
                 wallpaper2.BackColor = Color.Pink;           
             }
-            //else
-            //{
-            //    wallpaper2.BackColor = Color.LightGray;
-            //}
+            else
+            {
+                wallpaper2.BackColor = Color.LightGray;
+            }
 
 
 
 
 
-
+            // move wallpaper 2 
             if (isDraggingWallpaper2 == true)
             {
                 Control c = sender as Control;
@@ -350,8 +350,8 @@ namespace WallpaperManager
         {
             isDraggingWallpaper2 = false;
 
-            Console.WriteLine("Wallpaper 1 Left: " + wallpaper1.Bounds.Left.ToString());
-            Console.WriteLine("Wallpaper 1 Right: " + wallpaper1.Bounds.Right.ToString());
+            //Console.WriteLine("Wallpaper 1 Left: " + wallpaper1.Bounds.Left.ToString());
+            //Console.WriteLine("Wallpaper 1 Right: " + wallpaper1.Bounds.Right.ToString());
 
 
             // ensure that there is no collision between wallpapers
@@ -361,9 +361,7 @@ namespace WallpaperManager
                 // the left side of wallpaper 1
                 if (wallpaper2.Bounds.Right < wallpaper1.Bounds.Left)
                 {
-                    //Console.WriteLine("wallpaper 2 is too far on the left");
                     wallpaper2.Left = wallpaper1.Bounds.Left - wallpaper2.Width - margin;
-
                 }
 
                 // the right side of wallpaper 1
@@ -385,6 +383,28 @@ namespace WallpaperManager
                 }
 
             }
+            else
+            {
+                // the left inner side of wallpaper 1
+                if (wallpaper2.Bounds.Left < (wallpaper1.Bounds.Left + (wallpaper1.Bounds.Width / 2)))
+                {
+                    wallpaper2.Left = wallpaper1.Bounds.Left - wallpaper2.Width - margin;
+                }
+
+                // the right inner side of wallpaper 1
+                if (wallpaper2.Bounds.Left > (wallpaper1.Bounds.Right - (wallpaper1.Bounds.Width / 2)))
+                {
+                    wallpaper2.Left = wallpaper1.Bounds.Right + margin;
+                }
+
+                //  dokonczyc ...
+                //// the top inner side of wallpaper 1
+                //if (wallpaper2.Bounds.Top < (wallpaper1.Bounds.Top + (wallpaper1.Bounds.Height / 2)))
+                //{
+                //    wallpaper2.Top = wallpaper1.Bounds.Top - wallpaper2.Height - margin;
+                //}
+            }
+
 
         }
 

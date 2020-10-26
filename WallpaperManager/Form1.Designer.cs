@@ -83,12 +83,17 @@
             // 
             // button2
             // 
-            this.button2.Location = new System.Drawing.Point(331, 610);
+            this.button2.BackColor = System.Drawing.Color.LightGray;
+            this.button2.Enabled = false;
+            this.button2.FlatAppearance.BorderSize = 0;
+            this.button2.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.button2.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.button2.Location = new System.Drawing.Point(515, 433);
             this.button2.Name = "button2";
-            this.button2.Size = new System.Drawing.Size(323, 76);
+            this.button2.Size = new System.Drawing.Size(141, 32);
             this.button2.TabIndex = 5;
             this.button2.Text = "Set Wallpaper";
-            this.button2.UseVisualStyleBackColor = true;
+            this.button2.UseVisualStyleBackColor = false;
             this.button2.Click += new System.EventHandler(this.button2_Click);
             // 
             // closeBtn
