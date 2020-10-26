@@ -304,10 +304,10 @@ namespace WallpaperManager
             {
                 wallpaper2.BackColor = Color.Pink;           
             }
-            else
-            {
-                wallpaper2.BackColor = Color.LightGray;
-            }
+            //else
+            //{
+            //    wallpaper2.BackColor = Color.LightGray;
+            //}
 
 
 
@@ -345,9 +345,47 @@ namespace WallpaperManager
             }
         }
 
+        int margin = 3;
         private void wallpaper2_MouseUp(object sender, MouseEventArgs e)
         {
             isDraggingWallpaper2 = false;
+
+            Console.WriteLine("Wallpaper 1 Left: " + wallpaper1.Bounds.Left.ToString());
+            Console.WriteLine("Wallpaper 1 Right: " + wallpaper1.Bounds.Right.ToString());
+
+
+            // ensure that there is no collision between wallpapers
+            if(!wallpaper2.Bounds.IntersectsWith(wallpaper1.Bounds))
+            {
+
+                // the left side of wallpaper 1
+                if (wallpaper2.Bounds.Right < wallpaper1.Bounds.Left)
+                {
+                    //Console.WriteLine("wallpaper 2 is too far on the left");
+                    wallpaper2.Left = wallpaper1.Bounds.Left - wallpaper2.Width - margin;
+
+                }
+
+                // the right side of wallpaper 1
+                if (wallpaper2.Bounds.Left > wallpaper1.Bounds.Right)
+                {
+                    wallpaper2.Left = wallpaper1.Bounds.Right + margin;
+                }
+
+                // the top side of wallpaper 1
+                if (wallpaper2.Bounds.Bottom < wallpaper1.Bounds.Top) 
+                {
+                    wallpaper2.Top = wallpaper1.Bounds.Top - wallpaper2.Height - margin;
+                }
+
+                // the bottom side of wallpaper 1 
+                if (wallpaper2.Bounds.Top > wallpaper1.Bounds.Bottom)
+                {
+                    wallpaper2.Top = wallpaper1.Bounds.Bottom + margin;
+                }
+
+            }
+
         }
 
 
