@@ -31,7 +31,7 @@
             this.detectScreenBtn = new System.Windows.Forms.Button();
             this.wallpaper1 = new System.Windows.Forms.PictureBox();
             this.wallpaper2 = new System.Windows.Forms.PictureBox();
-            this.button2 = new System.Windows.Forms.Button();
+            this.setWallpaperBtn = new System.Windows.Forms.Button();
             this.closeBtn = new System.Windows.Forms.Button();
             this.freeSpaceArea = new System.Windows.Forms.Panel();
             this.label1 = new System.Windows.Forms.Label();
@@ -81,20 +81,20 @@
             this.wallpaper2.MouseMove += new System.Windows.Forms.MouseEventHandler(this.wallpaper2_MouseMove);
             this.wallpaper2.MouseUp += new System.Windows.Forms.MouseEventHandler(this.wallpaper2_MouseUp);
             // 
-            // button2
+            // setWallpaperBtn
             // 
-            this.button2.BackColor = System.Drawing.Color.LightGray;
-            this.button2.Enabled = false;
-            this.button2.FlatAppearance.BorderSize = 0;
-            this.button2.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.button2.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.button2.Location = new System.Drawing.Point(515, 433);
-            this.button2.Name = "button2";
-            this.button2.Size = new System.Drawing.Size(141, 32);
-            this.button2.TabIndex = 5;
-            this.button2.Text = "Set Wallpaper";
-            this.button2.UseVisualStyleBackColor = false;
-            this.button2.Click += new System.EventHandler(this.button2_Click);
+            this.setWallpaperBtn.BackColor = System.Drawing.Color.LightGray;
+            this.setWallpaperBtn.Enabled = false;
+            this.setWallpaperBtn.FlatAppearance.BorderSize = 0;
+            this.setWallpaperBtn.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.setWallpaperBtn.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.setWallpaperBtn.Location = new System.Drawing.Point(515, 433);
+            this.setWallpaperBtn.Name = "setWallpaperBtn";
+            this.setWallpaperBtn.Size = new System.Drawing.Size(141, 32);
+            this.setWallpaperBtn.TabIndex = 5;
+            this.setWallpaperBtn.Text = "Set Wallpaper";
+            this.setWallpaperBtn.UseVisualStyleBackColor = false;
+            this.setWallpaperBtn.Click += new System.EventHandler(this.setWallpaperBtn_Click);
             // 
             // closeBtn
             // 
@@ -167,7 +167,7 @@
             this.Controls.Add(this.label1);
             this.Controls.Add(this.freeSpaceArea);
             this.Controls.Add(this.closeBtn);
-            this.Controls.Add(this.button2);
+            this.Controls.Add(this.setWallpaperBtn);
             this.Controls.Add(this.detectScreenBtn);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.None;
             this.Name = "Form1";
@@ -186,7 +186,7 @@
         private System.Windows.Forms.Button detectScreenBtn;
         private System.Windows.Forms.PictureBox wallpaper1;
         private System.Windows.Forms.PictureBox wallpaper2;
-        private System.Windows.Forms.Button button2;
+        private System.Windows.Forms.Button setWallpaperBtn;
         private System.Windows.Forms.Button closeBtn;
         private System.Windows.Forms.Panel freeSpaceArea;
         private System.Windows.Forms.Label label1;

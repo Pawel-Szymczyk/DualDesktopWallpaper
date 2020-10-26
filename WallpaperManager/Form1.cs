@@ -1,19 +1,12 @@
 ﻿using Microsoft.Win32;
 using System;
 using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
 using System.Drawing;
 using System.Drawing.Imaging;
 using System.IO;
-using System.Linq;
 using System.Runtime.InteropServices;
-using System.Text;
-using System.Threading;
 using System.Threading.Tasks;
-using System.Timers;
 using System.Windows.Forms;
-using Timer = System.Windows.Forms.Timer;
 
 namespace WallpaperManager
 {
@@ -23,27 +16,27 @@ namespace WallpaperManager
 
 
 
-        const int SPI_SETDESKWALLPAPER = 20;
-        const int SPIF_UPDATEINIFILE = 0x01;
-        const int SPIF_SENDWININICHANGE = 0x02;
+        private const int SPI_SETDESKWALLPAPER = 20;
+        private const int SPIF_UPDATEINIFILE = 0x01;
+        private const int SPIF_SENDWININICHANGE = 0x02;
 
         [DllImport("user32.dll", CharSet = CharSet.Auto)]
         static extern int SystemParametersInfo(int uAction, int uParam, string lpvParam, int fuWinIni);
 
-     
 
 
 
-        private bool isDraggingWallpaper1 = false;
+
+        private readonly bool isDraggingWallpaper1 = false;
         private bool isDraggingWallpaper2 = false;
-        Point move;
+        private Point move;
 
 
         public Form1()
         {
             //m_aeroEnabled = true;
 
-            InitializeComponent();
+            this.InitializeComponent();
 
             new DropShadow().ApplyShadows(this);
 
@@ -53,30 +46,32 @@ namespace WallpaperManager
         }
 
 
-        
+
 
 
         private async Task<Form> CreateForm(Screen screen, int monitor)
         {
 
             // ----------FORM--------------
-            Form form = new Form();
-            form.BackColor = Color.FromArgb(0, 102, 204);
-            form.FormBorderStyle = FormBorderStyle.None;
-            form.Text = $"form ";
-            form.StartPosition = FormStartPosition.Manual;
+            var form = new Form
+            {
+                BackColor = Color.FromArgb(0, 102, 204),
+                FormBorderStyle = FormBorderStyle.None,
+                Text = $"form ",
+                StartPosition = FormStartPosition.Manual,
 
-            form.Bounds = new Rectangle(
+                Bounds = new Rectangle(
                 screen.Bounds.X + 100, screen.Bounds.Y + 100,
-                screen.Bounds.Width, screen.Bounds.Height);
-            form.Size = new Size(300, 300);
-            form.Padding = new Padding(100);
-            form.TopMost = true;
+                screen.Bounds.Width, screen.Bounds.Height),
+                Size = new Size(300, 300),
+                Padding = new Padding(100),
+                TopMost = true
+            };
 
             await Task.Delay(50);
 
             // ---------LABEL--------------
-            Label label = new Label()
+            var label = new Label()
             {
                 AutoSize = false,
                 TextAlign = ContentAlignment.MiddleCenter,
@@ -105,18 +100,18 @@ namespace WallpaperManager
             this.detectScreenBtn.Enabled = false;
 
             int monitor = 0;
-            List<Form> formList = new List<Form>();
-            foreach (var screen in Screen.AllScreens)
+            var formList = new List<Form>();
+            foreach (Screen screen in Screen.AllScreens)
             {
                 monitor++;
-                var form = await this.CreateForm(screen, monitor);
+                Form form = await this.CreateForm(screen, monitor);
                 formList.Add(form);
             }
 
             // wait 3 seconds before close forms.
             await Task.Delay(2000);
 
-            foreach (var form in formList)
+            foreach (Form form in formList)
             {
                 await this.CloseForm(form);
             }
@@ -142,8 +137,8 @@ namespace WallpaperManager
 
 
 
-        string wallpaperFileName1 = string.Empty;
-        string wallpaperFileName2 = string.Empty;
+        private string wallpaperFileName1 = string.Empty;
+        private string wallpaperFileName2 = string.Empty;
 
 
         /// <summary>
@@ -151,16 +146,17 @@ namespace WallpaperManager
         /// </summary>
         private void wallpaper1_DoubleClick(object sender, EventArgs e)
         {
-            OpenFileDialog dialog = new OpenFileDialog();
+            var dialog = new OpenFileDialog();
 
             if (dialog.ShowDialog() == DialogResult.OK)
             {
-                wallpaperFileName1 = dialog.FileName;
+                this.wallpaperFileName1 = dialog.FileName;
 
-                Image img = Image.FromFile(wallpaperFileName1);
+                var img = Image.FromFile(this.wallpaperFileName1);
                 this.wallpaper1.Image = img;
                 this.wallpaper1.SizeMode = PictureBoxSizeMode.Zoom;
 
+                this.setWallpaperBtnEnabled();
             }
         }
 
@@ -169,16 +165,29 @@ namespace WallpaperManager
         /// </summary>
         private void wallpaper2_DoubleClick(object sender, EventArgs e)
         {
-            OpenFileDialog dialog = new OpenFileDialog();
+            var dialog = new OpenFileDialog();
 
             if (dialog.ShowDialog() == DialogResult.OK)
             {
-                wallpaperFileName2 = dialog.FileName;
+                this.wallpaperFileName2 = dialog.FileName;
 
-                Image img = Image.FromFile(wallpaperFileName2);
+                var img = Image.FromFile(this.wallpaperFileName2);
                 this.wallpaper2.Image = img;
                 this.wallpaper2.SizeMode = PictureBoxSizeMode.Zoom;
 
+                this.setWallpaperBtnEnabled();
+            }
+        }
+
+        /// <summary>
+        /// Enable Set Wallpaper Button only when two wallpapers chosen.
+        /// </summary>
+        private void setWallpaperBtnEnabled()
+        {
+            if (!string.IsNullOrEmpty(this.wallpaperFileName1)
+               && !string.IsNullOrEmpty(this.wallpaperFileName2))
+            {
+                this.setWallpaperBtn.Enabled = true;
             }
         }
 
@@ -190,11 +199,14 @@ namespace WallpaperManager
         /// <returns>Bitmap.</returns>
         public static Bitmap MergeTwoImages(Image firstImage, Image secondImage)
         {
-            
+            // TODO: merge image depends on wallpapers positions 
+
+
+
             int outputImageWidth = firstImage.Width + secondImage.Width;
             int outputImageHeight = firstImage.Height > secondImage.Height ? firstImage.Height : secondImage.Height;
-            Bitmap outputImage = new Bitmap(outputImageWidth, outputImageHeight, System.Drawing.Imaging.PixelFormat.Format32bppArgb);
-            using (Graphics graphics = Graphics.FromImage(outputImage))
+            var outputImage = new Bitmap(outputImageWidth, outputImageHeight, System.Drawing.Imaging.PixelFormat.Format32bppArgb);
+            using (var graphics = Graphics.FromImage(outputImage))
             {
                 graphics.Clear(Color.Transparent);
                 graphics.DrawImage(firstImage, new Rectangle(new Point(), firstImage.Size), new Rectangle(new Point(), firstImage.Size), GraphicsUnit.Pixel);
@@ -204,9 +216,9 @@ namespace WallpaperManager
         }
 
         // Merge images and store them in the windows registry.
-        private void button2_Click(object sender, EventArgs e)
+        private void setWallpaperBtn_Click(object sender, EventArgs e)
         {
-            if(!string.IsNullOrEmpty(this.wallpaperFileName1) 
+            if (!string.IsNullOrEmpty(this.wallpaperFileName1)
                 && !string.IsNullOrEmpty(this.wallpaperFileName2))
             {
 
@@ -219,8 +231,8 @@ namespace WallpaperManager
                 // Note: there is no need to save bitmap and images cos it is stored as register key
                 // without saving, setting background speed increases.
 
-                Image img1 = Image.FromFile(this.wallpaperFileName1);
-                Image img2 = Image.FromFile(this.wallpaperFileName2);
+                var img1 = Image.FromFile(this.wallpaperFileName1);
+                var img2 = Image.FromFile(this.wallpaperFileName2);
                 Bitmap bm = MergeTwoImages(img1, img2);
                 //bm.Save("result.png", ImageFormat.Png);
 
@@ -228,16 +240,16 @@ namespace WallpaperManager
 
                 //System.Drawing.Image img = System.Drawing.Image.FromFile(@"F:\Projects\VStudio\WallpaperManager\WallpaperManager\bin\Debug\result.png");
 
-                Image img = (Image)bm;
+                // store temporary image in appdata...
+                var img = (Image)bm;
                 string tempPath = Path.Combine(Path.GetTempPath(), "wallpaper.bmp");
-                //img.Save(tempPath, System.Drawing.Imaging.ImageFormat.Bmp);
+                img.Save(tempPath, ImageFormat.Bmp);
 
 
 
                 RegistryKey key = Registry.CurrentUser.OpenSubKey(@"Control Panel\Desktop", true);
                 key.SetValue(@"WallpaperStyle", 0.ToString());
                 key.SetValue(@"TileWallpaper", 1.ToString());
-                //SystemParametersInfo(SetDeskWallpaper, 0, defaultBackgroundFile, UpdateIniFile | SendWinIniChange);
                 SystemParametersInfo(SPI_SETDESKWALLPAPER, 0, tempPath, SPIF_UPDATEINIFILE | SPIF_SENDWININICHANGE);
 
 
@@ -258,7 +270,7 @@ namespace WallpaperManager
         [System.Runtime.InteropServices.DllImport("user32.dll")]
         public static extern bool ReleaseCapture();
 
- 
+
 
         /// <summary>
         /// Close form.
@@ -274,7 +286,7 @@ namespace WallpaperManager
             if (e.Button == MouseButtons.Left)
             {
                 ReleaseCapture();
-                SendMessage(Handle, WM_NCLBUTTONDOWN, HT_CAPTION, 0);
+                SendMessage(this.Handle, WM_NCLBUTTONDOWN, HT_CAPTION, 0);
             }
         }
 
@@ -287,9 +299,9 @@ namespace WallpaperManager
 
         private void wallpaper2_MouseDown(object sender, MouseEventArgs e)
         {
-            Control c = sender as Control;
-            isDraggingWallpaper2 = true;
-            move = e.Location;
+            var c = sender as Control;
+            this.isDraggingWallpaper2 = true;
+            this.move = e.Location;
         }
 
         private void wallpaper2_MouseMove(object sender, MouseEventArgs e)
@@ -300,26 +312,26 @@ namespace WallpaperManager
 
 
             // raczej tego nie potrzebuje... (do usuniecia)
-            if (wallpaper2.Bounds.IntersectsWith(wallpaper1.Bounds)) 
-            {
-                wallpaper2.BackColor = Color.Pink;           
-            }
-            else
-            {
-                wallpaper2.BackColor = Color.LightGray;
-            }
+            //if (wallpaper2.Bounds.IntersectsWith(wallpaper1.Bounds)) 
+            //{
+            //    wallpaper2.BackColor = Color.Pink;           
+            //}
+            //else
+            //{
+            //    wallpaper2.BackColor = Color.LightGray;
+            //}
 
 
 
 
 
             // move wallpaper 2 
-            if (isDraggingWallpaper2 == true)
+            if (this.isDraggingWallpaper2 == true)
             {
-                Control c = sender as Control;
+                var c = sender as Control;
 
-                this.wallpaper2.Left += e.X - move.X;
-                this.wallpaper2.Top += e.Y - move.Y;
+                this.wallpaper2.Left += e.X - this.move.X;
+                this.wallpaper2.Top += e.Y - this.move.Y;
 
 
 
@@ -345,56 +357,56 @@ namespace WallpaperManager
             }
         }
 
-        int margin = 3;
+        private readonly int margin = 3;
         private void wallpaper2_MouseUp(object sender, MouseEventArgs e)
         {
-            isDraggingWallpaper2 = false;
+            this.isDraggingWallpaper2 = false;
 
             //Console.WriteLine("Wallpaper 1 Left: " + wallpaper1.Bounds.Left.ToString());
             //Console.WriteLine("Wallpaper 1 Right: " + wallpaper1.Bounds.Right.ToString());
 
 
             // ensure that there is no collision between wallpapers
-            if(!wallpaper2.Bounds.IntersectsWith(wallpaper1.Bounds))
+            if (!this.wallpaper2.Bounds.IntersectsWith(this.wallpaper1.Bounds))
             {
 
                 // the left side of wallpaper 1
-                if (wallpaper2.Bounds.Right < wallpaper1.Bounds.Left)
+                if (this.wallpaper2.Bounds.Right < this.wallpaper1.Bounds.Left)
                 {
-                    wallpaper2.Left = wallpaper1.Bounds.Left - wallpaper2.Width - margin;
+                    this.wallpaper2.Left = this.wallpaper1.Bounds.Left - this.wallpaper2.Width - this.margin;
                 }
 
                 // the right side of wallpaper 1
-                if (wallpaper2.Bounds.Left > wallpaper1.Bounds.Right)
+                if (this.wallpaper2.Bounds.Left > this.wallpaper1.Bounds.Right)
                 {
-                    wallpaper2.Left = wallpaper1.Bounds.Right + margin;
+                    this.wallpaper2.Left = this.wallpaper1.Bounds.Right + this.margin;
                 }
 
                 // the top side of wallpaper 1
-                if (wallpaper2.Bounds.Bottom < wallpaper1.Bounds.Top) 
+                if (this.wallpaper2.Bounds.Bottom < this.wallpaper1.Bounds.Top)
                 {
-                    wallpaper2.Top = wallpaper1.Bounds.Top - wallpaper2.Height - margin;
+                    this.wallpaper2.Top = this.wallpaper1.Bounds.Top - this.wallpaper2.Height - this.margin;
                 }
 
                 // the bottom side of wallpaper 1 
-                if (wallpaper2.Bounds.Top > wallpaper1.Bounds.Bottom)
+                if (this.wallpaper2.Bounds.Top > this.wallpaper1.Bounds.Bottom)
                 {
-                    wallpaper2.Top = wallpaper1.Bounds.Bottom + margin;
+                    this.wallpaper2.Top = this.wallpaper1.Bounds.Bottom + this.margin;
                 }
 
             }
             else
             {
                 // the left inner side of wallpaper 1
-                if (wallpaper2.Bounds.Left < (wallpaper1.Bounds.Left + (wallpaper1.Bounds.Width / 2)))
+                if (this.wallpaper2.Bounds.Left < (this.wallpaper1.Bounds.Left + (this.wallpaper1.Bounds.Width / 2)))
                 {
-                    wallpaper2.Left = wallpaper1.Bounds.Left - wallpaper2.Width - margin;
+                    this.wallpaper2.Left = this.wallpaper1.Bounds.Left - this.wallpaper2.Width - this.margin;
                 }
 
                 // the right inner side of wallpaper 1
-                if (wallpaper2.Bounds.Left > (wallpaper1.Bounds.Right - (wallpaper1.Bounds.Width / 2)))
+                if (this.wallpaper2.Bounds.Left > (this.wallpaper1.Bounds.Right - (this.wallpaper1.Bounds.Width / 2)))
                 {
-                    wallpaper2.Left = wallpaper1.Bounds.Right + margin;
+                    this.wallpaper2.Left = this.wallpaper1.Bounds.Right + this.margin;
                 }
 
                 //  dokonczyc ...
