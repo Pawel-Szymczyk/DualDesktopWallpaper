@@ -29,17 +29,14 @@
         private void InitializeComponent()
         {
             this.detectScreenBtn = new System.Windows.Forms.Button();
-            this.wallpaper1 = new System.Windows.Forms.PictureBox();
-            this.wallpaper2 = new System.Windows.Forms.PictureBox();
             this.setWallpaperBtn = new System.Windows.Forms.Button();
-            this.closeBtn = new System.Windows.Forms.Button();
             this.freeSpaceArea = new System.Windows.Forms.Panel();
             this.label1 = new System.Windows.Forms.Label();
             this.label2 = new System.Windows.Forms.Label();
             this.label3 = new System.Windows.Forms.Label();
-            ((System.ComponentModel.ISupportInitialize)(this.wallpaper1)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.wallpaper2)).BeginInit();
-            this.freeSpaceArea.SuspendLayout();
+            this.label8 = new System.Windows.Forms.Label();
+            this.listBox1 = new System.Windows.Forms.ListBox();
+            this.checkBox1 = new System.Windows.Forms.CheckBox();
             this.SuspendLayout();
             // 
             // detectScreenBtn
@@ -48,38 +45,13 @@
             this.detectScreenBtn.FlatAppearance.BorderSize = 0;
             this.detectScreenBtn.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.detectScreenBtn.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.detectScreenBtn.Location = new System.Drawing.Point(662, 433);
+            this.detectScreenBtn.Location = new System.Drawing.Point(655, 445);
             this.detectScreenBtn.Name = "detectScreenBtn";
             this.detectScreenBtn.Size = new System.Drawing.Size(95, 32);
             this.detectScreenBtn.TabIndex = 0;
             this.detectScreenBtn.Text = "Identify";
             this.detectScreenBtn.UseVisualStyleBackColor = false;
             this.detectScreenBtn.Click += new System.EventHandler(this.detectScreenBtn_Click);
-            // 
-            // wallpaper1
-            // 
-            this.wallpaper1.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(204)))), ((int)(((byte)(65)))), ((int)(((byte)(41)))));
-            this.wallpaper1.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.wallpaper1.Location = new System.Drawing.Point(236, 83);
-            this.wallpaper1.Name = "wallpaper1";
-            this.wallpaper1.Size = new System.Drawing.Size(220, 80);
-            this.wallpaper1.TabIndex = 3;
-            this.wallpaper1.TabStop = false;
-            this.wallpaper1.DoubleClick += new System.EventHandler(this.wallpaper1_DoubleClick);
-            // 
-            // wallpaper2
-            // 
-            this.wallpaper2.BackColor = System.Drawing.Color.LightGray;
-            this.wallpaper2.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.wallpaper2.Location = new System.Drawing.Point(462, 83);
-            this.wallpaper2.Name = "wallpaper2";
-            this.wallpaper2.Size = new System.Drawing.Size(70, 126);
-            this.wallpaper2.TabIndex = 4;
-            this.wallpaper2.TabStop = false;
-            this.wallpaper2.DoubleClick += new System.EventHandler(this.wallpaper2_DoubleClick);
-            this.wallpaper2.MouseDown += new System.Windows.Forms.MouseEventHandler(this.wallpaper2_MouseDown);
-            this.wallpaper2.MouseMove += new System.Windows.Forms.MouseEventHandler(this.wallpaper2_MouseMove);
-            this.wallpaper2.MouseUp += new System.Windows.Forms.MouseEventHandler(this.wallpaper2_MouseUp);
             // 
             // setWallpaperBtn
             // 
@@ -88,7 +60,7 @@
             this.setWallpaperBtn.FlatAppearance.BorderSize = 0;
             this.setWallpaperBtn.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.setWallpaperBtn.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.setWallpaperBtn.Location = new System.Drawing.Point(515, 433);
+            this.setWallpaperBtn.Location = new System.Drawing.Point(507, 445);
             this.setWallpaperBtn.Name = "setWallpaperBtn";
             this.setWallpaperBtn.Size = new System.Drawing.Size(141, 32);
             this.setWallpaperBtn.TabIndex = 5;
@@ -96,33 +68,13 @@
             this.setWallpaperBtn.UseVisualStyleBackColor = false;
             this.setWallpaperBtn.Click += new System.EventHandler(this.setWallpaperBtn_Click);
             // 
-            // closeBtn
-            // 
-            this.closeBtn.FlatAppearance.BorderSize = 0;
-            this.closeBtn.FlatAppearance.MouseDownBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(128)))), ((int)(((byte)(128)))));
-            this.closeBtn.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(232)))), ((int)(((byte)(17)))), ((int)(((byte)(35)))));
-            this.closeBtn.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.closeBtn.Font = new System.Drawing.Font("Segoe UI Light", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.closeBtn.ForeColor = System.Drawing.SystemColors.WindowFrame;
-            this.closeBtn.Location = new System.Drawing.Point(739, -1);
-            this.closeBtn.Margin = new System.Windows.Forms.Padding(0);
-            this.closeBtn.Name = "closeBtn";
-            this.closeBtn.Size = new System.Drawing.Size(48, 34);
-            this.closeBtn.TabIndex = 6;
-            this.closeBtn.Text = "x";
-            this.closeBtn.UseVisualStyleBackColor = true;
-            this.closeBtn.Click += new System.EventHandler(this.closeBtn_Click);
-            // 
             // freeSpaceArea
             // 
-            this.freeSpaceArea.AllowDrop = true;
             this.freeSpaceArea.BackColor = System.Drawing.Color.WhiteSmoke;
-            this.freeSpaceArea.Controls.Add(this.wallpaper1);
-            this.freeSpaceArea.Controls.Add(this.wallpaper2);
             this.freeSpaceArea.Location = new System.Drawing.Point(29, 178);
             this.freeSpaceArea.Margin = new System.Windows.Forms.Padding(20, 3, 20, 3);
             this.freeSpaceArea.Name = "freeSpaceArea";
-            this.freeSpaceArea.Size = new System.Drawing.Size(728, 249);
+            this.freeSpaceArea.Size = new System.Drawing.Size(720, 260);
             this.freeSpaceArea.TabIndex = 7;
             // 
             // label1
@@ -156,26 +108,59 @@
             this.label3.Text = "Press and hold a wallpaper, then drag to rearrange it. Double click to pick wallp" +
     "aper.";
             // 
+            // label8
+            // 
+            this.label8.AutoSize = true;
+            this.label8.Font = new System.Drawing.Font("Segoe UI", 14.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label8.Location = new System.Drawing.Point(24, 502);
+            this.label8.Name = "label8";
+            this.label8.Size = new System.Drawing.Size(197, 25);
+            this.label8.TabIndex = 17;
+            this.label8.Text = "Displays Resolutions:";
+            // 
+            // listBox1
+            // 
+            this.listBox1.BorderStyle = System.Windows.Forms.BorderStyle.None;
+            this.listBox1.Font = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.listBox1.FormattingEnabled = true;
+            this.listBox1.ItemHeight = 21;
+            this.listBox1.Location = new System.Drawing.Point(29, 539);
+            this.listBox1.Name = "listBox1";
+            this.listBox1.SelectionMode = System.Windows.Forms.SelectionMode.None;
+            this.listBox1.Size = new System.Drawing.Size(230, 63);
+            this.listBox1.TabIndex = 21;
+            // 
+            // checkBox1
+            // 
+            this.checkBox1.AutoSize = true;
+            this.checkBox1.Location = new System.Drawing.Point(507, 502);
+            this.checkBox1.Name = "checkBox1";
+            this.checkBox1.Size = new System.Drawing.Size(172, 17);
+            this.checkBox1.TabIndex = 22;
+            this.checkBox1.Text = "Set Wallpaper on both screens";
+            this.checkBox1.UseVisualStyleBackColor = true;
+            this.checkBox1.CheckedChanged += new System.EventHandler(this.checkBox1_CheckedChanged);
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.White;
             this.ClientSize = new System.Drawing.Size(786, 786);
+            this.Controls.Add(this.checkBox1);
+            this.Controls.Add(this.listBox1);
+            this.Controls.Add(this.label8);
             this.Controls.Add(this.label3);
             this.Controls.Add(this.label2);
             this.Controls.Add(this.label1);
             this.Controls.Add(this.freeSpaceArea);
-            this.Controls.Add(this.closeBtn);
             this.Controls.Add(this.setWallpaperBtn);
             this.Controls.Add(this.detectScreenBtn);
-            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.None;
+            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
             this.Name = "Form1";
-            this.Text = "Form1";
+            this.Text = "DW";
+            this.Load += new System.EventHandler(this.Form1_Load);
             this.MouseDown += new System.Windows.Forms.MouseEventHandler(this.Form1_MouseDown);
-            ((System.ComponentModel.ISupportInitialize)(this.wallpaper1)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.wallpaper2)).EndInit();
-            this.freeSpaceArea.ResumeLayout(false);
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -184,14 +169,14 @@
         #endregion
 
         private System.Windows.Forms.Button detectScreenBtn;
-        private System.Windows.Forms.PictureBox wallpaper1;
-        private System.Windows.Forms.PictureBox wallpaper2;
         private System.Windows.Forms.Button setWallpaperBtn;
-        private System.Windows.Forms.Button closeBtn;
         private System.Windows.Forms.Panel freeSpaceArea;
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.Label label3;
+        private System.Windows.Forms.Label label8;
+        private System.Windows.Forms.ListBox listBox1;
+        private System.Windows.Forms.CheckBox checkBox1;
     }
 }
 

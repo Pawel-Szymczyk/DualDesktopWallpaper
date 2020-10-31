@@ -14,6 +14,8 @@ namespace WallpaperManager
     {
         // https://devblogs.microsoft.com/oldnewthing/?p=25003 
 
+        private string wallpaperFileName1 = string.Empty;
+        private string wallpaperFileName2 = string.Empty;
 
 
         private const int SPI_SETDESKWALLPAPER = 20;
@@ -26,10 +28,14 @@ namespace WallpaperManager
 
 
 
+        /// <summary>
+        /// On what side wallpaper2 currenlty is: "right", "left", "top", "bottom".
+        /// </summary>
+        private string wallpaper2Side = "right";
 
-        private readonly bool isDraggingWallpaper1 = false;
-        private bool isDraggingWallpaper2 = false;
-        private Point move;
+        //private readonly bool isDraggingWallpaper1 = false;
+        //private bool isDraggingWallpaper2 = false;
+        //private Point move;
 
 
         public Form1()
@@ -38,13 +44,119 @@ namespace WallpaperManager
 
             this.InitializeComponent();
 
-            new DropShadow().ApplyShadows(this);
+            //new DropShadow().ApplyShadows(this);
 
 
 
 
         }
 
+        private void Form1_Load(object sender, EventArgs e)
+        {
+
+
+            this.DrawDisplays();
+
+            this.GetDisplaysResolutions();
+        }
+
+        private void GetDisplaysResolutions()
+        {
+
+            foreach (var screen in Screen.AllScreens)
+            {
+                this.listBox1.Items.Add($"{screen.DeviceName.Replace(@"\.", "").Replace(@"\", "")}: {screen.Bounds.Width} x {screen.Bounds.Height}");
+            }
+
+
+        }
+
+
+        // ------------------------------------------
+        // class Display
+        private void DrawDisplays()
+        {
+            // panel area
+            var panelMiddlePointX = this.freeSpaceArea.Bounds.Width / 2;
+            var panelMiddlePointY = this.freeSpaceArea.Bounds.Height / 2;
+
+            Point realDisplayOneShiftLocation = new Point();
+
+            int scale = 21;
+            int margin = 1;
+            
+             
+            //int index = 1;
+            foreach (var screen in Screen.AllScreens)
+            {
+                // actual screen scaled size
+                var scaledScreenHeight = screen.Bounds.Size.Height / scale;
+                var scaledScreenWidth = (screen.Bounds.Size.Width / scale);
+
+                // center of actual screen
+                var displayCenterX = scaledScreenWidth / 2;
+                var displayCenterY = scaledScreenHeight / 2;
+
+                var display = new PictureBox();
+                display.Name = screen.DeviceName.Replace(@"\.", "").Replace(@"\", "").ToLower();
+                display.Size = new Size(scaledScreenWidth, scaledScreenHeight);
+                display.BackColor = Color.LightGray;
+                display.BorderStyle = BorderStyle.FixedSingle;
+                
+
+                if (screen.Primary)
+                {
+                    realDisplayOneShiftLocation = new Point(panelMiddlePointX - displayCenterX, panelMiddlePointY - displayCenterY);
+
+                    display.Location = realDisplayOneShiftLocation;
+                    display.MouseDoubleClick += new MouseEventHandler(wallpaper1_DoubleClick);
+                }
+                else
+                {
+                    int x = 0;
+                    int y = 0;
+                    if(screen.Bounds.X < 0)
+                    {
+                        // left side
+
+                        x = realDisplayOneShiftLocation.X - (screen.Bounds.Width / scale) - margin;
+                        y = realDisplayOneShiftLocation.Y + (screen.Bounds.Y / scale);
+                    }
+                    else if(screen.Bounds.X >=0 && screen.Bounds.Y < 0)
+                    {
+                        // top
+
+                        y = realDisplayOneShiftLocation.Y + (screen.Bounds.Y / scale) - margin;
+                        x = realDisplayOneShiftLocation.X + (screen.Bounds.X / scale);
+
+                    }
+                    else if(screen.Bounds.X >= 0 && screen.Bounds.Y >= Screen.AllScreens[0].Bounds.Height)
+                    {
+                        // bottom
+
+                        y = realDisplayOneShiftLocation.Y + (Screen.AllScreens[0].Bounds.Height / scale) + margin;
+                        x = realDisplayOneShiftLocation.X + (screen.Bounds.X / scale);
+                    }
+                    else
+                    {
+                        // right 
+
+                        x = realDisplayOneShiftLocation.X + (Screen.AllScreens[0].Bounds.Width / scale) + margin;
+                        y = realDisplayOneShiftLocation.Y + (screen.Bounds.Y /scale);
+                    }
+
+
+                    display.Location = new Point(x, y);
+                    display.MouseDoubleClick += new MouseEventHandler(wallpaper2_DoubleClick);
+
+                }
+
+                
+                this.freeSpaceArea.Controls.Add(display);
+                
+            }
+
+        }
 
 
 
@@ -119,26 +231,11 @@ namespace WallpaperManager
             this.detectScreenBtn.Enabled = true;
         }
 
-
-
-        //listBox1.Items.Add("Device Name: " + screen.DeviceName);
-        //listBox1.Items.Add("Bounds: " +
-        //    screen.Bounds.ToString());
-        //listBox1.Items.Add("Type: " +
-        //    screen.GetType().ToString());
-        //listBox1.Items.Add("Working Area: " +
-        //    screen.WorkingArea.ToString());
-        //listBox1.Items.Add("Primary Screen: " +
-        //    screen.Primary.ToString());
+  
 
 
 
 
-
-
-
-        private string wallpaperFileName1 = string.Empty;
-        private string wallpaperFileName2 = string.Empty;
 
 
         /// <summary>
@@ -146,6 +243,7 @@ namespace WallpaperManager
         /// </summary>
         private void wallpaper1_DoubleClick(object sender, EventArgs e)
         {
+            PictureBox pictureBox = (PictureBox)sender;
             var dialog = new OpenFileDialog();
 
             if (dialog.ShowDialog() == DialogResult.OK)
@@ -153,8 +251,8 @@ namespace WallpaperManager
                 this.wallpaperFileName1 = dialog.FileName;
 
                 var img = Image.FromFile(this.wallpaperFileName1);
-                this.wallpaper1.Image = img;
-                this.wallpaper1.SizeMode = PictureBoxSizeMode.Zoom;
+                pictureBox.Image = img;
+                pictureBox.SizeMode = PictureBoxSizeMode.Zoom;
 
                 this.setWallpaperBtnEnabled();
             }
@@ -165,6 +263,8 @@ namespace WallpaperManager
         /// </summary>
         private void wallpaper2_DoubleClick(object sender, EventArgs e)
         {
+            PictureBox pictureBox = (PictureBox)sender;
+
             var dialog = new OpenFileDialog();
 
             if (dialog.ShowDialog() == DialogResult.OK)
@@ -172,8 +272,8 @@ namespace WallpaperManager
                 this.wallpaperFileName2 = dialog.FileName;
 
                 var img = Image.FromFile(this.wallpaperFileName2);
-                this.wallpaper2.Image = img;
-                this.wallpaper2.SizeMode = PictureBoxSizeMode.Zoom;
+                pictureBox.Image = img;
+                pictureBox.SizeMode = PictureBoxSizeMode.Zoom;
 
                 this.setWallpaperBtnEnabled();
             }
@@ -196,22 +296,101 @@ namespace WallpaperManager
         /// </summary>
         /// <param name="firstImage">Image 1.</param>
         /// <param name="secondImage">Image 2.</param>
+        /// <param name="screens">Array of physical screens.</param>
         /// <returns>Bitmap.</returns>
-        public static Bitmap MergeTwoImages(Image firstImage, Image secondImage)
+        public Bitmap MergeTwoImages(Image firstImage, Image secondImage, Screen[] screens)
         {
             // TODO: merge image depends on wallpapers positions 
 
+            // if wallpaper2 is on right on left use exisitng code on width and height
+            // else new code requried
 
+            // in the case of second part of code it requiers 4 statemnst checking which monitor is first 
 
-            int outputImageWidth = firstImage.Width + secondImage.Width;
-            int outputImageHeight = firstImage.Height > secondImage.Height ? firstImage.Height : secondImage.Height;
-            var outputImage = new Bitmap(outputImageWidth, outputImageHeight, System.Drawing.Imaging.PixelFormat.Format32bppArgb);
-            using (var graphics = Graphics.FromImage(outputImage))
+            // TODO:
+            // later addiotional check will be required, in the case 
+            // when you first change wallpapers and then you will rearange wallpapers sides
+
+            // first screen is a PRIMARY screen.
+            var firstScreen = screens[0];
+            var secondScreen = screens[1];
+
+            int outputImageWidth = 0;
+            int outputImageHeight = 0;
+            Bitmap outputImage = null;
+
+            if (this.wallpaper2Side == "left" || this.wallpaper2Side == "right")
             {
-                graphics.Clear(Color.Transparent);
-                graphics.DrawImage(firstImage, new Rectangle(new Point(), firstImage.Size), new Rectangle(new Point(), firstImage.Size), GraphicsUnit.Pixel);
-                graphics.DrawImage(secondImage, new Rectangle(new Point(firstImage.Width, 0), secondImage.Size), new Rectangle(new Point(), secondImage.Size), GraphicsUnit.Pixel);
+                outputImageWidth = firstImage.Width + secondImage.Width;
+                outputImageHeight = firstImage.Height > secondImage.Height ? firstImage.Height : secondImage.Height;
+
+                outputImage = new Bitmap(outputImageWidth, outputImageHeight, PixelFormat.Format32bppArgb);
+
+                // TODO : replace 0 and new point() with actual y position 
+                if (this.wallpaper2Side == "right")
+                {
+                    using (var graphics = Graphics.FromImage(outputImage))
+                    {
+                        graphics.Clear(Color.Transparent);
+                        graphics.DrawImage(firstImage, new Rectangle(new Point(), firstImage.Size), new Rectangle(new Point(), firstImage.Size), GraphicsUnit.Pixel);
+                        graphics.DrawImage(secondImage, new Rectangle(new Point(firstImage.Width, 0), secondImage.Size), new Rectangle(new Point(), secondImage.Size), GraphicsUnit.Pixel);
+                    }
+                }
+                else if (this.wallpaper2Side == "left")
+                {
+                    using (var graphics = Graphics.FromImage(outputImage))
+                    {
+                        graphics.Clear(Color.Transparent);
+                        graphics.DrawImage(secondImage, new Rectangle(new Point(), secondImage.Size), new Rectangle(new Point(), secondImage.Size), GraphicsUnit.Pixel);
+                        graphics.DrawImage(firstImage, new Rectangle(new Point(secondImage.Width, 0), firstImage.Size), new Rectangle(new Point(), firstImage.Size), GraphicsUnit.Pixel);
+                    }
+                }
             }
+            else if (this.wallpaper2Side == "top" || this.wallpaper2Side == "bottom")
+            {
+                outputImageWidth = firstImage.Width > secondImage.Width ? firstImage.Width : secondImage.Width;
+                outputImageHeight = firstImage.Height + secondImage.Height;
+
+                outputImage = new Bitmap(outputImageWidth, outputImageHeight, PixelFormat.Format32bppArgb);
+
+                if (this.wallpaper2Side == "top")
+                {
+                    using (var graphics = Graphics.FromImage(outputImage))
+                    {
+                        
+
+
+                        graphics.Clear(Color.Transparent);
+                        graphics.DrawImage(secondImage, new Rectangle(new Point(secondScreen.Bounds.X, 0), secondImage.Size ), new Rectangle(new Point(), secondImage.Size), GraphicsUnit.Pixel);
+                        graphics.DrawImage(firstImage, new Rectangle(new Point(0, secondScreen.Bounds.Height), firstImage.Size), new Rectangle(new Point(), firstImage.Size), GraphicsUnit.Pixel);
+
+                        //graphics.DrawImage(firstImage, new Rectangle(new Point(), firstImage.Size), new Rectangle(new Point(), firstImage.Size), GraphicsUnit.Pixel);
+                        //graphics.DrawImage(secondImage, new Rectangle(new Point(firstImage.Width, 0), secondImage.Size), new Rectangle(new Point(), secondImage.Size), GraphicsUnit.Pixel);
+                    }
+                }
+                else if (this.wallpaper2Side == "bottom")
+                {
+                    using (var graphics = Graphics.FromImage(outputImage))
+                    {
+                        graphics.Clear(Color.Transparent);
+                        // graphics.DrawImage(secondImage, new Rectangle(new Point(firstImage.Width, 0), secondImage.Size), new Rectangle(new Point(), secondImage.Size), GraphicsUnit.Pixel);
+                        // graphics.DrawImage(firstImage, new Rectangle(new Point(), firstImage.Size), new Rectangle(new Point(), firstImage.Size), GraphicsUnit.Pixel);
+                    }
+                }
+            }
+
+
+
+            //outputImageWidth = firstImage.Width + secondImage.Width;
+            //outputImageHeight = firstImage.Height > secondImage.Height ? firstImage.Height : secondImage.Height;
+
+            //var outputImage = new Bitmap(outputImageWidth, outputImageHeight, PixelFormat.Format32bppArgb);
+            //using (var graphics = Graphics.FromImage(outputImage))
+            //{
+            //    graphics.Clear(Color.Transparent);
+            //    graphics.DrawImage(firstImage, new Rectangle(new Point(), firstImage.Size), new Rectangle(new Point(), firstImage.Size), GraphicsUnit.Pixel);
+            //    graphics.DrawImage(secondImage, new Rectangle(new Point(firstImage.Width, 0), secondImage.Size), new Rectangle(new Point(), secondImage.Size), GraphicsUnit.Pixel);
+            //}
             return outputImage;
         }
 
@@ -233,7 +412,7 @@ namespace WallpaperManager
 
                 var img1 = Image.FromFile(this.wallpaperFileName1);
                 var img2 = Image.FromFile(this.wallpaperFileName2);
-                Bitmap bm = MergeTwoImages(img1, img2);
+                Bitmap bm = MergeTwoImages(img1, img2, Screen.AllScreens);
                 //bm.Save("result.png", ImageFormat.Png);
 
 
@@ -275,11 +454,11 @@ namespace WallpaperManager
         /// <summary>
         /// Close form.
         /// </summary>
-        private void closeBtn_Click(object sender, EventArgs e)
-        {
-            this.Dispose();
-            this.Close();
-        }
+        //private void closeBtn_Click(object sender, EventArgs e)
+        //{
+        //    this.Dispose();
+        //    this.Close();
+        //}
 
         private void Form1_MouseDown(object sender, MouseEventArgs e)
         {
@@ -290,135 +469,172 @@ namespace WallpaperManager
             }
         }
 
-
-
-
-
-
-
-
-        private void wallpaper2_MouseDown(object sender, MouseEventArgs e)
+        private void checkBox1_CheckedChanged(object sender, EventArgs e)
         {
-            var c = sender as Control;
-            this.isDraggingWallpaper2 = true;
-            this.move = e.Location;
+            //var img1 = Image.FromFile(this.wallpaperFileName1);
+            //var img2 = Image.FromFile(this.wallpaperFileName2);
+            //Bitmap bm = MergeTwoImages(img1, img2, Screen.AllScreens);
+            ////bm.Save("result.png", ImageFormat.Png);
+
+
+
+            ////System.Drawing.Image img = System.Drawing.Image.FromFile(@"F:\Projects\VStudio\WallpaperManager\WallpaperManager\bin\Debug\result.png");
+
+            //// store temporary image in appdata...
+            //var img = (Image)bm;
+            //string tempPath = Path.Combine(Path.GetTempPath(), "wallpaper.bmp");
+            //img.Save(tempPath, ImageFormat.Bmp);
+
+
+
+            //RegistryKey key = Registry.CurrentUser.OpenSubKey(@"Control Panel\Desktop", true);
+            //key.SetValue(@"WallpaperStyle", 0.ToString());
+            //key.SetValue(@"TileWallpaper", 1.ToString());
+            //SystemParametersInfo(SPI_SETDESKWALLPAPER, 0, tempPath, SPIF_UPDATEINIFILE | SPIF_SENDWININICHANGE);
         }
 
-        private void wallpaper2_MouseMove(object sender, MouseEventArgs e)
-        {
-            // get wallpaper1 width and height
-            //var wallpaper1Height = this.wallpaper1.Bounds.Height;
-            //var wallpaper1Width = this.wallpaper1.Bounds.Width;
-
-
-            // raczej tego nie potrzebuje... (do usuniecia)
-            //if (wallpaper2.Bounds.IntersectsWith(wallpaper1.Bounds)) 
-            //{
-            //    wallpaper2.BackColor = Color.Pink;           
-            //}
-            //else
-            //{
-            //    wallpaper2.BackColor = Color.LightGray;
-            //}
 
 
 
 
 
-            // move wallpaper 2 
-            if (this.isDraggingWallpaper2 == true)
-            {
-                var c = sender as Control;
-
-                this.wallpaper2.Left += e.X - this.move.X;
-                this.wallpaper2.Top += e.Y - this.move.Y;
 
 
 
-
-                // walpaper2 corners
-                //var bottomLeftY = this.wallpaper2.Bounds.Bottom;
-                //var bottomLeftX = this.wallpaper2.Bounds.X;
-                //var bottomRightY =
-                //var topLeft =
-                //var topRight =
+        // Explanation: 
+        // I have removed function of drag and drop of the displays features to this program, because lack of 
+        // knowledge and resources to find out how to implement these changes also in windows 10 desktops. 
+        // This feature would be required to avoid switching between my solution and Windows 10 Display settings.
 
 
+        //private void wallpaper2_MouseDown(object sender, MouseEventArgs e)
+        //{
+        //    var c = sender as Control;
+        //    this.isDraggingWallpaper2 = true;
+        //    this.move = e.Location;
+        //}
+
+        //private void wallpaper2_MouseMove(object sender, MouseEventArgs e)
+        //{
+        //    // get wallpaper1 width and height
+        //    //var wallpaper1Height = this.wallpaper1.Bounds.Height;
+        //    //var wallpaper1Width = this.wallpaper1.Bounds.Width;
 
 
-                //for (int i = 0; i < pictureBoxList.Count(); i++)
-                //{
-                //    if (c.Equals(pictureBoxList[i]))
-                //    {
-                //        pictureBoxList[i].Left += e.X - move.X;
-                //        pictureBoxList[i].Top += e.Y - move.Y;
-                //    }
-                //}
-            }
-        }
-
-        private readonly int margin = 3;
-        private void wallpaper2_MouseUp(object sender, MouseEventArgs e)
-        {
-            this.isDraggingWallpaper2 = false;
-
-            //Console.WriteLine("Wallpaper 1 Left: " + wallpaper1.Bounds.Left.ToString());
-            //Console.WriteLine("Wallpaper 1 Right: " + wallpaper1.Bounds.Right.ToString());
+        //    // raczej tego nie potrzebuje... (do usuniecia)
+        //    //if (wallpaper2.Bounds.IntersectsWith(wallpaper1.Bounds)) 
+        //    //{
+        //    //    wallpaper2.BackColor = Color.Pink;           
+        //    //}
+        //    //else
+        //    //{
+        //    //    wallpaper2.BackColor = Color.LightGray;
+        //    //}
 
 
-            // ensure that there is no collision between wallpapers
-            if (!this.wallpaper2.Bounds.IntersectsWith(this.wallpaper1.Bounds))
-            {
-
-                // the left side of wallpaper 1
-                if (this.wallpaper2.Bounds.Right < this.wallpaper1.Bounds.Left)
-                {
-                    this.wallpaper2.Left = this.wallpaper1.Bounds.Left - this.wallpaper2.Width - this.margin;
-                }
-
-                // the right side of wallpaper 1
-                if (this.wallpaper2.Bounds.Left > this.wallpaper1.Bounds.Right)
-                {
-                    this.wallpaper2.Left = this.wallpaper1.Bounds.Right + this.margin;
-                }
-
-                // the top side of wallpaper 1
-                if (this.wallpaper2.Bounds.Bottom < this.wallpaper1.Bounds.Top)
-                {
-                    this.wallpaper2.Top = this.wallpaper1.Bounds.Top - this.wallpaper2.Height - this.margin;
-                }
-
-                // the bottom side of wallpaper 1 
-                if (this.wallpaper2.Bounds.Top > this.wallpaper1.Bounds.Bottom)
-                {
-                    this.wallpaper2.Top = this.wallpaper1.Bounds.Bottom + this.margin;
-                }
-
-            }
-            else
-            {
-                // the left inner side of wallpaper 1
-                if (this.wallpaper2.Bounds.Left < (this.wallpaper1.Bounds.Left + (this.wallpaper1.Bounds.Width / 2)))
-                {
-                    this.wallpaper2.Left = this.wallpaper1.Bounds.Left - this.wallpaper2.Width - this.margin;
-                }
-
-                // the right inner side of wallpaper 1
-                if (this.wallpaper2.Bounds.Left > (this.wallpaper1.Bounds.Right - (this.wallpaper1.Bounds.Width / 2)))
-                {
-                    this.wallpaper2.Left = this.wallpaper1.Bounds.Right + this.margin;
-                }
-
-                //  dokonczyc ...
-                //// the top inner side of wallpaper 1
-                //if (wallpaper2.Bounds.Top < (wallpaper1.Bounds.Top + (wallpaper1.Bounds.Height / 2)))
-                //{
-                //    wallpaper2.Top = wallpaper1.Bounds.Top - wallpaper2.Height - margin;
-                //}
-            }
 
 
-        }
+
+        //    // move wallpaper 2 
+        //    if (this.isDraggingWallpaper2 == true)
+        //    {
+        //        var c = sender as Control;
+
+        //        this.wallpaper2.Left += e.X - this.move.X;
+        //        this.wallpaper2.Top += e.Y - this.move.Y;
+
+
+
+
+        //        // walpaper2 corners
+        //        //var bottomLeftY = this.wallpaper2.Bounds.Bottom;
+        //        //var bottomLeftX = this.wallpaper2.Bounds.X;
+        //        //var bottomRightY =
+        //        //var topLeft =
+        //        //var topRight =
+
+
+
+
+        //        //for (int i = 0; i < pictureBoxList.Count(); i++)
+        //        //{
+        //        //    if (c.Equals(pictureBoxList[i]))
+        //        //    {
+        //        //        pictureBoxList[i].Left += e.X - move.X;
+        //        //        pictureBoxList[i].Top += e.Y - move.Y;
+        //        //    }
+        //        //}
+        //    }
+        //}
+
+        //private readonly int margin = 3;
+        //private void wallpaper2_MouseUp(object sender, MouseEventArgs e)
+        //{
+        //    this.isDraggingWallpaper2 = false;
+
+        //    //Console.WriteLine("Wallpaper 1 Left: " + wallpaper1.Bounds.Left.ToString());
+        //    //Console.WriteLine("Wallpaper 1 Right: " + wallpaper1.Bounds.Right.ToString());
+
+
+        //    // ensure that there is no collision between wallpapers
+        //    if (!this.wallpaper2.Bounds.IntersectsWith(this.wallpaper1.Bounds))
+        //    {
+
+        //        // the left side of wallpaper 1
+        //        if (this.wallpaper2.Bounds.Right < this.wallpaper1.Bounds.Left)
+        //        {
+        //            this.wallpaper2.Left = this.wallpaper1.Bounds.Left - this.wallpaper2.Width - this.margin;
+        //            this.wallpaper2Side = "left";
+        //        }
+
+        //        // the right side of wallpaper 1
+        //        if (this.wallpaper2.Bounds.Left > this.wallpaper1.Bounds.Right)
+        //        {
+        //            this.wallpaper2.Left = this.wallpaper1.Bounds.Right + this.margin;
+        //            this.wallpaper2Side = "right";
+        //        }
+
+        //        // the top side of wallpaper 1
+        //        if (this.wallpaper2.Bounds.Bottom < this.wallpaper1.Bounds.Top)
+        //        {
+        //            this.wallpaper2.Top = this.wallpaper1.Bounds.Top - this.wallpaper2.Height - this.margin;
+        //            this.wallpaper2Side = "top";
+        //        }
+
+        //        // the bottom side of wallpaper 1 
+        //        if (this.wallpaper2.Bounds.Top > this.wallpaper1.Bounds.Bottom)
+        //        {
+        //            this.wallpaper2.Top = this.wallpaper1.Bounds.Bottom + this.margin;
+        //            this.wallpaper2Side = "bottom";
+        //        }
+
+        //    }
+        //    else
+        //    {
+        //        // the left inner side of wallpaper 1
+        //        if (this.wallpaper2.Bounds.Left < (this.wallpaper1.Bounds.Left + (this.wallpaper1.Bounds.Width / 2)))
+        //        {
+        //            this.wallpaper2.Left = this.wallpaper1.Bounds.Left - this.wallpaper2.Width - this.margin;
+        //            this.wallpaper2Side = "left";
+        //        }
+
+        //        // the right inner side of wallpaper 1
+        //        if (this.wallpaper2.Bounds.Left > (this.wallpaper1.Bounds.Right - (this.wallpaper1.Bounds.Width / 2)))
+        //        {
+        //            this.wallpaper2.Left = this.wallpaper1.Bounds.Right + this.margin;
+        //            this.wallpaper2Side = "right";
+        //        }
+
+        //        //  dokonczyc ...
+        //        //// the top inner side of wallpaper 1
+        //        //if (wallpaper2.Bounds.Top < (wallpaper1.Bounds.Top + (wallpaper1.Bounds.Height / 2)))
+        //        //{
+        //        //    wallpaper2.Top = wallpaper1.Bounds.Top - wallpaper2.Height - margin;
+        //        //}
+        //    }
+
+
+        //}
 
 
 
