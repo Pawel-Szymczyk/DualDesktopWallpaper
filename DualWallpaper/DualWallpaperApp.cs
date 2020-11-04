@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Drawing;
 using System.Linq;
 using System.Windows.Forms;
 
@@ -9,10 +8,6 @@ namespace WallpaperManager
     public partial class DualWallpaperApp : Form
     {
         // https://devblogs.microsoft.com/oldnewthing/?p=25003 
-
-
-
-
 
         // -------------------------------------------------------------------
         // Form
@@ -65,7 +60,6 @@ namespace WallpaperManager
         #endregion
         // -------------------------------------------------------------------
 
-
         // -------------------------------------------------------------------
         // Form Event Handlers
         //
@@ -83,9 +77,9 @@ namespace WallpaperManager
 
 
         // Merge images and store them in the windows registry.
-        private void setWallpaperBtn_Click(object sender, EventArgs e)
+        private void applyBtn_Click(object sender, EventArgs e)
         {
-            WallpaperManager.SetWallpaper(this.freeSpaceArea, this.mergeScreenBtn);
+            WallpaperManager.SetWallpaper(this.freeSpaceArea, this.mergeBtn);
         }
 
         private void mergeScreenBtn_CheckedChanged(object sender, EventArgs e)
@@ -95,7 +89,7 @@ namespace WallpaperManager
 
             // in the case checkbox is unchecked it should display two displays
 
-            if (this.mergeScreenBtn.Checked)
+            if (this.mergeBtn.Checked)
             {
                 this.freeSpaceArea.Controls.Clear();
 
@@ -134,13 +128,9 @@ namespace WallpaperManager
             }
         }
 
+        private void cancelBtn_Click(object sender, EventArgs e)
+        {
 
-
-
-
-
-
-
-
+        }
     }
 }
