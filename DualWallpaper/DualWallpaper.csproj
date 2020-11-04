@@ -47,7 +47,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Browser.cs" />
-    <Compile Include="Display.cs" />
+    <Compile Include="DisplayManager.cs" />
     <Compile Include="DisplayEventHandler.cs" />
     <Compile Include="DisplayIdentity.cs" />
     <Compile Include="DropShadow.cs" />

@@ -28,6 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(DualWallpaperApp));
             this.detectScreenBtn = new System.Windows.Forms.Button();
             this.setWallpaperBtn = new System.Windows.Forms.Button();
             this.freeSpaceArea = new System.Windows.Forms.Panel();
@@ -170,8 +171,8 @@
             this.Controls.Add(this.setWallpaperBtn);
             this.Controls.Add(this.detectScreenBtn);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
+            this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.Name = "DualWallpaperApp";
-            this.Text = "DW";
             this.Load += new System.EventHandler(this.DualWallpaperApp_Load);
             this.MouseClick += new System.Windows.Forms.MouseEventHandler(this.DualWallpaperApp_MouseClick);
             this.ResumeLayout(false);

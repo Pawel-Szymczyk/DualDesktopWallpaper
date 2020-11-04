@@ -48,5 +48,33 @@ namespace WallpaperManager
 
             return identityBox;
         }
+
+
+        public static async Task DetectIdentity(Button button)
+        {
+            button.Enabled = false;
+
+            int monitor = 0;
+            var formList = new List<Form>();
+            foreach (Screen screen in Screen.AllScreens)
+            {
+                monitor++;
+                Form form = await DisplayIdentity.DisplayIdentityBox(screen, monitor);
+                formList.Add(form);
+            }
+
+            // wait 3 seconds before close forms.
+            await Task.Delay(2000);
+
+            foreach (Form form in formList)
+            {
+                await Task.Delay(0);
+                form.Close();
+            }
+
+            button.Enabled = true;
+        }
+
+
     }
 }

@@ -4,7 +4,7 @@ using System.Windows.Forms;
 
 namespace WallpaperManager
 {
-    public class Display
+    public class DisplayManager
     {
         /// <summary>
         /// Represents real screen scale.
