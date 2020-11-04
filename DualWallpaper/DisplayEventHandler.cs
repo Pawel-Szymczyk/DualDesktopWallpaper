@@ -36,7 +36,7 @@ namespace WallpaperManager
         /// <summary>
         /// Pick image for monitor.
         /// </summary>
-        public static void display_DoubleClick(object sender, EventArgs e)
+        public static void display_DoubleClick(object sender, EventArgs e, Panel panel, Button applyBtn, Button cancelBtn)
         {
             PictureBox pictureBox = (PictureBox)sender;
             var dialog = new OpenFileDialog();
@@ -48,6 +48,33 @@ namespace WallpaperManager
                 pictureBox.SizeMode = PictureBoxSizeMode.Zoom;
                 pictureBox.Tag = dialog.FileName;
             }
+
+
+            // check if both images are set 
+            List<PictureBox> list = new List<PictureBox>(); 
+
+            foreach(var u in panel.Controls)
+            {
+                if(u is PictureBox)
+                {
+                    list.Add((PictureBox)u);
+                }
+            }
+
+            var o = list.All(x => x.Image != null);
+            if(o)
+            {
+                // show buttons
+                applyBtn.Visible = true;
+                cancelBtn.Visible = true;
+            } 
+            else
+            {
+                applyBtn.Visible = false;
+                cancelBtn.Visible = false;
+            }
+
+
 
         }
 
@@ -95,43 +122,7 @@ namespace WallpaperManager
 
 
 
-        ///// <summary>
-        ///// Pick image for 1st monitor.
-        ///// </summary>
-        //public void wallpaper1_DoubleClick(object sender, EventArgs e)
-        //{
-        //    PictureBox pictureBox = (PictureBox)sender;
-        //    var dialog = new OpenFileDialog();
 
-        //    if (dialog.ShowDialog() == DialogResult.OK)
-        //    {
-        //        var img = Image.FromFile(dialog.FileName);
-        //        pictureBox.Image = img;
-        //        pictureBox.SizeMode = PictureBoxSizeMode.Zoom;
-
-        //        //this.setWallpaperBtnEnabled();
-        //    }
-        //}
-
-        ///// <summary>
-        ///// Pick image for 2nd monitor.
-        ///// </summary>
-        //public void wallpaper2_DoubleClick(object sender, EventArgs e)
-        //{
-        //    PictureBox pictureBox = (PictureBox)sender;
-
-        //    var dialog = new OpenFileDialog();
-
-        //    if (dialog.ShowDialog() == DialogResult.OK)
-        //    {
-
-        //        var img = Image.FromFile(dialog.FileName);
-        //        pictureBox.Image = img;
-        //        pictureBox.SizeMode = PictureBoxSizeMode.Zoom;
-
-        //        //this.setWallpaperBtnEnabled();
-        //    }
-        //}
 
     }
 }

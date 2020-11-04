@@ -55,7 +55,7 @@
             this.detectScreenBtn.TabIndex = 0;
             this.detectScreenBtn.Text = "I d e n t i t y";
             this.detectScreenBtn.UseVisualStyleBackColor = false;
-            this.detectScreenBtn.Click += new System.EventHandler(this.detectScreenBtn_Click);
+            this.detectScreenBtn.Click += new System.EventHandler(this.identifyBtn_Click);
             // 
             // applyBtn
             // 
@@ -145,7 +145,7 @@
             this.mergeBtn.Text = "M e r g e";
             this.mergeBtn.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             this.mergeBtn.UseVisualStyleBackColor = false;
-            this.mergeBtn.CheckedChanged += new System.EventHandler(this.mergeScreenBtn_CheckedChanged);
+            this.mergeBtn.CheckedChanged += new System.EventHandler(this.mergeBtn_CheckedChanged);
             // 
             // searchBtn
             // 

@@ -27,6 +27,8 @@ namespace WallpaperManager
         /// </summary>
         private void DualWallpaperApp_Load(object sender, EventArgs e)
         {
+            this.Version();
+
             this.DrawDisplays(false);
 
             // get displays resolutions...
@@ -41,19 +43,7 @@ namespace WallpaperManager
         /// </summary>
         private void DualWallpaperApp_MouseClick(object sender, MouseEventArgs e)
         {
-
-            // Hides search button and resolution labels.
-            this.searchBtn.Visible = false;
-
-            var resolutionLabels = this.freeSpaceArea.Controls.OfType<Label>()
-                .Where(c => c.Tag != null && c.Tag.ToString() == "resolution")
-                .ToList();
-
-            foreach (Label lbl in resolutionLabels)
-            {
-                this.freeSpaceArea.Controls.Remove(lbl);
-            }
-
+            this.HideControls();
         }
 
 
@@ -70,7 +60,7 @@ namespace WallpaperManager
             Browser.SearchForWallpapers(this.freeSpaceArea);
         }
 
-        private async void detectScreenBtn_Click(object sender, EventArgs e)
+        private async void identifyBtn_Click(object sender, EventArgs e)
         {
             await DisplayIdentity.DetectIdentity(this.detectScreenBtn);
         }
@@ -80,9 +70,19 @@ namespace WallpaperManager
         private void applyBtn_Click(object sender, EventArgs e)
         {
             WallpaperManager.SetWallpaper(this.freeSpaceArea, this.mergeBtn);
+
+            this.HideControls();
         }
 
-        private void mergeScreenBtn_CheckedChanged(object sender, EventArgs e)
+        private void cancelBtn_Click(object sender, EventArgs e)
+        {
+            // clear images from pictureboxes
+            WallpaperManager.CleanWallpapers(this.freeSpaceArea);
+
+            this.HideControls();
+        }
+
+        private void mergeBtn_CheckedChanged(object sender, EventArgs e)
         {
             // remove displays and drow 1 common for both displays 
             // allow to click on it
@@ -115,12 +115,17 @@ namespace WallpaperManager
         /// <param name="DrawSingleDisplay"></param>
         private void DrawDisplays(bool DrawSingleDisplay)
         {
+            this.applyBtn.Visible = false;
+            this.cancelBtn.Visible = false;
+
             List<PictureBox> displays = new DisplayManager().DrawDisplays(
                     DrawSingleDisplay,
                     this.freeSpaceArea.Bounds.Width / 2,
                     this.freeSpaceArea.Bounds.Height / 2,
                     this.freeSpaceArea,
-                    this.searchBtn);
+                    this.searchBtn,
+                    this.applyBtn,
+                    this.cancelBtn);
 
             foreach (PictureBox display in displays)
             {
@@ -128,9 +133,42 @@ namespace WallpaperManager
             }
         }
 
-        private void cancelBtn_Click(object sender, EventArgs e)
+        /// <summary>
+        /// Display assembly version.
+        /// </summary>
+        private void Version()
         {
+            var assembly = System.Reflection.Assembly.GetExecutingAssembly();
+            var fvi = System.Diagnostics.FileVersionInfo.GetVersionInfo(assembly.Location);
 
+            string text = $"Ver. {fvi.FileVersion}";
+            for (int i = 1; i <= text.Length; i += 1)
+            {
+                text = text.Insert(i, " ");
+
+                i++;
+            }
+
+            this.versionLbl.Text = text;
         }
+
+
+        private void HideControls()
+        {
+            // Hides search button and resolution labels.
+            this.searchBtn.Visible = false;
+            this.applyBtn.Visible = false;
+            this.cancelBtn.Visible = false;
+
+            var resolutionLabels = this.freeSpaceArea.Controls.OfType<Label>()
+                .Where(c => c.Tag != null && c.Tag.ToString() == "resolution")
+                .ToList();
+
+            foreach (Label lbl in resolutionLabels)
+            {
+                this.freeSpaceArea.Controls.Remove(lbl);
+            }
+        }
+
     }
 }

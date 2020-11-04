@@ -236,9 +236,21 @@ namespace WallpaperManager
                     WallpaperManager.SaveBackground(bm, "0", "1");
                 }
 
+                
 
 
+            }
+        }
 
+        public static void CleanWallpapers(Panel panel)
+        {
+            foreach (var u in panel.Controls)
+            {
+                if (u is PictureBox)
+                {
+                    var obj = (PictureBox)u;
+                    obj.Image = null;
+                }
             }
         }
 

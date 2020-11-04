@@ -24,7 +24,7 @@ namespace WallpaperManager
         /// <param name="width">Width.</param>
         /// <param name="height">Height.</param>
         /// <returns>PictureBox.</returns>
-        private PictureBox CreateDisplay(Screen screen, int width, int height, string text, Panel panel, Button button)
+        private PictureBox CreateDisplay(Screen screen, int width, int height, string text, Panel panel, Button searchBtn, Button applyBtn, Button cancelBtn)
         {
             var pictureBox = new PictureBox
             {
@@ -34,11 +34,13 @@ namespace WallpaperManager
                 BorderStyle = BorderStyle.FixedSingle
             };
             pictureBox.Paint += new PaintEventHandler((sender, e) => DisplayEventHandler.draw_Label(sender, e, text));
-            pictureBox.MouseClick += new MouseEventHandler((sender, e) => DisplayEventHandler.display_SingleClick(sender, e, Screen.AllScreens, panel, button)); 
-            pictureBox.MouseDoubleClick += new MouseEventHandler(DisplayEventHandler.display_DoubleClick);
+            pictureBox.MouseClick += new MouseEventHandler((sender, e) => DisplayEventHandler.display_SingleClick(sender, e, Screen.AllScreens, panel, searchBtn));
+            pictureBox.MouseDoubleClick += new MouseEventHandler((sender, e) => DisplayEventHandler.display_DoubleClick(sender, e, panel, applyBtn, cancelBtn));
 
             return pictureBox;
         }
+
+
 
 
         /// <summary>
@@ -51,9 +53,9 @@ namespace WallpaperManager
         /// <param name="parentContainerMiddleWidth">Middle of parent panel - width.</param>
         /// <param name="parentContainerMiddleHeight">Middle of parent panel - height.</param>
         /// <param name="panel">Parent panel.</param>
-        /// <param name="button">Search button.</param>
+        /// <param name="searchBtn">Search button.</param>
         /// <returns>List of ready to display picture boxes.</returns>
-        public List<PictureBox> DrawDisplays(bool drawSingleDiplay, int parentContainerMiddleWidth, int parentContainerMiddleHeight, Panel panel, Button button)
+        public List<PictureBox> DrawDisplays(bool drawSingleDiplay, int parentContainerMiddleWidth, int parentContainerMiddleHeight, Panel panel, Button searchBtn, Button applyBtn, Button cancelBtn)
         {
             var pictureBoxes = new List<PictureBox>();
 
@@ -80,7 +82,7 @@ namespace WallpaperManager
                 int displayCenterY = scaledScreenHeight / 2;
 
                 string text = "1 | 2";
-                PictureBox display = this.CreateDisplay(screen, scaledScreenWidth, scaledScreenHeight, text, panel, button);
+                PictureBox display = this.CreateDisplay(screen, scaledScreenWidth, scaledScreenHeight, text, panel, searchBtn, applyBtn, cancelBtn);
 
                 display.Location = new Point(parentContainerMiddleWidth - displayCenterX, parentContainerMiddleHeight - displayCenterY);
                 pictureBoxes.Add(display);
@@ -104,7 +106,7 @@ namespace WallpaperManager
                     int displayCenterY = scaledScreenHeight / 2;
 
                     string text = screen.DeviceName.Replace(@"\.", "").Replace(@"\", "").ToLower().Replace(@"display", "");
-                    PictureBox display = this.CreateDisplay(screen, scaledScreenWidth, scaledScreenHeight, text, panel, button);
+                    PictureBox display = this.CreateDisplay(screen, scaledScreenWidth, scaledScreenHeight, text, panel, searchBtn, applyBtn, cancelBtn);
 
 
                     if (screen.Primary)
