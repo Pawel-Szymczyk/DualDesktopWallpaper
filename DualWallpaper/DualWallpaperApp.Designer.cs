@@ -238,7 +238,7 @@
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.Label label3;
         private System.Windows.Forms.ListBox resolutionsList;
-        private System.Windows.Forms.CheckBox mergeBtn;
+        public System.Windows.Forms.CheckBox mergeBtn;
         private System.Windows.Forms.Button searchBtn;
         private System.Windows.Forms.Button cancelBtn;
         private System.Windows.Forms.Label label4;

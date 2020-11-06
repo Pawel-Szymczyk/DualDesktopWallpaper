@@ -18,8 +18,15 @@ namespace WallpaperManager
         /// <param name="panel">Parent panel to which is added label with resolution.</param>
         public static void SearchForWallpapers(Panel panel)
         {
-            int index = 2; // this is going to be always 3 element, after 2 displays.
-            string resolution = !string.IsNullOrEmpty(panel.Controls[index].Text) ? panel.Controls[index].Text : string.Empty;
+            string resolution = string.Empty;
+
+            foreach(Control control in panel.Controls)
+            {
+                if(control is Label)
+                {
+                    resolution = control.Text;
+                }
+            }
 
             System.Diagnostics.Process.Start(@"https://www.google.com/search?q=wallpaper+" + resolution);
         }

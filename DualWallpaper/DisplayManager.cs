@@ -9,7 +9,7 @@ namespace WallpaperManager
         /// <summary>
         /// Represents real screen scale.
         /// </summary>
-        private readonly int scale = 21;
+        private readonly int scale = 14;
 
         /// <summary>
         /// Space between drawn displays.
@@ -24,14 +24,16 @@ namespace WallpaperManager
         /// <param name="width">Width.</param>
         /// <param name="height">Height.</param>
         /// <returns>PictureBox.</returns>
-        private PictureBox CreateDisplay(Screen screen, int width, int height, string text, Panel panel, Button searchBtn, Button applyBtn, Button cancelBtn)
+        private PictureBox CreateDisplay(Screen screen, Panel panel, Button searchBtn, Button applyBtn, Button cancelBtn, int width, int height, string text, string deviceName, string resolution)
         {
             var pictureBox = new PictureBox
             {
-                Name = screen.DeviceName.Replace(@"\.", "").Replace(@"\", "").ToLower(),
+                //Name = screen.DeviceName.Replace(@"\.", "").Replace(@"\", "").ToLower(),
+                Name = deviceName,
                 Size = new Size(width, height),
                 BackColor = Color.LightGray,
-                BorderStyle = BorderStyle.FixedSingle
+                BorderStyle = BorderStyle.FixedSingle,
+                Tag = resolution
             };
             pictureBox.Paint += new PaintEventHandler((sender, e) => DisplayEventHandler.draw_Label(sender, e, text));
             pictureBox.MouseClick += new MouseEventHandler((sender, e) => DisplayEventHandler.display_SingleClick(sender, e, Screen.AllScreens, panel, searchBtn));
@@ -64,9 +66,15 @@ namespace WallpaperManager
                 // Draw Single Display
 
                 Screen screen = null;
+                string resolution = string.Empty;
                 if (Screen.AllScreens[0].Primary)
                 {
                     screen = Screen.AllScreens[0];
+                    // this will be wrong but for now... it requires to know exavct screens positions to each other...
+                    int width = Screen.AllScreens[0].Bounds.Width + Screen.AllScreens[1].Bounds.Width;
+                    int height = Screen.AllScreens[1].Bounds.Height;
+                    resolution = $"{width} x {height}";
+
                 }
                 else
                 {
@@ -82,7 +90,12 @@ namespace WallpaperManager
                 int displayCenterY = scaledScreenHeight / 2;
 
                 string text = "1 | 2";
-                PictureBox display = this.CreateDisplay(screen, scaledScreenWidth, scaledScreenHeight, text, panel, searchBtn, applyBtn, cancelBtn);
+                string deviceName = "mergedDisplay";
+
+
+                
+
+                PictureBox display = this.CreateDisplay(screen, panel, searchBtn, applyBtn, cancelBtn, scaledScreenWidth, scaledScreenHeight, text, deviceName, resolution);
 
                 display.Location = new Point(parentContainerMiddleWidth - displayCenterX, parentContainerMiddleHeight - displayCenterY);
                 pictureBoxes.Add(display);
@@ -106,7 +119,11 @@ namespace WallpaperManager
                     int displayCenterY = scaledScreenHeight / 2;
 
                     string text = screen.DeviceName.Replace(@"\.", "").Replace(@"\", "").ToLower().Replace(@"display", "");
-                    PictureBox display = this.CreateDisplay(screen, scaledScreenWidth, scaledScreenHeight, text, panel, searchBtn, applyBtn, cancelBtn);
+                    string deviceName = screen.DeviceName.Replace(@"\.", "").Replace(@"\", "").ToLower();
+
+                    string resolution = $"{screen.Bounds.Width} x {screen.Bounds.Height}"; ;
+
+                    PictureBox display = this.CreateDisplay(screen, panel, searchBtn, applyBtn, cancelBtn, scaledScreenWidth, scaledScreenHeight, text, deviceName, resolution);
 
 
                     if (screen.Primary)

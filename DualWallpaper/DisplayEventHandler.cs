@@ -20,7 +20,6 @@ namespace WallpaperManager
 
             e.Graphics.TextRenderingHint = System.Drawing.Text.TextRenderingHint.ClearTypeGridFit;
 
-            //string text = display.Name.Replace(@"display", "");
             Font font = new Font("Segoe UI", 40);
 
             SizeF textSize = e.Graphics.MeasureString(text, font);
@@ -78,6 +77,14 @@ namespace WallpaperManager
 
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="sender">Picture Box</param>
+        /// <param name="e"></param>
+        /// <param name="screens">Connected monitors (peripherals)</param>
+        /// <param name="panel">freeSpaceArea</param>
+        /// <param name="button">search button</param>
         public static void display_SingleClick(object sender, MouseEventArgs e, Screen[] screens, Panel panel, Button button)
         {
             // change button visisbility to true
@@ -95,7 +102,6 @@ namespace WallpaperManager
                 panel.Controls.Remove(lbl);
             }
 
-
             // add label to each click picturebox with its resoultion, remove old label
             Label label = new Label();
             label.Font = new Font("Segoe UI", 14);
@@ -103,16 +109,7 @@ namespace WallpaperManager
             label.Location = new Point(pictureBox.Bounds.Location.X, pictureBox.Bounds.Location.Y - 50);
             label.Name = $"{pictureBox.Name}";
             label.Tag = "resolution";
-            
-            // decorate label with resolution text
-            if (pictureBox.Name == "display1")
-            {
-                label.Text = $"{screens[0].Bounds.Width} x {screens[0].Bounds.Height}";
-            }
-            else if (pictureBox.Name == "display2")
-            {
-                label.Text = $"{screens[1].Bounds.Width} x {screens[1].Bounds.Height}";
-            }
+            label.Text = pictureBox.Tag.ToString();
 
             panel.Controls.Add(label);
 

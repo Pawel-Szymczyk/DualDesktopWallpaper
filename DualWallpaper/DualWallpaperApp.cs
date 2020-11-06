@@ -91,18 +91,12 @@ namespace WallpaperManager
 
             if (this.mergeBtn.Checked)
             {
-                this.freeSpaceArea.Controls.Clear();
-
                 this.DrawDisplays(true);
             }
             else
             {
-                this.freeSpaceArea.Controls.Clear();
-
                 this.DrawDisplays(false);
             }
-
-
         }
 
 
@@ -110,13 +104,15 @@ namespace WallpaperManager
         // -------------------------------------------------------------------
 
         /// <summary>
-        /// 
+        /// Dynamically draw displays.
         /// </summary>
-        /// <param name="DrawSingleDisplay"></param>
+        /// <param name="DrawSingleDisplay">True, if we want to draw single monitor, otherwise false.</param>
         private void DrawDisplays(bool DrawSingleDisplay)
         {
+            this.freeSpaceArea.Controls.Clear();
             this.applyBtn.Visible = false;
             this.cancelBtn.Visible = false;
+            this.searchBtn.Visible = false;
 
             List<PictureBox> displays = new DisplayManager().DrawDisplays(
                     DrawSingleDisplay,
@@ -145,14 +141,15 @@ namespace WallpaperManager
             for (int i = 1; i <= text.Length; i += 1)
             {
                 text = text.Insert(i, " ");
-
                 i++;
             }
 
             this.versionLbl.Text = text;
         }
 
-
+        /// <summary>
+        /// Hide form controles.
+        /// </summary>
         private void HideControls()
         {
             // Hides search button and resolution labels.
