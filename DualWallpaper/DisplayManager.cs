@@ -4,12 +4,36 @@ using System.Windows.Forms;
 
 namespace WallpaperManager
 {
+    /// <summary>
+    /// Responsible for drawing displays in the application
+    /// </summary>
     public class DisplayManager
     {
         /// <summary>
         /// Represents real screen scale.
         /// </summary>
-        private readonly int scale = 14;
+        private int scale = 14;
+
+        private int Scale
+        {
+            get
+            {
+                // this is not fully working scale, this solution is not working in call case scenarios 
+                // but for main scenarion this solution is good enough
+                // TODO: dynamic scale (future)
+
+                if ((Screen.AllScreens[1].Bounds.X >= 0 && Screen.AllScreens[1].Bounds.Y < 0)
+                || (Screen.AllScreens[1].Bounds.X >= 0 && Screen.AllScreens[1].Bounds.Y >= Screen.AllScreens[0].Bounds.Height))
+                {
+                    // top or bottom
+                    return 22;
+                }
+
+                return this.scale;
+
+            }
+            set => this.scale = value;
+        }
 
         /// <summary>
         /// Space between drawn displays.
@@ -24,16 +48,15 @@ namespace WallpaperManager
         /// <param name="width">Width.</param>
         /// <param name="height">Height.</param>
         /// <returns>PictureBox.</returns>
-        private PictureBox CreateDisplay(Screen screen, Panel panel, Button searchBtn, Button applyBtn, Button cancelBtn, int width, int height, string text, string deviceName, string resolution)
+        private PictureBox DrawDisplay(Screen screen, Panel panel, Button searchBtn, Button applyBtn, Button cancelBtn, int width, int height, string text, string deviceName, string resolution)
         {
             var pictureBox = new PictureBox
             {
-                //Name = screen.DeviceName.Replace(@"\.", "").Replace(@"\", "").ToLower(),
                 Name = deviceName,
                 Size = new Size(width, height),
                 BackColor = Color.LightGray,
                 BorderStyle = BorderStyle.FixedSingle,
-                Tag = resolution
+                Text = resolution
             };
             pictureBox.Paint += new PaintEventHandler((sender, e) => DisplayEventHandler.draw_Label(sender, e, text));
             pictureBox.MouseClick += new MouseEventHandler((sender, e) => DisplayEventHandler.display_SingleClick(sender, e, Screen.AllScreens, panel, searchBtn));
@@ -57,13 +80,15 @@ namespace WallpaperManager
         /// <param name="panel">Parent panel.</param>
         /// <param name="searchBtn">Search button.</param>
         /// <returns>List of ready to display picture boxes.</returns>
-        public List<PictureBox> DrawDisplays(bool drawSingleDiplay, int parentContainerMiddleWidth, int parentContainerMiddleHeight, Panel panel, Button searchBtn, Button applyBtn, Button cancelBtn)
+        public List<PictureBox> ShowDisplays(bool drawSingleDiplay, int parentContainerMiddleWidth, int parentContainerMiddleHeight, Panel panel, Button searchBtn, Button applyBtn, Button cancelBtn)
         {
             var pictureBoxes = new List<PictureBox>();
 
             if (drawSingleDiplay)
             {
                 // Draw Single Display
+
+                // here the scale should be left default...
 
                 Screen screen = null;
                 string resolution = string.Empty;
@@ -82,8 +107,8 @@ namespace WallpaperManager
                 }
 
                 // actual screen scaled size
-                int scaledScreenHeight = screen.Bounds.Size.Height / this.scale;
-                int scaledScreenWidth = (screen.Bounds.Size.Width / this.scale);
+                int scaledScreenHeight = screen.Bounds.Size.Height / this.Scale;
+                int scaledScreenWidth = (screen.Bounds.Size.Width / this.Scale);
 
                 // center of actual screen
                 int displayCenterX = scaledScreenWidth / 2;
@@ -92,10 +117,7 @@ namespace WallpaperManager
                 string text = "1 | 2";
                 string deviceName = "mergedDisplay";
 
-
-                
-
-                PictureBox display = this.CreateDisplay(screen, panel, searchBtn, applyBtn, cancelBtn, scaledScreenWidth, scaledScreenHeight, text, deviceName, resolution);
+                PictureBox display = this.DrawDisplay(screen, panel, searchBtn, applyBtn, cancelBtn, scaledScreenWidth, scaledScreenHeight, text, deviceName, resolution);
 
                 display.Location = new Point(parentContainerMiddleWidth - displayCenterX, parentContainerMiddleHeight - displayCenterY);
                 pictureBoxes.Add(display);
@@ -104,15 +126,15 @@ namespace WallpaperManager
             {
                 // Draw Multiple Displays
 
-
-
                 var realDisplayOneShiftLocation = new Point();
 
                 foreach (Screen screen in Screen.AllScreens)
                 {
+
+
                     // actual screen scaled size
-                    int scaledScreenHeight = screen.Bounds.Size.Height / this.scale;
-                    int scaledScreenWidth = (screen.Bounds.Size.Width / this.scale);
+                    int scaledScreenHeight = screen.Bounds.Size.Height / this.Scale;
+                    int scaledScreenWidth = (screen.Bounds.Size.Width / this.Scale);
 
                     // center of actual screen
                     int displayCenterX = scaledScreenWidth / 2;
@@ -123,7 +145,9 @@ namespace WallpaperManager
 
                     string resolution = $"{screen.Bounds.Width} x {screen.Bounds.Height}"; ;
 
-                    PictureBox display = this.CreateDisplay(screen, panel, searchBtn, applyBtn, cancelBtn, scaledScreenWidth, scaledScreenHeight, text, deviceName, resolution);
+
+
+                    PictureBox display = this.DrawDisplay(screen, panel, searchBtn, applyBtn, cancelBtn, scaledScreenWidth, scaledScreenHeight, text, deviceName, resolution);
 
 
                     if (screen.Primary)
@@ -140,33 +164,28 @@ namespace WallpaperManager
                         if (screen.Bounds.X < 0)
                         {
                             // left side
-
-                            x = realDisplayOneShiftLocation.X - (screen.Bounds.Width / this.scale) - this.margin;
-                            y = realDisplayOneShiftLocation.Y + (screen.Bounds.Y / this.scale);
+                            x = realDisplayOneShiftLocation.X - (screen.Bounds.Width / this.Scale) - this.margin;
+                            y = realDisplayOneShiftLocation.Y + (screen.Bounds.Y / this.Scale);
                         }
                         else if (screen.Bounds.X >= 0 && screen.Bounds.Y < 0)
                         {
                             // top
-
-                            y = realDisplayOneShiftLocation.Y + (screen.Bounds.Y / this.scale) - this.margin;
-                            x = realDisplayOneShiftLocation.X + (screen.Bounds.X / this.scale);
+                            y = realDisplayOneShiftLocation.Y + (screen.Bounds.Y / this.Scale) - this.margin;
+                            x = realDisplayOneShiftLocation.X + (screen.Bounds.X / this.Scale);
 
                         }
                         else if (screen.Bounds.X >= 0 && screen.Bounds.Y >= Screen.AllScreens[0].Bounds.Height)
                         {
                             // bottom
-
-                            y = realDisplayOneShiftLocation.Y + (Screen.AllScreens[0].Bounds.Height / this.scale) + this.margin;
-                            x = realDisplayOneShiftLocation.X + (screen.Bounds.X / this.scale);
+                            y = realDisplayOneShiftLocation.Y + (Screen.AllScreens[0].Bounds.Height / this.Scale) + this.margin;
+                            x = realDisplayOneShiftLocation.X + (screen.Bounds.X / this.Scale);
                         }
                         else
                         {
                             // right 
-
-                            x = realDisplayOneShiftLocation.X + (Screen.AllScreens[0].Bounds.Width / this.scale) + this.margin;
-                            y = realDisplayOneShiftLocation.Y + (screen.Bounds.Y / this.scale);
+                            x = realDisplayOneShiftLocation.X + (Screen.AllScreens[0].Bounds.Width / this.Scale) + this.margin;
+                            y = realDisplayOneShiftLocation.Y + (screen.Bounds.Y / this.Scale);
                         }
-
 
                         display.Location = new Point(x, y);
                     }
@@ -174,17 +193,9 @@ namespace WallpaperManager
                     pictureBoxes.Add(display);
                 }
 
-
             }
             return pictureBoxes;
         }
-
-
-
-        
-
-
-
 
 
     }

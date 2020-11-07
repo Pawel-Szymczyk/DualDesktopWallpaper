@@ -46,7 +46,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Browser.cs" />
+    <Compile Include="Search.cs" />
     <Compile Include="DisplayManager.cs" />
     <Compile Include="DisplayEventHandler.cs" />
     <Compile Include="DisplayIdentity.cs" />
@@ -59,7 +59,7 @@
     </Compile>
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="WallpaperManager.cs" />
+    <Compile Include="BackgroundManager.cs" />
     <EmbeddedResource Include="DualWallpaperApp.resx">
       <DependentUpon>DualWallpaperApp.cs</DependentUpon>
     </EmbeddedResource>

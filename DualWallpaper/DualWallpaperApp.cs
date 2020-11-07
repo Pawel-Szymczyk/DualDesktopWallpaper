@@ -39,7 +39,7 @@ namespace WallpaperManager
         }
 
         /// <summary>
-        /// Hide controls and blank out freeSpaceArea on mouse single click.
+        /// Hide controls and blank out wall on mouse single click.
         /// </summary>
         private void DualWallpaperApp_MouseClick(object sender, MouseEventArgs e)
         {
@@ -57,7 +57,7 @@ namespace WallpaperManager
 
         private void searchBtn_Click(object sender, EventArgs e)
         {
-            Browser.SearchForWallpapers(this.freeSpaceArea);
+            Search.GetBackgrounds(this.wall);
         }
 
         private async void identifyBtn_Click(object sender, EventArgs e)
@@ -69,7 +69,7 @@ namespace WallpaperManager
         // Merge images and store them in the windows registry.
         private void applyBtn_Click(object sender, EventArgs e)
         {
-            WallpaperManager.SetWallpaper(this.freeSpaceArea, this.mergeBtn);
+            BackgroundManager.SetBackground(this.wall, this.mergeBtn);
 
             this.HideControls();
         }
@@ -77,7 +77,7 @@ namespace WallpaperManager
         private void cancelBtn_Click(object sender, EventArgs e)
         {
             // clear images from pictureboxes
-            WallpaperManager.CleanWallpapers(this.freeSpaceArea);
+            BackgroundManager.CleanWallpapers(this.wall);
 
             this.HideControls();
         }
@@ -106,26 +106,26 @@ namespace WallpaperManager
         /// <summary>
         /// Dynamically draw displays.
         /// </summary>
-        /// <param name="DrawSingleDisplay">True, if we want to draw single monitor, otherwise false.</param>
-        private void DrawDisplays(bool DrawSingleDisplay)
+        /// <param name="ShowSingleDisplay">True, if we want to show single monitor, otherwise false.</param>
+        private void DrawDisplays(bool ShowSingleDisplay)
         {
-            this.freeSpaceArea.Controls.Clear();
+            this.wall.Controls.Clear();
             this.applyBtn.Visible = false;
             this.cancelBtn.Visible = false;
             this.searchBtn.Visible = false;
 
-            List<PictureBox> displays = new DisplayManager().DrawDisplays(
-                    DrawSingleDisplay,
-                    this.freeSpaceArea.Bounds.Width / 2,
-                    this.freeSpaceArea.Bounds.Height / 2,
-                    this.freeSpaceArea,
+            List<PictureBox> displays = new DisplayManager().ShowDisplays(
+                    ShowSingleDisplay,
+                    this.wall.Bounds.Width / 2,
+                    this.wall.Bounds.Height / 2,
+                    this.wall,
                     this.searchBtn,
                     this.applyBtn,
                     this.cancelBtn);
 
             foreach (PictureBox display in displays)
             {
-                this.freeSpaceArea.Controls.Add(display);
+                this.wall.Controls.Add(display);
             }
         }
 
@@ -157,13 +157,13 @@ namespace WallpaperManager
             this.applyBtn.Visible = false;
             this.cancelBtn.Visible = false;
 
-            var resolutionLabels = this.freeSpaceArea.Controls.OfType<Label>()
+            var resolutionLabels = this.wall.Controls.OfType<Label>()
                 .Where(c => c.Tag != null && c.Tag.ToString() == "resolution")
                 .ToList();
 
             foreach (Label lbl in resolutionLabels)
             {
-                this.freeSpaceArea.Controls.Remove(lbl);
+                this.wall.Controls.Remove(lbl);
             }
         }
 

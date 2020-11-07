@@ -31,7 +31,7 @@
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(DualWallpaperApp));
             this.detectScreenBtn = new System.Windows.Forms.Button();
             this.applyBtn = new System.Windows.Forms.Button();
-            this.freeSpaceArea = new System.Windows.Forms.Panel();
+            this.wall = new System.Windows.Forms.Panel();
             this.label1 = new System.Windows.Forms.Label();
             this.label2 = new System.Windows.Forms.Label();
             this.label3 = new System.Windows.Forms.Label();
@@ -72,14 +72,14 @@
             this.applyBtn.Visible = false;
             this.applyBtn.Click += new System.EventHandler(this.applyBtn_Click);
             // 
-            // freeSpaceArea
+            // wall
             // 
-            this.freeSpaceArea.BackColor = System.Drawing.Color.WhiteSmoke;
-            this.freeSpaceArea.Location = new System.Drawing.Point(29, 178);
-            this.freeSpaceArea.Margin = new System.Windows.Forms.Padding(20, 3, 20, 3);
-            this.freeSpaceArea.Name = "freeSpaceArea";
-            this.freeSpaceArea.Size = new System.Drawing.Size(720, 260);
-            this.freeSpaceArea.TabIndex = 7;
+            this.wall.BackColor = System.Drawing.Color.WhiteSmoke;
+            this.wall.Location = new System.Drawing.Point(29, 178);
+            this.wall.Margin = new System.Windows.Forms.Padding(20, 3, 20, 3);
+            this.wall.Name = "wall";
+            this.wall.Size = new System.Drawing.Size(720, 260);
+            this.wall.TabIndex = 7;
             // 
             // label1
             // 
@@ -216,7 +216,7 @@
             this.Controls.Add(this.label3);
             this.Controls.Add(this.label2);
             this.Controls.Add(this.label1);
-            this.Controls.Add(this.freeSpaceArea);
+            this.Controls.Add(this.wall);
             this.Controls.Add(this.applyBtn);
             this.Controls.Add(this.detectScreenBtn);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
@@ -233,7 +233,7 @@
 
         private System.Windows.Forms.Button detectScreenBtn;
         private System.Windows.Forms.Button applyBtn;
-        private System.Windows.Forms.Panel freeSpaceArea;
+        private System.Windows.Forms.Panel wall;
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.Label label3;
