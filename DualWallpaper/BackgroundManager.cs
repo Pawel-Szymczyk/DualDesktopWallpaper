@@ -49,6 +49,30 @@ namespace WallpaperManager
         /// Difault position of the 2md display.
         /// </summary>
         private static string defaultLayout = "right";
+        private static string DefaultLayout 
+        {
+            get 
+            {
+                var screens = Screen.AllScreens;
+
+                if (screens[1].Bounds.X < 0)
+                {
+                    return "left";
+                }
+                else if (screens[1].Bounds.X >= 0 && screens[1].Bounds.Y < 0)
+                {
+                    return "top";
+                }
+                else if (screens[1].Bounds.X >= 0 && screens[1].Bounds.Y >= Screen.AllScreens[0].Bounds.Height)
+                {
+                    return "bottom";
+                }
+                else
+                {
+                    return "right";
+                }
+            }
+        }
 
 
 
@@ -56,42 +80,59 @@ namespace WallpaperManager
         /// <summary>
         /// Combine two images into one and return it in form of bitmap.
         /// </summary>
-        /// <param name="firstImage">Image 1.</param>
-        /// <param name="secondImage">Image 2.</param>
+        /// <param name="images">List of images.</param>
         /// <param name="screens">Array of physical screens.</param>
         /// <returns>Bitmap.</returns>
-        //public static Bitmap MergePictures(Image firstImage, Image secondImage, Screen[] screens, string wallpaper2Side)
         public static Bitmap MergePictures(List<Image> images, Screen[] screens, string layout)
         {
             int outputImageWidth = 0;
             int outputImageHeight = 0;
 
-            // get total height and width of the picture, depends on the layout.
+            // -------------------------------------------------------------------------
+            // Define total height and width of the picture, depends on the layout.
+            //
             if (layout == "top" || layout == "bottom")
             {
-                outputImageWidth = images[0].Width > images[1].Width ? images[0].Width : images[1].Width;
                 outputImageHeight = images.Sum(i => i.Height);
+                
+                if (screens[1].Bounds.X + screens[1].Bounds.Width > screens[0].Bounds.Width) 
+                {
+                    var difference = images[0].Width - screens[1].Bounds.X ;
+                    outputImageWidth = images[0].Width + images[1].Width - difference;
+                }
+                else
+                {
+                    outputImageWidth = images[0].Width > images[1].Width ? images[0].Width : images[1].Width;
+                }
             }
             else if (layout == "right" || layout == "left")
             {
                 outputImageWidth = images.Sum(i => i.Width);
 
                 // when second image is upper than primary, it has negative Y value.
-                if (screens[1].Bounds.Y < 0) 
+                if (screens[1].Bounds.Top < 0)
                 {
                     outputImageHeight = images[0].Height + images[1].Height - screens[1].Bounds.Bottom;
                 }
                 // when second image is lower than primary, it has positve Y value.
                 else
                 {
-                    outputImageHeight = images[0].Height > images[1].Height ? images[0].Height + screens[1].Bounds.Y : images[1].Height + screens[1].Bounds.Y;
+                    outputImageHeight = images[0].Height > images[1].Height ? images[0].Height + screens[1].Bounds.Top : images[1].Height + screens[1].Bounds.Top;
+                }
+
+                // special case, where top is negative but bottom is grater than primarys' height
+                if (screens[1].Bounds.Top < 0 && screens[1].Bounds.Bottom > images[0].Height)
+                {
+                    outputImageHeight = images[0].Height > images[1].Height ? images[0].Height : images[1].Height;
                 }
             }
 
             Bitmap outputImage = new Bitmap(outputImageWidth, outputImageHeight, PixelFormat.Format32bppArgb);
 
 
-            // draw image based on the layout
+            // -------------------------------------------------------------------------
+            // Draw image based on the layout
+            //
             using (var graphics = Graphics.FromImage(outputImage))
             {
                 graphics.Clear(Color.Transparent);
@@ -99,7 +140,7 @@ namespace WallpaperManager
                 switch (layout)
                 {
                     case "right":
-                        if (screens[1].Bounds.Y < 0)
+                        if (screens[1].Bounds.Top < 0)
                         {
                             // when second image has nagative y value, then it should be tread as image 1 having starting point as (x, 0).
                             graphics.DrawImage(
@@ -114,7 +155,8 @@ namespace WallpaperManager
                                 new Rectangle(new Point(), images[0].Size), 
                                 GraphicsUnit.Pixel);
                         }
-                        else {
+                        else 
+                        {
                             graphics.DrawImage(
                                 images[0], 
                                 new Rectangle(new Point(), images[0].Size), 
@@ -128,101 +170,73 @@ namespace WallpaperManager
                                 GraphicsUnit.Pixel);
                         }
                         break;
+
                     case "left":
+                        if (screens[1].Bounds.Top < 0)
+                        {
+                            graphics.DrawImage(
+                                images[1],
+                                new Rectangle(new Point(), images[1].Size),
+                                new Rectangle(new Point(), images[1].Size),
+                                GraphicsUnit.Pixel);
+
+                            graphics.DrawImage(
+                                images[0],
+                                new Rectangle(new Point(images[1].Width, images[1].Height - screens[1].Bounds.Bottom), images[0].Size),
+                                new Rectangle(new Point(), images[0].Size),
+                                GraphicsUnit.Pixel);
+                        }
+                        else
+                        {
+                            graphics.DrawImage(
+                                images[1],
+                                new Rectangle(new Point(0, screens[1].Bounds.Y), images[1].Size),
+                                new Rectangle(new Point(), images[1].Size),
+                                GraphicsUnit.Pixel);
+
+                            graphics.DrawImage(
+                                images[0],
+                                new Rectangle(new Point(images[1].Width, 0), images[0].Size),
+                                new Rectangle(new Point(), images[0].Size),
+                                GraphicsUnit.Pixel);
+
+                            //special case
+                            // where image is in left bottom corner, lack of good solution at the moment
+                        }
                         break;
+
                     case "top":
+                        graphics.DrawImage(
+                            images[1],
+                            new Rectangle(new Point(screens[1].Bounds.X, 0), images[1].Size),
+                            new Rectangle(new Point(), images[1].Size),
+                            GraphicsUnit.Pixel);
+
+                        graphics.DrawImage(
+                                images[0],
+                                new Rectangle(new Point(0, screens[1].Bounds.Height), images[0].Size),
+                                new Rectangle(new Point(), images[0].Size),
+                                GraphicsUnit.Pixel);
                         break;
+
                     case "bottom":
+                        graphics.DrawImage(
+                            images[0],
+                            new Rectangle(new Point(), images[0].Size),
+                            new Rectangle(new Point(), images[0].Size),
+                            GraphicsUnit.Pixel);
+
+                        graphics.DrawImage(
+                           images[1],
+                           new Rectangle(new Point(screens[1].Bounds.X, screens[0].Bounds.Height), images[1].Size),
+                           new Rectangle(new Point(), images[1].Size),
+                           GraphicsUnit.Pixel);
                         break;
+
                     default:
                         break;
                 }
             }
-
-
-
-
-
-            // it should be list of pictures instead of separated images objects
-            // TODO: merge image depends on wallpapers positions 
-
-            // if wallpaper2 is on right on left use exisitng code on width and height
-            // else new code requried
-
-            // in the case of second part of code it requiers 4 statemnst checking which monitor is first 
-
-            // TODO:
-            // later addiotional check will be required, in the case 
-            // when you first change wallpapers and then you will rearange wallpapers sides
-
-            // first screen is a PRIMARY screen.
-            //var firstScreen = screens[0];
-            //var secondScreen = screens[1];
-
-            //int outputImageWidth = 0;
-            //int outputImageHeight = 0;
-            //Bitmap outputImage = null;
-
-            //if (wallpaper2Side == "left" || wallpaper2Side == "right")
-            //{
-            //    outputImageWidth = firstImage.Width + secondImage.Width;
-            //    outputImageHeight = firstImage.Height > secondImage.Height ? firstImage.Height : secondImage.Height;
-
-            //    outputImage = new Bitmap(outputImageWidth, outputImageHeight, PixelFormat.Format32bppArgb);
-
-            //    // TODO : replace 0 and new point() with actual y position 
-            //    if (wallpaper2Side == "right")
-            //    {
-            //        using (var graphics = Graphics.FromImage(outputImage))
-            //        {
-            //            graphics.Clear(Color.Transparent);
-            //            graphics.DrawImage(firstImage, new Rectangle(new Point(), firstImage.Size), new Rectangle(new Point(), firstImage.Size), GraphicsUnit.Pixel);
-            //            graphics.DrawImage(secondImage, new Rectangle(new Point(firstImage.Width, 0), secondImage.Size), new Rectangle(new Point(), secondImage.Size), GraphicsUnit.Pixel);
-            //        }
-            //    }
-            //    else if (wallpaper2Side == "left")
-            //    {
-            //        using (var graphics = Graphics.FromImage(outputImage))
-            //        {
-            //            graphics.Clear(Color.Transparent);
-            //            graphics.DrawImage(secondImage, new Rectangle(new Point(), secondImage.Size), new Rectangle(new Point(), secondImage.Size), GraphicsUnit.Pixel);
-            //            graphics.DrawImage(firstImage, new Rectangle(new Point(secondImage.Width, 0), firstImage.Size), new Rectangle(new Point(), firstImage.Size), GraphicsUnit.Pixel);
-            //        }
-            //    }
-            //}
-            //else if (wallpaper2Side == "top" || wallpaper2Side == "bottom")
-            //{
-            //    outputImageWidth = firstImage.Width > secondImage.Width ? firstImage.Width : secondImage.Width;
-            //    outputImageHeight = firstImage.Height + secondImage.Height;
-
-            //    outputImage = new Bitmap(outputImageWidth, outputImageHeight, PixelFormat.Format32bppArgb);
-
-            //    if (wallpaper2Side == "top")
-            //    {
-            //        using (var graphics = Graphics.FromImage(outputImage))
-            //        {
-
-
-
-            //            graphics.Clear(Color.Transparent);
-            //            graphics.DrawImage(secondImage, new Rectangle(new Point(secondScreen.Bounds.X, 0), secondImage.Size), new Rectangle(new Point(), secondImage.Size), GraphicsUnit.Pixel);
-            //            graphics.DrawImage(firstImage, new Rectangle(new Point(0, secondScreen.Bounds.Height), firstImage.Size), new Rectangle(new Point(), firstImage.Size), GraphicsUnit.Pixel);
-
-            //            //graphics.DrawImage(firstImage, new Rectangle(new Point(), firstImage.Size), new Rectangle(new Point(), firstImage.Size), GraphicsUnit.Pixel);
-            //            //graphics.DrawImage(secondImage, new Rectangle(new Point(firstImage.Width, 0), secondImage.Size), new Rectangle(new Point(), secondImage.Size), GraphicsUnit.Pixel);
-            //        }
-            //    }
-            //    else if (wallpaper2Side == "bottom")
-            //    {
-            //        using (var graphics = Graphics.FromImage(outputImage))
-            //        {
-            //            graphics.Clear(Color.Transparent);
-            //            // graphics.DrawImage(secondImage, new Rectangle(new Point(firstImage.Width, 0), secondImage.Size), new Rectangle(new Point(), secondImage.Size), GraphicsUnit.Pixel);
-            //            // graphics.DrawImage(firstImage, new Rectangle(new Point(), firstImage.Size), new Rectangle(new Point(), firstImage.Size), GraphicsUnit.Pixel);
-            //        }
-            //    }
-            //}
-
 
             return outputImage;
         }
@@ -324,8 +338,7 @@ namespace WallpaperManager
                 }
                 else
                 {
-                    //bm = BackgroundManager.MergePictures(img1, img2, Screen.AllScreens, defaultPosition);
-                    bm = BackgroundManager.MergePictures(images, Screen.AllScreens, defaultLayout);
+                    bm = BackgroundManager.MergePictures(images, Screen.AllScreens, DefaultLayout);
                     BackgroundManager.SaveBackground(bm, "0", "1");
                 }
 
