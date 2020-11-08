@@ -222,6 +222,7 @@
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.Name = "DualWallpaperApp";
+            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Load += new System.EventHandler(this.DualWallpaperApp_Load);
             this.MouseClick += new System.Windows.Forms.MouseEventHandler(this.DualWallpaperApp_MouseClick);
             this.ResumeLayout(false);
