@@ -172,6 +172,8 @@ namespace WallpaperManager
                             // top
                             y = realDisplayOneShiftLocation.Y + (screen.Bounds.Y / this.Scale) - this.margin;
                             x = realDisplayOneShiftLocation.X + (screen.Bounds.X / this.Scale);
+                            //y = 0;
+                            //x = 0;
 
                         }
                         else if (screen.Bounds.X >= 0 && screen.Bounds.Y >= Screen.AllScreens[0].Bounds.Height)
