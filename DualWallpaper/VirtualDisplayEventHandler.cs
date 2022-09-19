@@ -6,7 +6,7 @@ using System.Windows.Forms;
 
 namespace WallpaperManager
 {
-    public static class DisplayEventHandler
+    public static class VirtualDisplayEventHandler
     {
 
         /// <summary>

@@ -52,7 +52,7 @@ namespace DualWallpaper
         /// <param name="text"></param>
         public void AddLabel(PictureBox pictureBox, string text)
         {
-            pictureBox.Paint += new PaintEventHandler((sender, e) => DisplayEventHandler.DrawLabel(sender, e, text));
+            pictureBox.Paint += new PaintEventHandler((sender, e) => VirtualDisplayEventHandler.DrawLabel(sender, e, text));
         }
 
         /// <summary>
@@ -63,7 +63,7 @@ namespace DualWallpaper
         /// <param name="searchBtn"></param>
         public void AddSingleClick(PictureBox pictureBox, Panel panel, Button searchBtn)
         {
-            pictureBox.MouseClick += new MouseEventHandler((sender, e) => DisplayEventHandler.DisplaySingleClick(sender, e, Screen.AllScreens, panel, searchBtn));
+            pictureBox.MouseClick += new MouseEventHandler((sender, e) => VirtualDisplayEventHandler.DisplaySingleClick(sender, e, Screen.AllScreens, panel, searchBtn));
         }
 
         /// <summary>
@@ -75,7 +75,7 @@ namespace DualWallpaper
         /// <param name="cancelBtn"></param>
         public void AddDoubleClick(PictureBox pictureBox, Panel panel, Button applyBtn, Button cancelBtn)
         {
-            pictureBox.MouseDoubleClick += new MouseEventHandler((sender, e) => DisplayEventHandler.DisplayDoubleClick(sender, e, panel, applyBtn, cancelBtn));
+            pictureBox.MouseDoubleClick += new MouseEventHandler((sender, e) => VirtualDisplayEventHandler.DisplayDoubleClick(sender, e, panel, applyBtn, cancelBtn));
         }
     }
 }

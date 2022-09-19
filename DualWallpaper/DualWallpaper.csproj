@@ -71,7 +71,7 @@
     <Compile Include="Interfaces\IVirtualDisplay.cs" />
     <Compile Include="Interfaces\IVirtualDisplayManager.cs" />
     <Compile Include="Search.cs" />
-    <Compile Include="DisplayEventHandler.cs" />
+    <Compile Include="VirtualDisplayEventHandler.cs" />
     <Compile Include="DisplayIdentity.cs" />
     <Compile Include="DropShadow.cs" />
     <Compile Include="DualWallpaperApp.cs">
