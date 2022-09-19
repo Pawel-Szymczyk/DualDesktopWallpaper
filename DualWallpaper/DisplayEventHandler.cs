@@ -12,7 +12,7 @@ namespace WallpaperManager
         /// <summary>
         /// Draws label which represents the display number.
         /// </summary>
-        internal static void draw_Label(object sender, PaintEventArgs e, string text)
+        internal static void DrawLabel(object sender, PaintEventArgs e, string text)
         {
             var display = (PictureBox)sender;
 
@@ -35,7 +35,7 @@ namespace WallpaperManager
         /// <summary>
         /// Pick image for monitor.
         /// </summary>
-        public static void display_DoubleClick(object sender, EventArgs e, Panel panel, Button applyBtn, Button cancelBtn)
+        public static void DisplayDoubleClick(object sender, EventArgs e, Panel panel, Button applyBtn, Button cancelBtn)
         {
             var pictureBox = (PictureBox)sender;
             var dialog = new OpenFileDialog();
@@ -85,7 +85,7 @@ namespace WallpaperManager
         /// <param name="screens">Connected monitors (peripherals)</param>
         /// <param name="panel">freeSpaceArea</param>
         /// <param name="button">search button</param>
-        public static void display_SingleClick(object sender, MouseEventArgs e, Screen[] screens, Panel panel, Button button)
+        public static void DisplaySingleClick(object sender, MouseEventArgs e, Screen[] screens, Panel panel, Button button)
         {
             var pictureBox = (PictureBox)sender;
 
@@ -112,10 +112,6 @@ namespace WallpaperManager
             // set search button to be visible
             button.Visible = true;
         }
-
-
-
-
 
     }
 }

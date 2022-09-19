@@ -58,9 +58,9 @@ namespace WallpaperManager
                 BorderStyle = BorderStyle.FixedSingle,
                 Text = resolution
             };
-            pictureBox.Paint += new PaintEventHandler((sender, e) => DisplayEventHandler.draw_Label(sender, e, text));
-            pictureBox.MouseClick += new MouseEventHandler((sender, e) => DisplayEventHandler.display_SingleClick(sender, e, Screen.AllScreens, panel, searchBtn));
-            pictureBox.MouseDoubleClick += new MouseEventHandler((sender, e) => DisplayEventHandler.display_DoubleClick(sender, e, panel, applyBtn, cancelBtn));
+            pictureBox.Paint += new PaintEventHandler((sender, e) => DisplayEventHandler.DrawLabel(sender, e, text));
+            pictureBox.MouseClick += new MouseEventHandler((sender, e) => DisplayEventHandler.DisplaySingleClick(sender, e, Screen.AllScreens, panel, searchBtn));
+            pictureBox.MouseDoubleClick += new MouseEventHandler((sender, e) => DisplayEventHandler.DisplayDoubleClick(sender, e, panel, applyBtn, cancelBtn));
 
             return pictureBox;
         }

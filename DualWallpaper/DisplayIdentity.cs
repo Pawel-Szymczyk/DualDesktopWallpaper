@@ -10,7 +10,7 @@ namespace WallpaperManager
 {
     public static class DisplayIdentity
     {
-        public static async Task<Form> DisplayIdentityBox(Screen screen, int monitor)
+        private static async Task<Form> DisplayIdentityBox(Screen screen, int monitor)
         {
 
             // ----------FORM--------------

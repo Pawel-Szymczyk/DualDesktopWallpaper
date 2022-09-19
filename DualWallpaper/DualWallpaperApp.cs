@@ -1,4 +1,5 @@
-﻿using System;
+﻿using DualWallpaper.Interfaces;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Windows.Forms;
@@ -103,6 +104,8 @@ namespace WallpaperManager
         #endregion
         // -------------------------------------------------------------------
 
+        private IVirtualDisplay virtualDisplay;
+
         /// <summary>
         /// Dynamically draw displays.
         /// </summary>
@@ -122,6 +125,8 @@ namespace WallpaperManager
                     this.searchBtn,
                     this.applyBtn,
                     this.cancelBtn);
+
+            //virtualDisplay.DrawDisplay();
 
             foreach (PictureBox display in displays)
             {

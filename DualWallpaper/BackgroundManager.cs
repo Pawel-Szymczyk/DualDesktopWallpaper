@@ -83,7 +83,7 @@ namespace WallpaperManager
         /// <param name="images">List of images.</param>
         /// <param name="screens">Array of physical screens.</param>
         /// <returns>Bitmap.</returns>
-        public static Bitmap MergePictures(List<Image> images, Screen[] screens, string layout)
+        private static Bitmap MergePictures(List<Image> images, Screen[] screens, string layout)
         {
             int outputImageWidth = 0;
             int outputImageHeight = 0;
@@ -242,7 +242,7 @@ namespace WallpaperManager
         }
 
 
-        public static Bitmap StretchBackground(Image firstImage, Screen[] screens)
+        private static Bitmap StretchBackground(Image firstImage, Screen[] screens)
         {
             var firstScreen = screens[0];
             var secondScreen = screens[1];
@@ -279,7 +279,7 @@ namespace WallpaperManager
         }
 
 
-        public static void SaveBackground(Bitmap bitmap, string wallpaperStyle, string tileWallpaper)
+        private static void SaveBackground(Bitmap bitmap, string wallpaperStyle, string tileWallpaper)
         {
             // store temporary image in appdata...
             var img = (Image)bitmap;

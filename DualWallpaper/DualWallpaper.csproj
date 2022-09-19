@@ -68,6 +68,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Interfaces\IVirtualDisplay.cs" />
     <Compile Include="Search.cs" />
     <Compile Include="DisplayManager.cs" />
     <Compile Include="DisplayEventHandler.cs" />
@@ -82,6 +83,7 @@
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="BackgroundManager.cs" />
+    <Compile Include="VirtualDisplay.cs" />
     <EmbeddedResource Include="DualWallpaperApp.resx">
       <DependentUpon>DualWallpaperApp.cs</DependentUpon>
     </EmbeddedResource>
@@ -111,9 +113,7 @@
   <ItemGroup>
     <Content Include="desktop.ico" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Interfaces\" />
-  </ItemGroup>
+  <ItemGroup />
   <ItemGroup>
     <BootstrapperPackage Include=".NETFramework,Version=v4.8">
       <Visible>False</Visible>
