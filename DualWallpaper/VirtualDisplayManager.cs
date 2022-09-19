@@ -24,14 +24,16 @@ namespace DualWallpaper
                 // but for main scenarion this solution is good enough
                 // TODO: dynamic scale (future)
 
-                if ((Screen.AllScreens[1].Bounds.X >= 0 && Screen.AllScreens[1].Bounds.Y < 0)
-                || (Screen.AllScreens[1].Bounds.X >= 0 && Screen.AllScreens[1].Bounds.Y >= Screen.AllScreens[0].Bounds.Height))
-                {
-                    // top or bottom
-                    return 22;
-                }
+                //if ((Screen.AllScreens[1].Bounds.X >= 0 && Screen.AllScreens[1].Bounds.Y < 0)
+                //|| (Screen.AllScreens[1].Bounds.X >= 0 && Screen.AllScreens[1].Bounds.Y >= Screen.AllScreens[0].Bounds.Height))
+                //{
+                //    // top or bottom
+                //    return 22;
+                //}
 
-                return this.scale;
+                //return this.scale;
+
+                return 15;
 
             }
             set => this.scale = value;
@@ -141,9 +143,13 @@ namespace DualWallpaper
 
             // Draw Multiple Displays
 
-            var realDisplayOneShiftLocation = new Point();
+           
 
-            foreach (Screen screen in Screen.AllScreens)
+            // get primary screen first
+            //Screen primaryScreen = Screen.AllScreens.FirstOrDefault(x => x.Primary.Equals(true));
+            var realDisplayOneShiftLocation = new Point();
+      
+            foreach (Screen screen in Screen.AllScreens.OrderByDescending(x => x.Primary == true))
             {
 
 
@@ -161,8 +167,6 @@ namespace DualWallpaper
                 string resolution = $"{screen.Bounds.Width} x {screen.Bounds.Height}"; ;
 
 
-
-                //PictureBox display = this.DrawDisplay(screen, panel, searchBtn, applyBtn, cancelBtn, scaledScreenWidth, scaledScreenHeight, text, deviceName, resolution);
                 // ---------------------------------------------------
                 // create virtual display
                 IVirtualDisplay virtualDisplay = new VirtualDisplay(scaledScreenWidth, scaledScreenHeight, deviceName, resolution);
@@ -176,6 +180,9 @@ namespace DualWallpaper
 
 
 
+                // --------------------------------------------------
+                // Position virtual display on panel...
+
                 if (screen.Primary)
                 {
                     realDisplayOneShiftLocation = new Point(parentContainerMiddleWidth - displayCenterX, parentContainerMiddleHeight - displayCenterY);
@@ -187,6 +194,8 @@ namespace DualWallpaper
                 {
                     int x = 0;
                     int y = 0;
+
+
                     if (screen.Bounds.X < 0)
                     {
                         // left side
@@ -197,9 +206,11 @@ namespace DualWallpaper
                     {
                         // top
                         y = realDisplayOneShiftLocation.Y + (screen.Bounds.Y / this.Scale) - this.margin;
-                        x = realDisplayOneShiftLocation.X + (screen.Bounds.X / this.Scale);
+
+                        var z = (screen.Bounds.X / this.Scale);
+                        x = realDisplayOneShiftLocation.X + z;
                         //y = 0;
-                        //x = 0;
+                        //x = 400;
 
                     }
                     else if (screen.Bounds.X >= 0 && screen.Bounds.Y >= Screen.AllScreens[0].Bounds.Height)

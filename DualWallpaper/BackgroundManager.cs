@@ -157,15 +157,19 @@ namespace WallpaperManager
                         }
                         else 
                         {
+                            // need to get max hight e,g. 1920 (H), height of monitor(h), equestion: (H-h)/2 = y
+
+                            var y = (outputImageHeight - images[0].Height) / 2;
+
                             graphics.DrawImage(
                                 images[0], 
-                                new Rectangle(new Point(), images[0].Size), 
+                                new Rectangle(new Point(0,y), images[0].Size), 
                                 new Rectangle(new Point(), images[0].Size), 
                                 GraphicsUnit.Pixel);
 
                             graphics.DrawImage(
-                                images[1], 
-                                new Rectangle(new Point(images[0].Width, screens[1].Bounds.Y), images[1].Size), 
+                                images[1],
+                                new Rectangle(new Point(images[0].Width, screens[1].Bounds.Y), images[1].Size),
                                 new Rectangle(new Point(), images[1].Size),
                                 GraphicsUnit.Pixel);
                         }
