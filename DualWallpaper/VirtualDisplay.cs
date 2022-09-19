@@ -18,7 +18,7 @@ namespace DualWallpaper
         private BorderStyle BorderStyle { get; set; }
         private string Resolution { get; set; }
 
-        public VirtualDisplay(int width, int height, string text, string deviceName, string resolution)
+        public VirtualDisplay(int width, int height, string deviceName, string resolution)
         {
             this.DisplayName = deviceName;
             this.Size = new Size(width, height);
