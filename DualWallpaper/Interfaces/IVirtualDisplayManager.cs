@@ -10,6 +10,6 @@ namespace DualWallpaper.Interfaces
     public interface IVirtualDisplayManager
     {
         PictureBox Show(int parentContainerMiddleWidth, int parentContainerMiddleHeight);
-        List<PictureBox> ShowAll();
+        List<PictureBox> ShowAll(int parentContainerMiddleWidth, int parentContainerMiddleHeight);
     }
 }

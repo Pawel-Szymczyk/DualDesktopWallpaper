@@ -118,31 +118,40 @@ namespace WallpaperManager
             this.cancelBtn.Visible = false;
             this.searchBtn.Visible = false;
 
-            List<PictureBox> displays = new DisplayManager().ShowDisplays(
-                    ShowSingleDisplay,
-                    this.wall.Bounds.Width / 2,
-                    this.wall.Bounds.Height / 2,
-                    this.wall,
+            //List<PictureBox> displays = new DisplayManager().ShowDisplays(
+            //        ShowSingleDisplay,
+            //        this.wall.Bounds.Width / 2,
+            //        this.wall.Bounds.Height / 2,
+            //        this.wall,
+            //        this.searchBtn,
+            //        this.applyBtn,
+            //        this.cancelBtn);
+
+
+            //foreach (PictureBox display in displays)
+            //{
+            //    this.wall.Controls.Add(display);
+            //}
+
+            IVirtualDisplayManager virtualDisplayManager =
+                new VirtualDisplayManager(this.wall,
                     this.searchBtn,
                     this.applyBtn,
                     this.cancelBtn);
+
+            //PictureBox display = virtualDisplayManager.Show(
+            //    this.wall.Bounds.Width / 2, this.wall.Bounds.Height / 2);
+
+            //this.wall.Controls.Add(display);
+
+
+            List<PictureBox> displays = virtualDisplayManager.ShowAll(this.wall.Bounds.Width / 2, this.wall.Bounds.Height / 2);
 
 
             foreach (PictureBox display in displays)
             {
                 this.wall.Controls.Add(display);
             }
-
-            //IVirtualDisplayManager virtualDisplayManager =
-            //    new VirtualDisplayManager(this.wall,
-            //        this.searchBtn,
-            //        this.applyBtn,
-            //        this.cancelBtn);
-
-            //PictureBox display = virtualDisplayManager.Show(
-            //    this.wall.Bounds.Width / 2, this.wall.Bounds.Height / 2);
-
-            //this.wall.Controls.Add(display);
         }
 
         /// <summary>

@@ -42,7 +42,10 @@ namespace DualWallpaper
         private Button ConfirmBtn { get; set; }
         private Button CancelBtn { get; set; }
 
-        //private IVirtualDisplay VirtualDisplay;
+        /// <summary>
+        /// Space between drawn displays.
+        /// </summary>
+        private readonly int margin = 1;
 
         public VirtualDisplayManager(Panel panel, Button searchBtn, Button applyBtn, Button cancelBtn)
         {
@@ -60,7 +63,7 @@ namespace DualWallpaper
         public PictureBox Show(int parentContainerMiddleWidth, int parentContainerMiddleHeight)
         {
 
-            // Draw Single Display
+            // Draw Single Display -- Fuck, this logic should be for merged image (of 2 monitors, common picture)
 
             // here the scale should be left default...
 
@@ -112,14 +115,114 @@ namespace DualWallpaper
             return display;
         }
 
+
+        /// <summary>
+        /// Draw number of displays in the parent panel, mimic screen arrangemnt set up in the Windows display settings.
+        /// </summary>
+        /// <param name="drawSingleDiplay">
+        ///     True if user want to draw single screen (having stretched image over two monitors).
+        ///     False if user want to have all available screens (having multiple wallpapers).
+        /// </param>
+        /// <param name="parentContainerMiddleWidth">Middle of parent panel - width.</param>
+        /// <param name="parentContainerMiddleHeight">Middle of parent panel - height.</param>
+        /// <param name="panel">Parent panel.</param>
+        /// <param name="searchBtn">Search button.</param>
+        /// <returns>List of ready to display picture boxes.</returns>
+
+
         /// <summary>
         /// Returns all virtual displays.
         /// </summary>
         /// <returns></returns>
         /// <exception cref="NotImplementedException"></exception>
-        public List<PictureBox> ShowAll()
+        public List<PictureBox> ShowAll(int parentContainerMiddleWidth, int parentContainerMiddleHeight)
         {
-            throw new NotImplementedException();
+            var pictureBoxes = new List<PictureBox>();
+
+            // Draw Multiple Displays
+
+            var realDisplayOneShiftLocation = new Point();
+
+            foreach (Screen screen in Screen.AllScreens)
+            {
+
+
+                // actual screen scaled size
+                int scaledScreenHeight = screen.Bounds.Size.Height / this.Scale;
+                int scaledScreenWidth = (screen.Bounds.Size.Width / this.Scale);
+
+                // center of actual screen
+                int displayCenterX = scaledScreenWidth / 2;
+                int displayCenterY = scaledScreenHeight / 2;
+
+                string text = screen.DeviceName.Replace(@"\.", "").Replace(@"\", "").ToLower().Replace(@"display", "");
+                string deviceName = screen.DeviceName.Replace(@"\.", "").Replace(@"\", "").ToLower();
+
+                string resolution = $"{screen.Bounds.Width} x {screen.Bounds.Height}"; ;
+
+
+
+                //PictureBox display = this.DrawDisplay(screen, panel, searchBtn, applyBtn, cancelBtn, scaledScreenWidth, scaledScreenHeight, text, deviceName, resolution);
+                // ---------------------------------------------------
+                // create virtual display
+                IVirtualDisplay virtualDisplay = new VirtualDisplay(scaledScreenWidth, scaledScreenHeight, deviceName, resolution);
+                PictureBox display = virtualDisplay.Draw();
+
+                // ---------------------------------------------------
+                // add additional features to virtual display
+                virtualDisplay.AddLabel(display, text);
+                virtualDisplay.AddSingleClick(display, this.Panel, this.SearchBtn);
+                virtualDisplay.AddDoubleClick(display, this.Panel, this.ConfirmBtn, this.CancelBtn);
+
+
+
+                if (screen.Primary)
+                {
+                    realDisplayOneShiftLocation = new Point(parentContainerMiddleWidth - displayCenterX, parentContainerMiddleHeight - displayCenterY);
+
+                    display.Location = realDisplayOneShiftLocation;
+
+                }
+                else
+                {
+                    int x = 0;
+                    int y = 0;
+                    if (screen.Bounds.X < 0)
+                    {
+                        // left side
+                        x = realDisplayOneShiftLocation.X - (screen.Bounds.Width / this.Scale) - this.margin;
+                        y = realDisplayOneShiftLocation.Y + (screen.Bounds.Y / this.Scale);
+                    }
+                    else if (screen.Bounds.X >= 0 && screen.Bounds.Y < 0)
+                    {
+                        // top
+                        y = realDisplayOneShiftLocation.Y + (screen.Bounds.Y / this.Scale) - this.margin;
+                        x = realDisplayOneShiftLocation.X + (screen.Bounds.X / this.Scale);
+                        //y = 0;
+                        //x = 0;
+
+                    }
+                    else if (screen.Bounds.X >= 0 && screen.Bounds.Y >= Screen.AllScreens[0].Bounds.Height)
+                    {
+                        // bottom
+                        y = realDisplayOneShiftLocation.Y + (Screen.AllScreens[0].Bounds.Height / this.Scale) + this.margin;
+                        x = realDisplayOneShiftLocation.X + (screen.Bounds.X / this.Scale);
+                    }
+                    else
+                    {
+                        // right 
+                        x = realDisplayOneShiftLocation.X + (Screen.AllScreens[0].Bounds.Width / this.Scale) + this.margin;
+                        y = realDisplayOneShiftLocation.Y + (screen.Bounds.Y / this.Scale);
+                    }
+
+                    display.Location = new Point(x, y);
+                }
+
+                pictureBoxes.Add(display);
+            }
+
+            return pictureBoxes;
         }
+
     }
 }
