@@ -157,9 +157,12 @@ namespace WallpaperManager
                         }
                         else 
                         {
-                            // need to get max hight e,g. 1920 (H), height of monitor(h), equestion: (H-h)/2 = y
 
-                            var y = (outputImageHeight - images[0].Height) / 2;
+                            // primary screen is always with coordinates (0,0), so the screen we can take the height difference is one of the highier screens.
+                            // grab that hight, ensure it's a positive number, as use as looking for Y.
+                            // take higher picture as reference 
+                            var higherScreen = screens.OrderByDescending(item => item.Bounds.Height).First();
+                            var y = Math.Abs(higherScreen.Bounds.Y);
 
                             graphics.DrawImage(
                                 images[0], 
