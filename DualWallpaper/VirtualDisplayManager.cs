@@ -15,30 +15,32 @@ namespace DualWallpaper
         /// <summary>
         /// Represents real screen scale.
         /// </summary>
-        private int scale = 14;
+        //private int scale = 14;
 
-        private int Scale
-        {
-            get
-            {
-                // this is not fully working scale, this solution is not working in call case scenarios 
-                // but for main scenarion this solution is good enough
-                // TODO: dynamic scale (future)
+        //private int Scale
+        //{
+        //    get
+        //    {
+        //        // this is not fully working scale, this solution is not working in call case scenarios 
+        //        // but for main scenarion this solution is good enough
+        //        // TODO: dynamic scale (future)
 
-                //if ((Screen.AllScreens[1].Bounds.X >= 0 && Screen.AllScreens[1].Bounds.Y < 0)
-                //|| (Screen.AllScreens[1].Bounds.X >= 0 && Screen.AllScreens[1].Bounds.Y >= Screen.AllScreens[0].Bounds.Height))
-                //{
-                //    // top or bottom
-                //    return 22;
-                //}
+        //        //if ((Screen.AllScreens[1].Bounds.X >= 0 && Screen.AllScreens[1].Bounds.Y < 0)
+        //        //|| (Screen.AllScreens[1].Bounds.X >= 0 && Screen.AllScreens[1].Bounds.Y >= Screen.AllScreens[0].Bounds.Height))
+        //        //{
+        //        //    // top or bottom
+        //        //    return 22;
+        //        //}
 
-                //return this.scale;
+        //        //return this.scale;
 
-                return 15;
+        //        return 15;
 
-            }
-            set => this.scale = value;
-        }
+        //    }
+        //    set => this.scale = value;
+        //}
+
+        private int Scale { get; set; }
 
         private Panel Panel { get; set; }
         private Button SearchBtn { get; set; }
@@ -56,6 +58,9 @@ namespace DualWallpaper
             this.SearchBtn = searchBtn;
             this.ConfirmBtn = applyBtn;
             this.CancelBtn = cancelBtn;
+
+            this.Scale = 17;
+
         }
 
         /// <summary>
@@ -216,6 +221,9 @@ namespace DualWallpaper
 
             return pictureBoxes;
         }
+
+
+ 
 
 
     }

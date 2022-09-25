@@ -30,6 +30,7 @@ namespace WallpaperManager
         private void DualWallpaperApp_Load(object sender, EventArgs e)
         {
             this.Version();
+            this.BuildNumber();
 
             this.DrawDisplays(false);
 
@@ -38,6 +39,12 @@ namespace WallpaperManager
             {
                 this.resolutionsList.Items.Add($"{screen.DeviceName.Replace(@"\.", "").Replace(@"\", "")}: {screen.Bounds.Width} x {screen.Bounds.Height}");
             }
+        }
+
+        private void BuildNumber()
+        {            
+            string text = $"B u i l d: {Const.BuildNumber}";
+            this.buildLbl.Text = text;
         }
 
         /// <summary>
@@ -192,5 +199,9 @@ namespace WallpaperManager
             }
         }
 
+        private void label5_Click(object sender, EventArgs e)
+        {
+
+        }
     }
 }

@@ -41,6 +41,7 @@
             this.cancelBtn = new System.Windows.Forms.Button();
             this.label4 = new System.Windows.Forms.Label();
             this.versionLbl = new System.Windows.Forms.Label();
+            this.buildLbl = new System.Windows.Forms.Label();
             this.SuspendLayout();
             // 
             // detectScreenBtn
@@ -48,7 +49,7 @@
             this.detectScreenBtn.BackColor = System.Drawing.Color.LightGray;
             this.detectScreenBtn.FlatAppearance.BorderSize = 0;
             this.detectScreenBtn.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.detectScreenBtn.Font = new System.Drawing.Font("DM Sans", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.detectScreenBtn.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.detectScreenBtn.Location = new System.Drawing.Point(637, 445);
             this.detectScreenBtn.Name = "detectScreenBtn";
             this.detectScreenBtn.Size = new System.Drawing.Size(113, 32);
@@ -62,7 +63,7 @@
             this.applyBtn.BackColor = System.Drawing.Color.LightGray;
             this.applyBtn.FlatAppearance.BorderSize = 0;
             this.applyBtn.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.applyBtn.Font = new System.Drawing.Font("DM Sans", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.applyBtn.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.applyBtn.Location = new System.Drawing.Point(29, 445);
             this.applyBtn.Name = "applyBtn";
             this.applyBtn.Size = new System.Drawing.Size(112, 32);
@@ -84,28 +85,28 @@
             // label1
             // 
             this.label1.AutoSize = true;
-            this.label1.Font = new System.Drawing.Font("DM Sans", 21.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label1.Font = new System.Drawing.Font("Microsoft Sans Serif", 21.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.label1.Location = new System.Drawing.Point(417, 15);
             this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(357, 38);
+            this.label1.Size = new System.Drawing.Size(371, 33);
             this.label1.TabIndex = 8;
             this.label1.Text = "D U A L  W A L L P A P E R";
             // 
             // label2
             // 
             this.label2.AutoSize = true;
-            this.label2.Font = new System.Drawing.Font("DM Sans", 15.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label2.Font = new System.Drawing.Font("Microsoft Sans Serif", 15.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.label2.ForeColor = System.Drawing.Color.Black;
             this.label2.Location = new System.Drawing.Point(24, 107);
             this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(305, 28);
+            this.label2.Size = new System.Drawing.Size(306, 25);
             this.label2.TabIndex = 9;
             this.label2.Text = "S e t  Y o u r  W a l l p a p e r s";
             // 
             // label3
             // 
             this.label3.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.label3.Font = new System.Drawing.Font("DM Sans", 9.749999F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label3.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.749999F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.label3.ForeColor = System.Drawing.SystemColors.GrayText;
             this.label3.Location = new System.Drawing.Point(26, 135);
             this.label3.Name = "label3";
@@ -117,13 +118,13 @@
             // resolutionsList
             // 
             this.resolutionsList.BorderStyle = System.Windows.Forms.BorderStyle.None;
-            this.resolutionsList.Font = new System.Drawing.Font("DM Sans", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.resolutionsList.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.resolutionsList.FormattingEnabled = true;
-            this.resolutionsList.ItemHeight = 21;
+            this.resolutionsList.ItemHeight = 20;
             this.resolutionsList.Location = new System.Drawing.Point(29, 550);
             this.resolutionsList.Name = "resolutionsList";
             this.resolutionsList.SelectionMode = System.Windows.Forms.SelectionMode.None;
-            this.resolutionsList.Size = new System.Drawing.Size(300, 189);
+            this.resolutionsList.Size = new System.Drawing.Size(300, 180);
             this.resolutionsList.TabIndex = 21;
             // 
             // mergeBtn
@@ -136,7 +137,7 @@
             this.mergeBtn.CheckAlign = System.Drawing.ContentAlignment.MiddleCenter;
             this.mergeBtn.FlatAppearance.BorderSize = 0;
             this.mergeBtn.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.mergeBtn.Font = new System.Drawing.Font("DM Sans", 12F);
+            this.mergeBtn.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F);
             this.mergeBtn.Location = new System.Drawing.Point(512, 445);
             this.mergeBtn.Margin = new System.Windows.Forms.Padding(3, 3, 10, 3);
             this.mergeBtn.Name = "mergeBtn";
@@ -152,7 +153,7 @@
             this.searchBtn.BackColor = System.Drawing.Color.LightGray;
             this.searchBtn.FlatAppearance.BorderSize = 0;
             this.searchBtn.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.searchBtn.Font = new System.Drawing.Font("DM Sans", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.searchBtn.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.searchBtn.Location = new System.Drawing.Point(387, 445);
             this.searchBtn.Margin = new System.Windows.Forms.Padding(3, 3, 10, 3);
             this.searchBtn.Name = "searchBtn";
@@ -168,7 +169,7 @@
             this.cancelBtn.BackColor = System.Drawing.Color.LightGray;
             this.cancelBtn.FlatAppearance.BorderSize = 0;
             this.cancelBtn.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.cancelBtn.Font = new System.Drawing.Font("DM Sans", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.cancelBtn.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.cancelBtn.Location = new System.Drawing.Point(154, 445);
             this.cancelBtn.Margin = new System.Windows.Forms.Padding(10, 3, 3, 3);
             this.cancelBtn.Name = "cancelBtn";
@@ -182,24 +183,36 @@
             // label4
             // 
             this.label4.AutoSize = true;
-            this.label4.Font = new System.Drawing.Font("DM Sans", 15.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label4.Font = new System.Drawing.Font("Microsoft Sans Serif", 15.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.label4.ForeColor = System.Drawing.Color.Black;
             this.label4.Location = new System.Drawing.Point(24, 519);
             this.label4.Name = "label4";
-            this.label4.Size = new System.Drawing.Size(311, 28);
+            this.label4.Size = new System.Drawing.Size(312, 25);
             this.label4.TabIndex = 25;
             this.label4.Text = "S c r e e n s  R e s o l u t i o n s";
             // 
             // versionLbl
             // 
             this.versionLbl.AutoSize = true;
-            this.versionLbl.Font = new System.Drawing.Font("DM Sans", 8.249999F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.versionLbl.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.249999F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.versionLbl.ForeColor = System.Drawing.Color.Black;
             this.versionLbl.Location = new System.Drawing.Point(26, 763);
             this.versionLbl.Name = "versionLbl";
-            this.versionLbl.Size = new System.Drawing.Size(73, 14);
+            this.versionLbl.Size = new System.Drawing.Size(74, 13);
             this.versionLbl.TabIndex = 26;
             this.versionLbl.Text = "V e r.  1 . 0 . 0";
+            // 
+            // buildLbl
+            // 
+            this.buildLbl.AutoSize = true;
+            this.buildLbl.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.249999F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.buildLbl.ForeColor = System.Drawing.Color.Black;
+            this.buildLbl.Location = new System.Drawing.Point(655, 763);
+            this.buildLbl.Name = "buildLbl";
+            this.buildLbl.Size = new System.Drawing.Size(94, 13);
+            this.buildLbl.TabIndex = 27;
+            this.buildLbl.Text = "B u i l d:  #990101";
+            this.buildLbl.Click += new System.EventHandler(this.label5_Click);
             // 
             // DualWallpaperApp
             // 
@@ -207,6 +220,7 @@
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.White;
             this.ClientSize = new System.Drawing.Size(786, 786);
+            this.Controls.Add(this.buildLbl);
             this.Controls.Add(this.versionLbl);
             this.Controls.Add(this.label4);
             this.Controls.Add(this.cancelBtn);
@@ -244,6 +258,7 @@
         private System.Windows.Forms.Button cancelBtn;
         private System.Windows.Forms.Label label4;
         private System.Windows.Forms.Label versionLbl;
+        private System.Windows.Forms.Label buildLbl;
     }
 }
 
