@@ -12,19 +12,18 @@ namespace DualWallpaper
 {
     public class VirtualDisplay : IVirtualDisplay
     {
-        private string DisplayName { get; set; }
-        private Size Size { get; set; }
         private Color BackgroundColor { get; set; }
         private BorderStyle BorderStyle { get; set; }
-        private string Resolution { get; set; }
+        private int Scale { get; set; }
+        private Screen Screen { get; set; }
 
-        public VirtualDisplay(int width, int height, string deviceName, string resolution)
+        public VirtualDisplay(Screen screen, int scale)
         {
-            this.DisplayName = deviceName;
-            this.Size = new Size(width, height);
+            this.Screen = screen;
+            this.Scale = scale;
+
             this.BackgroundColor = Color.LightGray;
             this.BorderStyle = BorderStyle.FixedSingle;
-            this.Resolution = resolution;
         }
 
         /// <summary>
@@ -33,13 +32,19 @@ namespace DualWallpaper
         /// <returns>PictureBox.</returns>
         public PictureBox Draw()
         {
+            var name = this.GetDisplayName();
+            var size = this.GetSize();
+            var text = this.GetResolution();
+            var location = this.GetLocation();
+
             var pictureBox = new PictureBox
             {
-                Name = this.DisplayName,
-                Size = this.Size,
                 BackColor = this.BackgroundColor,
                 BorderStyle = this.BorderStyle,
-                Text = this.Resolution
+                Name = name,
+                Size = size,
+                Text = text,
+                Location = location
             };
 
             return pictureBox;
@@ -50,8 +55,10 @@ namespace DualWallpaper
         /// </summary>
         /// <param name="pictureBox"></param>
         /// <param name="text"></param>
-        public void AddLabel(PictureBox pictureBox, string text)
+        public void AddLabel(PictureBox pictureBox)
         {
+            string text = this.Screen.DeviceName.Replace(@"\.", "").Replace(@"\", "").ToLower().Replace(@"display", "");
+
             pictureBox.Paint += new PaintEventHandler((sender, e) => VirtualDisplayEventHandler.DrawLabel(sender, e, text));
         }
 
@@ -77,5 +84,33 @@ namespace DualWallpaper
         {
             pictureBox.MouseDoubleClick += new MouseEventHandler((sender, e) => VirtualDisplayEventHandler.DisplayDoubleClick(sender, e, panel, applyBtn, cancelBtn));
         }
+
+        private string GetDisplayName()
+        {
+            return this.Screen.DeviceName.Replace(@"\.", "").Replace(@"\", "").ToLower();
+        }
+
+        private string GetResolution()
+        {
+            return $"{this.Screen.Bounds.Width} x {this.Screen.Bounds.Height}";
+        }
+
+        private Size GetSize()
+        {
+            int width = this.Screen.Bounds.Size.Width / this.Scale;
+            int height = this.Screen.Bounds.Size.Height / this.Scale;
+            return new Size(width, height);
+        }
+
+        private Point GetLocation()
+        {
+            int X = this.Screen.Bounds.X / this.Scale;
+            int Y = this.Screen.Bounds.Y / this.Scale;
+
+            return new Point(X, Y);
+        }
+
+       
+
     }
 }

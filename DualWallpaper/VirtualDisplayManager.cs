@@ -5,6 +5,7 @@ using System.Drawing;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows;
 using System.Windows.Forms;
 
 namespace DualWallpaper
@@ -65,6 +66,14 @@ namespace DualWallpaper
         public PictureBox Show(int parentContainerMiddleWidth, int parentContainerMiddleHeight)
         {
 
+            // TODO: if this is merged then it should show still two screens together in different positions, only the image is stretched over two displays
+            // otherwise show only single monitor picked by user(?) and allow modify background only for selected display...
+
+
+
+
+
+
             // Draw Single Display -- Fuck, this logic should be for merged image (of 2 monitors, common picture)
 
             // here the scale should be left default...
@@ -99,22 +108,24 @@ namespace DualWallpaper
 
             // ---------------------------------------------------
             // create virtual display
-            IVirtualDisplay virtualDisplay = new VirtualDisplay(scaledScreenWidth, scaledScreenHeight, deviceName, resolution);
-            PictureBox display = virtualDisplay.Draw();
+            //IVirtualDisplay virtualDisplay = new VirtualDisplay(scaledScreenWidth, scaledScreenHeight, deviceName, resolution);
+            //PictureBox display = virtualDisplay.Draw();
 
-            // ---------------------------------------------------
-            // add additional features to virtual display
-            virtualDisplay.AddLabel(display, text);
-            virtualDisplay.AddSingleClick(display, this.Panel, this.SearchBtn);
-            virtualDisplay.AddDoubleClick(display, this.Panel, this.ConfirmBtn, this.CancelBtn);
+            //// ---------------------------------------------------
+            //// add additional features to virtual display
+            //virtualDisplay.AddLabel(display, text);
+            //virtualDisplay.AddSingleClick(display, this.Panel, this.SearchBtn);
+            //virtualDisplay.AddDoubleClick(display, this.Panel, this.ConfirmBtn, this.CancelBtn);
 
-            // ---------------------------------------------------
-            // set virtual display location
-            int x = parentContainerMiddleWidth - displayCenterX;
-            int y = parentContainerMiddleHeight - displayCenterY;
-            display.Location = new Point(x, y);
+            //// ---------------------------------------------------
+            //// set virtual display location
+            //int x = parentContainerMiddleWidth - displayCenterX;
+            //int y = parentContainerMiddleHeight - displayCenterY;
+            //display.Location = new Point(x, y);
 
-            return display;
+            //return display;
+
+            return null;
         }
 
 
@@ -137,92 +148,63 @@ namespace DualWallpaper
         /// </summary>
         /// <returns></returns>
         /// <exception cref="NotImplementedException"></exception>
-        public List<PictureBox> ShowAll(int parentContainerMiddleWidth, int parentContainerMiddleHeight)
+        public List<PictureBox> ShowAll(int centerPointX, int centerPointY)
         {
             var pictureBoxes = new List<PictureBox>();
-
-            // Draw Multiple Displays
-
-           
-
-            // get primary screen first
-            //Screen primaryScreen = Screen.AllScreens.FirstOrDefault(x => x.Primary.Equals(true));
             var realDisplayOneShiftLocation = new Point();
-      
+
             foreach (Screen screen in Screen.AllScreens.OrderByDescending(x => x.Primary == true))
             {
 
-
-                // actual screen scaled size
-                int scaledScreenHeight = screen.Bounds.Size.Height / this.Scale;
-                int scaledScreenWidth = (screen.Bounds.Size.Width / this.Scale);
-
-                // center of actual screen
-                int displayCenterX = scaledScreenWidth / 2;
-                int displayCenterY = scaledScreenHeight / 2;
-
-                string text = screen.DeviceName.Replace(@"\.", "").Replace(@"\", "").ToLower().Replace(@"display", "");
-                string deviceName = screen.DeviceName.Replace(@"\.", "").Replace(@"\", "").ToLower();
-
-                string resolution = $"{screen.Bounds.Width} x {screen.Bounds.Height}"; ;
-
-
                 // ---------------------------------------------------
                 // create virtual display
-                IVirtualDisplay virtualDisplay = new VirtualDisplay(scaledScreenWidth, scaledScreenHeight, deviceName, resolution);
+                IVirtualDisplay virtualDisplay = new VirtualDisplay(screen, this.Scale);
                 PictureBox display = virtualDisplay.Draw();
 
                 // ---------------------------------------------------
                 // add additional features to virtual display
-                virtualDisplay.AddLabel(display, text);
+                virtualDisplay.AddLabel(display);
                 virtualDisplay.AddSingleClick(display, this.Panel, this.SearchBtn);
                 virtualDisplay.AddDoubleClick(display, this.Panel, this.ConfirmBtn, this.CancelBtn);
 
-
+               
 
                 // --------------------------------------------------
                 // Position virtual display on panel...
-
                 if (screen.Primary)
                 {
-                    realDisplayOneShiftLocation = new Point(parentContainerMiddleWidth - displayCenterX, parentContainerMiddleHeight - displayCenterY);
+                    // set position for main screen first...
+                    realDisplayOneShiftLocation = new Point(centerPointX - (display.Width / 2), centerPointY - (display.Height / 2));
 
                     display.Location = realDisplayOneShiftLocation;
-
                 }
                 else
                 {
                     int x = 0;
                     int y = 0;
 
-
                     if (screen.Bounds.X < 0)
                     {
-                        // left side
+                        // left
                         x = realDisplayOneShiftLocation.X - (screen.Bounds.Width / this.Scale) - this.margin;
                         y = realDisplayOneShiftLocation.Y + (screen.Bounds.Y / this.Scale);
                     }
                     else if (screen.Bounds.X >= 0 && screen.Bounds.Y < 0)
                     {
                         // top
+                        x = realDisplayOneShiftLocation.X + (screen.Bounds.X / this.Scale);
                         y = realDisplayOneShiftLocation.Y + (screen.Bounds.Y / this.Scale) - this.margin;
-
-                        var z = (screen.Bounds.X / this.Scale);
-                        x = realDisplayOneShiftLocation.X + z;
-                        //y = 0;
-                        //x = 400;
-
                     }
                     else if (screen.Bounds.X >= 0 && screen.Bounds.Y >= Screen.AllScreens[0].Bounds.Height)
                     {
                         // bottom
-                        y = realDisplayOneShiftLocation.Y + (Screen.AllScreens[0].Bounds.Height / this.Scale) + this.margin;
                         x = realDisplayOneShiftLocation.X + (screen.Bounds.X / this.Scale);
+                        y = realDisplayOneShiftLocation.Y + (screen.Bounds.Y / this.Scale) + this.margin;
                     }
                     else
                     {
                         // right 
-                        x = realDisplayOneShiftLocation.X + (Screen.AllScreens[0].Bounds.Width / this.Scale) + this.margin;
+                        x = realDisplayOneShiftLocation.X + (screen.Bounds.X / this.Scale);
                         y = realDisplayOneShiftLocation.Y + (screen.Bounds.Y / this.Scale);
                     }
 
@@ -234,6 +216,7 @@ namespace DualWallpaper
 
             return pictureBoxes;
         }
+
 
     }
 }
