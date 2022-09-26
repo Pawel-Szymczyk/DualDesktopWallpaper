@@ -87,6 +87,7 @@
     <Compile Include="BackgroundManager.cs" />
     <Compile Include="VirtualDisplay.cs" />
     <Compile Include="VirtualDisplayManager.cs" />
+    <Compile Include="VirtualDisplayMode.cs" />
     <EmbeddedResource Include="DualWallpaperApp.resx">
       <DependentUpon>DualWallpaperApp.cs</DependentUpon>
     </EmbeddedResource>

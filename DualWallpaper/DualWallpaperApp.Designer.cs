@@ -86,7 +86,7 @@
             // 
             this.label1.AutoSize = true;
             this.label1.Font = new System.Drawing.Font("Microsoft Sans Serif", 21.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label1.Location = new System.Drawing.Point(417, 15);
+            this.label1.Location = new System.Drawing.Point(378, 30);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(371, 33);
             this.label1.TabIndex = 8;
@@ -121,10 +121,10 @@
             this.resolutionsList.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.resolutionsList.FormattingEnabled = true;
             this.resolutionsList.ItemHeight = 20;
-            this.resolutionsList.Location = new System.Drawing.Point(29, 550);
+            this.resolutionsList.Location = new System.Drawing.Point(29, 604);
             this.resolutionsList.Name = "resolutionsList";
             this.resolutionsList.SelectionMode = System.Windows.Forms.SelectionMode.None;
-            this.resolutionsList.Size = new System.Drawing.Size(300, 180);
+            this.resolutionsList.Size = new System.Drawing.Size(300, 120);
             this.resolutionsList.TabIndex = 21;
             // 
             // mergeBtn
@@ -185,7 +185,7 @@
             this.label4.AutoSize = true;
             this.label4.Font = new System.Drawing.Font("Microsoft Sans Serif", 15.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.label4.ForeColor = System.Drawing.Color.Black;
-            this.label4.Location = new System.Drawing.Point(24, 519);
+            this.label4.Location = new System.Drawing.Point(24, 566);
             this.label4.Name = "label4";
             this.label4.Size = new System.Drawing.Size(312, 25);
             this.label4.TabIndex = 25;
@@ -212,7 +212,6 @@
             this.buildLbl.Size = new System.Drawing.Size(94, 13);
             this.buildLbl.TabIndex = 27;
             this.buildLbl.Text = "B u i l d:  #990101";
-            this.buildLbl.Click += new System.EventHandler(this.label5_Click);
             // 
             // DualWallpaperApp
             // 

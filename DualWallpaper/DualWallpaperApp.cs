@@ -11,6 +11,9 @@ namespace WallpaperManager
     {
         // https://devblogs.microsoft.com/oldnewthing/?p=25003 
 
+
+        private IVirtualDisplayManager virtualDisplayManager;
+
         // -------------------------------------------------------------------
         // Form
         //
@@ -22,6 +25,11 @@ namespace WallpaperManager
         public DualWallpaperApp()
         {
             this.InitializeComponent();
+
+            this.virtualDisplayManager = new VirtualDisplayManager(this.wall,
+                  this.searchBtn,
+                  this.applyBtn,
+                  this.cancelBtn);
         }
 
         /// <summary>
@@ -32,20 +40,20 @@ namespace WallpaperManager
             this.Version();
             this.BuildNumber();
 
-            this.DrawDisplays(false);
+            
 
             // get displays resolutions...
             foreach (Screen screen in Screen.AllScreens)
             {
                 this.resolutionsList.Items.Add($"{screen.DeviceName.Replace(@"\.", "").Replace(@"\", "")}: {screen.Bounds.Width} x {screen.Bounds.Height}");
             }
+
+
+            this.DrawDisplays();
+
         }
 
-        private void BuildNumber()
-        {            
-            string text = $"B u i l d: {Const.BuildNumber}";
-            this.buildLbl.Text = text;
-        }
+       
 
         /// <summary>
         /// Hide controls and blank out wall on mouse single click.
@@ -100,59 +108,46 @@ namespace WallpaperManager
 
             if (this.mergeBtn.Checked)
             {
-                this.DrawDisplays(true);
+                this.DrawMergedDisplays();
             }
             else
             {
-                this.DrawDisplays(false);
+                this.DrawDisplays();
             }
         }
 
-
-        #endregion
-        // -------------------------------------------------------------------
-
-        //private IVirtualDisplayManager VirtualDisplayManager;
-
-        /// <summary>
-        /// Dynamically draw displays.
-        /// </summary>
-        /// <param name="ShowSingleDisplay">True, if we want to show single monitor, otherwise false.</param>
-        private void DrawDisplays(bool ShowSingleDisplay)
+        private void DrawMergedDisplays()
         {
             this.wall.Controls.Clear();
             this.applyBtn.Visible = false;
             this.cancelBtn.Visible = false;
             this.searchBtn.Visible = false;
 
-            //List<PictureBox> displays = new DisplayManager().ShowDisplays(
-            //        ShowSingleDisplay,
-            //        this.wall.Bounds.Width / 2,
-            //        this.wall.Bounds.Height / 2,
-            //        this.wall,
-            //        this.searchBtn,
-            //        this.applyBtn,
-            //        this.cancelBtn);
+            PictureBox  display = this.virtualDisplayManager.Show(this.wall.Bounds.Width / 2, this.wall.Bounds.Height / 2);
+        }
 
 
-            //foreach (PictureBox display in displays)
-            //{
-            //    this.wall.Controls.Add(display);
-            //}
-
-            IVirtualDisplayManager virtualDisplayManager =
-                new VirtualDisplayManager(this.wall,
-                    this.searchBtn,
-                    this.applyBtn,
-                    this.cancelBtn);
-
-            //PictureBox display = virtualDisplayManager.Show(
-            //    this.wall.Bounds.Width / 2, this.wall.Bounds.Height / 2);
-
-            //this.wall.Controls.Add(display);
+        #endregion
+        // -------------------------------------------------------------------
 
 
-            List<PictureBox> displays = virtualDisplayManager.ShowAll(this.wall.Bounds.Width / 2, this.wall.Bounds.Height / 2);
+        /// <summary>
+        /// Dynamically draw displays.
+        /// </summary>
+        /// <param name="ShowSingleDisplay">True, if we want to show single monitor, otherwise false.</param>
+        private void DrawDisplays()
+        {
+            this.wall.Controls.Clear();
+            this.applyBtn.Visible = false;
+            this.cancelBtn.Visible = false;
+            this.searchBtn.Visible = false;
+
+
+           
+
+           
+
+            List<PictureBox> displays = this.virtualDisplayManager.ShowAll(this.wall.Bounds.Width / 2, this.wall.Bounds.Height / 2);
 
 
             foreach (PictureBox display in displays)
@@ -180,6 +175,15 @@ namespace WallpaperManager
         }
 
         /// <summary>
+        /// Display build number.
+        /// </summary>
+        private void BuildNumber()
+        {
+            string text = $"B u i l d: {Const.BuildNumber}";
+            this.buildLbl.Text = text;
+        }
+
+        /// <summary>
         /// Hide form controles.
         /// </summary>
         private void HideControls()
@@ -199,9 +203,6 @@ namespace WallpaperManager
             }
         }
 
-        private void label5_Click(object sender, EventArgs e)
-        {
 
-        }
     }
 }

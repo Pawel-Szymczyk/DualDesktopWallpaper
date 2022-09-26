@@ -83,54 +83,110 @@ namespace DualWallpaper
 
             // here the scale should be left default...
 
-            Screen screen = null;
-            string resolution = string.Empty;
-            if (Screen.AllScreens[0].Primary)
+            //Screen screen = null;
+            //string resolution = string.Empty;
+            //if (Screen.AllScreens[0].Primary)
+            //{
+            //    screen = Screen.AllScreens[0];
+            //    // this will be wrong but for now... it requires to know exavct screens positions to each other...
+            //    int width = Screen.AllScreens[0].Bounds.Width + Screen.AllScreens[1].Bounds.Width;
+            //    int height = Screen.AllScreens[1].Bounds.Height;
+            //    resolution = $"{width} x {height}";
+
+            //}
+            //else
+            //{
+            //    screen = Screen.AllScreens[1];
+            //}
+
+            //// actual screen scaled size
+            //int scaledScreenHeight = screen.Bounds.Size.Height / this.Scale;
+            //int scaledScreenWidth = (screen.Bounds.Size.Width / this.Scale);
+
+            //// center of actual screen
+            //int displayCenterX = scaledScreenWidth / 2;
+            //int displayCenterY = scaledScreenHeight / 2;
+
+            //string text = "1 | 2";
+            //string deviceName = "mergedDisplay";
+
+
+            int width = 0;
+            int height = 0;
+
+            foreach (Screen screen in Screen.AllScreens.OrderByDescending(x => x.Primary == true))
             {
-                screen = Screen.AllScreens[0];
-                // this will be wrong but for now... it requires to know exavct screens positions to each other...
-                int width = Screen.AllScreens[0].Bounds.Width + Screen.AllScreens[1].Bounds.Width;
-                int height = Screen.AllScreens[1].Bounds.Height;
-                resolution = $"{width} x {height}";
+                if (screen.Primary)
+                {
+                    // set position for main screen first...
+                    //realDisplayOneShiftLocation = new Point(centerPointX - (display.Width / 2), centerPointY - (display.Height / 2));
 
+                    //display.Location = realDisplayOneShiftLocation;
+
+                    width += screen.Bounds.Width;
+                }
+                else
+                {
+                    //int x = 0;
+                    //int y = 0;
+
+                    if (screen.Bounds.X < 0)
+                    {
+                        // left
+                        //x = realDisplayOneShiftLocation.X - (screen.Bounds.Width / this.Scale) - this.margin;
+                        //y = realDisplayOneShiftLocation.Y + (screen.Bounds.Y / this.Scale);
+
+                        width += screen.Bounds.Width;
+                    }
+                    else if (screen.Bounds.X >= 0 && screen.Bounds.Y < 0)
+                    {
+                        // top
+                        //x = realDisplayOneShiftLocation.X + (screen.Bounds.X / this.Scale);
+                        //y = realDisplayOneShiftLocation.Y + (screen.Bounds.Y / this.Scale) - this.margin;
+
+                        width += screen.Bounds.Width;
+                    }
+                    else if (screen.Bounds.X >= 0 && screen.Bounds.Y >= Screen.AllScreens[0].Bounds.Height)
+                    {
+                        // bottom
+                        //x = realDisplayOneShiftLocation.X + (screen.Bounds.X / this.Scale);
+                        //y = realDisplayOneShiftLocation.Y + (screen.Bounds.Y / this.Scale) + this.margin;
+                    }
+                    else
+                    {
+                        // right 
+                        //x = realDisplayOneShiftLocation.X + (screen.Bounds.X / this.Scale);
+                        //y = realDisplayOneShiftLocation.Y + (screen.Bounds.Y / this.Scale);
+
+                       
+                    }
+
+                    //display.Location = new Point(x, y);
+                }
             }
-            else
-            {
-                screen = Screen.AllScreens[1];
-            }
-
-            // actual screen scaled size
-            int scaledScreenHeight = screen.Bounds.Size.Height / this.Scale;
-            int scaledScreenWidth = (screen.Bounds.Size.Width / this.Scale);
-
-            // center of actual screen
-            int displayCenterX = scaledScreenWidth / 2;
-            int displayCenterY = scaledScreenHeight / 2;
-
-            string text = "1 | 2";
-            string deviceName = "mergedDisplay";
 
 
-            // ---------------------------------------------------
-            // create virtual display
-            //IVirtualDisplay virtualDisplay = new VirtualDisplay(scaledScreenWidth, scaledScreenHeight, deviceName, resolution);
-            //PictureBox display = virtualDisplay.Draw();
 
-            //// ---------------------------------------------------
-            //// add additional features to virtual display
-            //virtualDisplay.AddLabel(display, text);
-            //virtualDisplay.AddSingleClick(display, this.Panel, this.SearchBtn);
-            //virtualDisplay.AddDoubleClick(display, this.Panel, this.ConfirmBtn, this.CancelBtn);
+                // ---------------------------------------------------
+                // create virtual display
+                //IVirtualDisplay virtualDisplay = new VirtualDisplay(scaledScreenWidth, scaledScreenHeight, deviceName, resolution);
+                //PictureBox display = virtualDisplay.Draw();
 
-            //// ---------------------------------------------------
-            //// set virtual display location
-            //int x = parentContainerMiddleWidth - displayCenterX;
-            //int y = parentContainerMiddleHeight - displayCenterY;
-            //display.Location = new Point(x, y);
+                //// ---------------------------------------------------
+                //// add additional features to virtual display
+                //virtualDisplay.AddLabel(display, text);
+                //virtualDisplay.AddSingleClick(display, this.Panel, this.SearchBtn);
+                //virtualDisplay.AddDoubleClick(display, this.Panel, this.ConfirmBtn, this.CancelBtn);
 
-            //return display;
+                //// ---------------------------------------------------
+                //// set virtual display location
+                //int x = parentContainerMiddleWidth - displayCenterX;
+                //int y = parentContainerMiddleHeight - displayCenterY;
+                //display.Location = new Point(x, y);
 
-            return null;
+                //return display;
+
+                return null;
         }
 
 
