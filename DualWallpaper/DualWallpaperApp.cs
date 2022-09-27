@@ -25,11 +25,6 @@ namespace WallpaperManager
         public DualWallpaperApp()
         {
             this.InitializeComponent();
-
-            this.virtualDisplayManager = new VirtualDisplayManager(this.wall,
-                  this.searchBtn,
-                  this.applyBtn,
-                  this.cancelBtn);
         }
 
         /// <summary>
@@ -40,7 +35,11 @@ namespace WallpaperManager
             this.Version();
             this.BuildNumber();
 
-            
+
+            this.virtualDisplayManager = new VirtualDisplayManager(this.wall,
+                  this.searchBtn,
+                  this.applyBtn,
+                  this.cancelBtn);
 
             // get displays resolutions...
             foreach (Screen screen in Screen.AllScreens)
@@ -86,6 +85,8 @@ namespace WallpaperManager
         // Merge images and store them in the windows registry.
         private void applyBtn_Click(object sender, EventArgs e)
         {
+            var x = this.virtualDisplayManager.SecondaryVirtualDisplayLayout;
+
             BackgroundManager.SetBackground(this.wall, this.mergeBtn);
 
             this.HideControls();

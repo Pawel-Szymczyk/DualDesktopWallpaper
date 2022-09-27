@@ -55,6 +55,8 @@ namespace WallpaperManager
             {
                 var screens = Screen.AllScreens;
 
+                // assumming that primary screen will be always at the front of the user, starting from point(0,0)
+
                 if (screens[1].Bounds.X < 0)
                 {
                     return "left";

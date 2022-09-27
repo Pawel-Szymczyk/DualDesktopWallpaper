@@ -12,10 +12,17 @@ namespace DualWallpaper
 {
     public class VirtualDisplay : IVirtualDisplay
     {
+        private Screen Screen { get; set; }
+        private int Scale { get; set; }
         private Color BackgroundColor { get; set; }
         private BorderStyle BorderStyle { get; set; }
-        private int Scale { get; set; }
-        private Screen Screen { get; set; }
+
+        public VirtualDisplay() 
+        {
+            this.Scale = 1;
+            this.BackgroundColor = Color.LightGray;
+            this.BorderStyle = BorderStyle.FixedSingle;
+        }
 
         public VirtualDisplay(Screen screen, int scale)
         {

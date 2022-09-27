@@ -1,8 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace DualWallpaper
 {
@@ -10,6 +7,12 @@ namespace DualWallpaper
     {
         private int Key { get; set; }
         private string Value { get; set; }
+
+        public VirtualDisplayMode()
+        {
+            this.Key = 0;
+            this.Value = String.Empty;
+        }
 
         private List<VirtualDisplayMode> ModesList()
         {

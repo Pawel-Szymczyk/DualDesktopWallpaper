@@ -10,8 +10,6 @@ namespace DualWallpaper.Interfaces
 {
     public interface IVirtualDisplay
     {
-        //Point Location { get; }
-
         PictureBox Draw();
         void AddLabel(PictureBox pictureBox);
         void AddSingleClick(PictureBox pictureBox, Panel panel, Button searchBtn);

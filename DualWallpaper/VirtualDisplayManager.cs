@@ -1,4 +1,5 @@
-﻿using DualWallpaper.Interfaces;
+﻿using DualWallpaper.Enums;
+using DualWallpaper.Interfaces;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
@@ -41,7 +42,6 @@ namespace DualWallpaper
         //}
 
         private int Scale { get; set; }
-
         private Panel Panel { get; set; }
         private Button SearchBtn { get; set; }
         private Button ConfirmBtn { get; set; }
@@ -52,15 +52,56 @@ namespace DualWallpaper
         /// </summary>
         private readonly int margin = 1;
 
+
+
+        /// <summary>
+        /// Default position of the 2md virtual display.
+        /// </summary>
+        public VirtualDisplayLayout SecondaryVirtualDisplayLayout
+        {
+            get
+            {
+                // assumming that primary screen will be always at the front of the user, starting from point(0,0)
+                var primaryDisplay = Screen.PrimaryScreen;
+                var secondaryDisplay = Screen.AllScreens.Where(x => x != primaryDisplay).FirstOrDefault();
+
+
+                if(secondaryDisplay.Bounds.Left >= primaryDisplay.Bounds.Right)
+                {
+                    return VirtualDisplayLayout.Right;
+                }
+                else if(secondaryDisplay.Bounds.Right <= primaryDisplay.Bounds.Left)
+                {
+                    return VirtualDisplayLayout.Left;
+                }
+                else if(secondaryDisplay.Bounds.Bottom <= primaryDisplay.Bounds.Top)
+                {
+                    return VirtualDisplayLayout.Top;
+                }
+                else
+                {
+                    return VirtualDisplayLayout.Bottom;
+                }
+            }
+
+        }
+
+        public VirtualDisplayManager() 
+        { 
+            this.Scale = 1;
+            this.Panel = new Panel();
+            this.SearchBtn = new Button();
+            this.ConfirmBtn = new Button();
+            this.CancelBtn = new Button();
+        }
+
         public VirtualDisplayManager(Panel panel, Button searchBtn, Button applyBtn, Button cancelBtn)
         {
+            this.Scale = 17;
             this.Panel = panel;
             this.SearchBtn = searchBtn;
             this.ConfirmBtn = applyBtn;
             this.CancelBtn = cancelBtn;
-
-            this.Scale = 17;
-
         }
 
         /// <summary>
@@ -75,7 +116,7 @@ namespace DualWallpaper
             // otherwise show only single monitor picked by user(?) and allow modify background only for selected display...
 
 
-
+            this.SetTotalWidthAndHeightOfVirtualDisplays(SecondaryVirtualDisplayLayout);
 
 
 
@@ -111,82 +152,83 @@ namespace DualWallpaper
             //string deviceName = "mergedDisplay";
 
 
-            int width = 0;
-            int height = 0;
-
-            foreach (Screen screen in Screen.AllScreens.OrderByDescending(x => x.Primary == true))
-            {
-                if (screen.Primary)
-                {
-                    // set position for main screen first...
-                    //realDisplayOneShiftLocation = new Point(centerPointX - (display.Width / 2), centerPointY - (display.Height / 2));
-
-                    //display.Location = realDisplayOneShiftLocation;
-
-                    width += screen.Bounds.Width;
-                }
-                else
-                {
-                    //int x = 0;
-                    //int y = 0;
-
-                    if (screen.Bounds.X < 0)
-                    {
-                        // left
-                        //x = realDisplayOneShiftLocation.X - (screen.Bounds.Width / this.Scale) - this.margin;
-                        //y = realDisplayOneShiftLocation.Y + (screen.Bounds.Y / this.Scale);
-
-                        width += screen.Bounds.Width;
-                    }
-                    else if (screen.Bounds.X >= 0 && screen.Bounds.Y < 0)
-                    {
-                        // top
-                        //x = realDisplayOneShiftLocation.X + (screen.Bounds.X / this.Scale);
-                        //y = realDisplayOneShiftLocation.Y + (screen.Bounds.Y / this.Scale) - this.margin;
-
-                        width += screen.Bounds.Width;
-                    }
-                    else if (screen.Bounds.X >= 0 && screen.Bounds.Y >= Screen.AllScreens[0].Bounds.Height)
-                    {
-                        // bottom
-                        //x = realDisplayOneShiftLocation.X + (screen.Bounds.X / this.Scale);
-                        //y = realDisplayOneShiftLocation.Y + (screen.Bounds.Y / this.Scale) + this.margin;
-                    }
-                    else
-                    {
-                        // right 
-                        //x = realDisplayOneShiftLocation.X + (screen.Bounds.X / this.Scale);
-                        //y = realDisplayOneShiftLocation.Y + (screen.Bounds.Y / this.Scale);
-
-                       
-                    }
-
-                    //display.Location = new Point(x, y);
-                }
-            }
 
 
 
-                // ---------------------------------------------------
-                // create virtual display
-                //IVirtualDisplay virtualDisplay = new VirtualDisplay(scaledScreenWidth, scaledScreenHeight, deviceName, resolution);
-                //PictureBox display = virtualDisplay.Draw();
 
-                //// ---------------------------------------------------
-                //// add additional features to virtual display
-                //virtualDisplay.AddLabel(display, text);
-                //virtualDisplay.AddSingleClick(display, this.Panel, this.SearchBtn);
-                //virtualDisplay.AddDoubleClick(display, this.Panel, this.ConfirmBtn, this.CancelBtn);
+            //foreach (Screen screen in Screen.AllScreens.OrderByDescending(x => x.Primary == true))
+            //{
+            //    if (screen.Primary)
+            //    {
+            //        // set position for main screen first...
+            //        //realDisplayOneShiftLocation = new Point(centerPointX - (display.Width / 2), centerPointY - (display.Height / 2));
 
-                //// ---------------------------------------------------
-                //// set virtual display location
-                //int x = parentContainerMiddleWidth - displayCenterX;
-                //int y = parentContainerMiddleHeight - displayCenterY;
-                //display.Location = new Point(x, y);
+            //        //display.Location = realDisplayOneShiftLocation;
 
-                //return display;
+            //        width += screen.Bounds.Width;
+            //    }
+            //    else
+            //    {
+            //        //int x = 0;
+            //        //int y = 0;
 
-                return null;
+            //        if (screen.Bounds.X < 0)
+            //        {
+            //            // left
+            //            //x = realDisplayOneShiftLocation.X - (screen.Bounds.Width / this.Scale) - this.margin;
+            //            //y = realDisplayOneShiftLocation.Y + (screen.Bounds.Y / this.Scale);
+
+            //            width += screen.Bounds.Width;
+            //        }
+            //        else if (screen.Bounds.X >= 0 && screen.Bounds.Y < 0)
+            //        {
+            //            // top
+            //            //x = realDisplayOneShiftLocation.X + (screen.Bounds.X / this.Scale);
+            //            //y = realDisplayOneShiftLocation.Y + (screen.Bounds.Y / this.Scale) - this.margin;
+
+            //            width += screen.Bounds.Width;
+            //        }
+            //        else if (screen.Bounds.X >= 0 && screen.Bounds.Y >= Screen.AllScreens[0].Bounds.Height)
+            //        {
+            //            // bottom
+            //            //x = realDisplayOneShiftLocation.X + (screen.Bounds.X / this.Scale);
+            //            //y = realDisplayOneShiftLocation.Y + (screen.Bounds.Y / this.Scale) + this.margin;
+            //        }
+            //        else
+            //        {
+            //            // right 
+            //            //x = realDisplayOneShiftLocation.X + (screen.Bounds.X / this.Scale);
+            //            //y = realDisplayOneShiftLocation.Y + (screen.Bounds.Y / this.Scale);
+
+
+            //        }
+
+            //        //display.Location = new Point(x, y);
+            //    }
+            //}
+
+
+
+            // ---------------------------------------------------
+            // create virtual display
+            //IVirtualDisplay virtualDisplay = new VirtualDisplay(scaledScreenWidth, scaledScreenHeight, deviceName, resolution);
+            //PictureBox display = virtualDisplay.Draw();
+
+            //// ---------------------------------------------------
+            //// add additional features to virtual display
+            //virtualDisplay.AddLabel(display, text);
+            //virtualDisplay.AddSingleClick(display, this.Panel, this.SearchBtn);
+            //virtualDisplay.AddDoubleClick(display, this.Panel, this.ConfirmBtn, this.CancelBtn);
+
+            //// ---------------------------------------------------
+            //// set virtual display location
+            //int x = parentContainerMiddleWidth - displayCenterX;
+            //int y = parentContainerMiddleHeight - displayCenterY;
+            //display.Location = new Point(x, y);
+
+            //return display;
+
+            return null;
         }
 
 
@@ -279,8 +321,86 @@ namespace DualWallpaper
         }
 
 
- 
 
+        public int TotalHeight { get; private set; }
+        public int TotalWidth { get; private set; }
+
+
+        private void SetTotalWidthAndHeightOfVirtualDisplays(VirtualDisplayLayout secondaryVirtualDisplayLayout)
+        {
+            int totalWidth = 0;
+            int totalHeight = 0;
+            
+            // should be global?
+            var primaryDisplay = Screen.PrimaryScreen;
+            var secondaryDisplay = Screen.AllScreens.Where(x => x != primaryDisplay).FirstOrDefault();
+
+
+            if (secondaryVirtualDisplayLayout.Equals(VirtualDisplayLayout.Left) 
+                || secondaryVirtualDisplayLayout.Equals(VirtualDisplayLayout.Right))
+            {
+                totalWidth = Screen.AllScreens.Sum(x => x.Bounds.Width);
+
+                // case 1 secondary display (y) is smaller or equal the primary display (y)
+                // and its height is equal or greater than the primary screen
+
+                if(secondaryDisplay.Bounds.Y <= primaryDisplay.Bounds.Y 
+                    && secondaryDisplay.Bounds.Height >= primaryDisplay.Bounds.Height)
+                {
+                    totalHeight = secondaryDisplay.Bounds.Height;
+                }
+
+
+                // case 2 secondary display (y) is smaller or equal the primary display (y)
+                // and its height is smaller than the primary screen 
+
+                // case 3 secondary display (y) is greater than the priamry display (y)
+                // and its height is equal or greater than the primary screen
+
+                // case 4 secondary display (y) is greater than the priamry display (y)
+                // and its height is smaller than the primary screen
+
+
+            }
+            else if(secondaryVirtualDisplayLayout.Equals(VirtualDisplayLayout.Top)
+                || secondaryVirtualDisplayLayout.Equals(VirtualDisplayLayout.Bottom))
+            {
+                totalHeight = Screen.AllScreens.Sum(x => x.Bounds.Height);
+
+                // case 1 secondary display (x) is smaller equal the primary display (x)
+                // and its width is equal or greater than the primary screen 
+
+                // case 2 secondary display (x) is smaller equal the primary display (x)
+                // and its width is smaller than the primary screen 
+
+                // case 3 secondary display (x) is greater than the primary display (x)
+                // and its width is equal or greater than the primary screen
+
+                // case 4 secondary display (x) is greater than the primary display (x)
+                // and its width is smaller than the primary screen
+            }
+
+
+        }
 
     }
 }
+
+
+//switch (secondaryVirtualDisplayLayout)
+//{
+//    case VirtualDisplayLayout.Left:
+//        break;
+
+//    case VirtualDisplayLayout.Right:
+//        break;
+
+//    case VirtualDisplayLayout.Top:
+//        break;
+
+//    case VirtualDisplayLayout.Bottom:
+//        break;
+
+//    default:
+//        break;
+//}
