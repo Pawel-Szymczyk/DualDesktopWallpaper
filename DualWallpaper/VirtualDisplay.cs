@@ -17,11 +17,23 @@ namespace DualWallpaper
         private Color BackgroundColor { get; set; }
         private BorderStyle BorderStyle { get; set; }
 
+        /// <summary>
+        /// Virtual display resolution (width x height).
+        /// </summary>
+        private string Resolution { get; set; }
+
+        /// <summary>
+        /// Virtual display name.
+        /// </summary>
+        private string DisplayName { get; set; }
+
         public VirtualDisplay() 
         {
             this.Scale = 1;
             this.BackgroundColor = Color.LightGray;
             this.BorderStyle = BorderStyle.FixedSingle;
+            this.Resolution = string.Empty;
+            this.DisplayName = string.Empty;
         }
 
         public VirtualDisplay(Screen screen, int scale)
@@ -31,6 +43,9 @@ namespace DualWallpaper
 
             this.BackgroundColor = Color.LightGray;
             this.BorderStyle = BorderStyle.FixedSingle;
+
+            this.Resolution = string.Empty;
+            this.DisplayName = string.Empty;
         }
 
         /// <summary>
@@ -39,18 +54,16 @@ namespace DualWallpaper
         /// <returns>PictureBox.</returns>
         public PictureBox Draw()
         {
-            var name = this.GetDisplayName();
             var size = this.GetSize();
-            var text = this.GetResolution();
             var location = this.GetLocation();
 
             var pictureBox = new PictureBox
             {
                 BackColor = this.BackgroundColor,
                 BorderStyle = this.BorderStyle,
-                Name = name,
+                Text = this.Resolution,
+                Name = this.DisplayName,
                 Size = size,
-                Text = text,
                 Location = location
             };
 
@@ -66,6 +79,11 @@ namespace DualWallpaper
         {
             string text = this.Screen.DeviceName.Replace(@"\.", "").Replace(@"\", "").ToLower().Replace(@"display", "");
 
+            this.AddLabel(pictureBox, text);
+        }
+
+        public void AddLabel(PictureBox pictureBox, string text)
+        {
             pictureBox.Paint += new PaintEventHandler((sender, e) => VirtualDisplayEventHandler.DrawLabel(sender, e, text));
         }
 
@@ -92,14 +110,44 @@ namespace DualWallpaper
             pictureBox.MouseDoubleClick += new MouseEventHandler((sender, e) => VirtualDisplayEventHandler.DisplayDoubleClick(sender, e, panel, applyBtn, cancelBtn));
         }
 
-        private string GetDisplayName()
+
+        /// <summary>
+        /// Adds system display name to virtual display.
+        /// Note: Must be used before "Draw" method.
+        /// </summary>
+        public void  SetDisplayName()
         {
-            return this.Screen.DeviceName.Replace(@"\.", "").Replace(@"\", "").ToLower();
+            this.SetDisplayName(this.Screen.DeviceName.Replace(@"\.", "").Replace(@"\", "").ToLower());
         }
 
-        private string GetResolution()
+        /// <summary>
+        /// Adds system display name to virtual display.
+        /// Note: Must be used before "Draw" method.
+        /// </summary>
+        /// <param name="displayName">Virtual display name.</param>
+        public void SetDisplayName(string displayName)
         {
-            return $"{this.Screen.Bounds.Width} x {this.Screen.Bounds.Height}";
+            this.DisplayName = displayName;
+        }
+
+        /// <summary>
+        /// Provides (sets) system resolution (width x height) for virtual display.
+        /// Note: Must be used before "Draw" method.
+        /// </summary>
+        public void SetResolution()
+        {
+            this.SetResolution(this.Screen.Bounds.Height, this.Screen.Bounds.Width);
+        }
+
+        /// <summary>
+        /// Provides (sets) system resolution (width x height) for virtual display.
+        /// Note: Must be used before "Draw" method.
+        /// </summary>
+        /// <param name="height">Virtual display height.</param>
+        /// <param name="width">Virtual display width.</param>
+        public void SetResolution(int height, int width)
+        {
+            this.Resolution = $"{width} x {height}";
         }
 
         private Size GetSize()

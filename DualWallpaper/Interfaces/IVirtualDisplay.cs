@@ -12,7 +12,12 @@ namespace DualWallpaper.Interfaces
     {
         PictureBox Draw();
         void AddLabel(PictureBox pictureBox);
+        void AddLabel(PictureBox pictureBox, string text);
         void AddSingleClick(PictureBox pictureBox, Panel panel, Button searchBtn);
         void AddDoubleClick(PictureBox pictureBox, Panel panel, Button applyBtn, Button cancelBtn);
+        void SetDisplayName();
+        void SetDisplayName(string displayName);
+        void SetResolution();
+        void SetResolution(int height, int width);
     }
 }

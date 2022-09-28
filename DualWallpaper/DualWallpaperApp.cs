@@ -125,6 +125,8 @@ namespace WallpaperManager
             this.searchBtn.Visible = false;
 
             PictureBox  display = this.virtualDisplayManager.Show(this.wall.Bounds.Width / 2, this.wall.Bounds.Height / 2);
+
+            this.wall.Controls.Add(display);
         }
 
 

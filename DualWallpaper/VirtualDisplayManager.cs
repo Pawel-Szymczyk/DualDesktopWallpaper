@@ -41,6 +41,11 @@ namespace DualWallpaper
         //    set => this.scale = value;
         //}
 
+        /// <summary>
+        /// Space between drawn displays.
+        /// </summary>
+        private readonly int margin = 1;
+
         private int Scale { get; set; }
         private Panel Panel { get; set; }
         private Button SearchBtn { get; set; }
@@ -48,11 +53,14 @@ namespace DualWallpaper
         private Button CancelBtn { get; set; }
 
         /// <summary>
-        /// Space between drawn displays.
+        /// Total Height of multiple displays.
         /// </summary>
-        private readonly int margin = 1;
+        public int TotalHeight { get; private set; }
 
-
+        /// <summary>
+        /// Total Width of multiple displays.
+        /// </summary>
+        public int TotalWidth { get; private set; }
 
         /// <summary>
         /// Default position of the 2md virtual display.
@@ -93,6 +101,8 @@ namespace DualWallpaper
             this.SearchBtn = new Button();
             this.ConfirmBtn = new Button();
             this.CancelBtn = new Button();
+            this.TotalHeight = 0;
+            this.TotalWidth = 0;
         }
 
         public VirtualDisplayManager(Panel panel, Button searchBtn, Button applyBtn, Button cancelBtn)
@@ -102,133 +112,41 @@ namespace DualWallpaper
             this.SearchBtn = searchBtn;
             this.ConfirmBtn = applyBtn;
             this.CancelBtn = cancelBtn;
+            this.TotalHeight = 0;
+            this.TotalWidth = 0;
         }
 
         /// <summary>
         /// Returns single virtual display.
         /// </summary>
         /// <returns></returns>
-        /// <exception cref="NotImplementedException"></exception>
-        public PictureBox Show(int parentContainerMiddleWidth, int parentContainerMiddleHeight)
+        public PictureBox Show(int centerPointX, int centerPointY)
         {
-
-            // TODO: if this is merged then it should show still two screens together in different positions, only the image is stretched over two displays
-            // otherwise show only single monitor picked by user(?) and allow modify background only for selected display...
-
-
+            // ---------------------------------------------------
+            // define sum of height and width for both screens...
             this.SetTotalWidthAndHeightOfVirtualDisplays(SecondaryVirtualDisplayLayout);
-
-
-
-            // Draw Single Display -- Fuck, this logic should be for merged image (of 2 monitors, common picture)
-
-            // here the scale should be left default...
-
-            //Screen screen = null;
-            //string resolution = string.Empty;
-            //if (Screen.AllScreens[0].Primary)
-            //{
-            //    screen = Screen.AllScreens[0];
-            //    // this will be wrong but for now... it requires to know exavct screens positions to each other...
-            //    int width = Screen.AllScreens[0].Bounds.Width + Screen.AllScreens[1].Bounds.Width;
-            //    int height = Screen.AllScreens[1].Bounds.Height;
-            //    resolution = $"{width} x {height}";
-
-            //}
-            //else
-            //{
-            //    screen = Screen.AllScreens[1];
-            //}
-
-            //// actual screen scaled size
-            //int scaledScreenHeight = screen.Bounds.Size.Height / this.Scale;
-            //int scaledScreenWidth = (screen.Bounds.Size.Width / this.Scale);
-
-            //// center of actual screen
-            //int displayCenterX = scaledScreenWidth / 2;
-            //int displayCenterY = scaledScreenHeight / 2;
-
-            //string text = "1 | 2";
-            //string deviceName = "mergedDisplay";
-
-
-
-
-
-
-            //foreach (Screen screen in Screen.AllScreens.OrderByDescending(x => x.Primary == true))
-            //{
-            //    if (screen.Primary)
-            //    {
-            //        // set position for main screen first...
-            //        //realDisplayOneShiftLocation = new Point(centerPointX - (display.Width / 2), centerPointY - (display.Height / 2));
-
-            //        //display.Location = realDisplayOneShiftLocation;
-
-            //        width += screen.Bounds.Width;
-            //    }
-            //    else
-            //    {
-            //        //int x = 0;
-            //        //int y = 0;
-
-            //        if (screen.Bounds.X < 0)
-            //        {
-            //            // left
-            //            //x = realDisplayOneShiftLocation.X - (screen.Bounds.Width / this.Scale) - this.margin;
-            //            //y = realDisplayOneShiftLocation.Y + (screen.Bounds.Y / this.Scale);
-
-            //            width += screen.Bounds.Width;
-            //        }
-            //        else if (screen.Bounds.X >= 0 && screen.Bounds.Y < 0)
-            //        {
-            //            // top
-            //            //x = realDisplayOneShiftLocation.X + (screen.Bounds.X / this.Scale);
-            //            //y = realDisplayOneShiftLocation.Y + (screen.Bounds.Y / this.Scale) - this.margin;
-
-            //            width += screen.Bounds.Width;
-            //        }
-            //        else if (screen.Bounds.X >= 0 && screen.Bounds.Y >= Screen.AllScreens[0].Bounds.Height)
-            //        {
-            //            // bottom
-            //            //x = realDisplayOneShiftLocation.X + (screen.Bounds.X / this.Scale);
-            //            //y = realDisplayOneShiftLocation.Y + (screen.Bounds.Y / this.Scale) + this.margin;
-            //        }
-            //        else
-            //        {
-            //            // right 
-            //            //x = realDisplayOneShiftLocation.X + (screen.Bounds.X / this.Scale);
-            //            //y = realDisplayOneShiftLocation.Y + (screen.Bounds.Y / this.Scale);
-
-
-            //        }
-
-            //        //display.Location = new Point(x, y);
-            //    }
-            //}
-
 
 
             // ---------------------------------------------------
             // create virtual display
-            //IVirtualDisplay virtualDisplay = new VirtualDisplay(scaledScreenWidth, scaledScreenHeight, deviceName, resolution);
-            //PictureBox display = virtualDisplay.Draw();
+            IVirtualDisplay virtualDisplay = new VirtualDisplay(Screen.PrimaryScreen, this.Scale);
 
-            //// ---------------------------------------------------
-            //// add additional features to virtual display
-            //virtualDisplay.AddLabel(display, text);
-            //virtualDisplay.AddSingleClick(display, this.Panel, this.SearchBtn);
-            //virtualDisplay.AddDoubleClick(display, this.Panel, this.ConfirmBtn, this.CancelBtn);
+            virtualDisplay.SetDisplayName("display1|2");
+            virtualDisplay.SetResolution(this.TotalHeight, this.TotalWidth);
 
-            //// ---------------------------------------------------
-            //// set virtual display location
-            //int x = parentContainerMiddleWidth - displayCenterX;
-            //int y = parentContainerMiddleHeight - displayCenterY;
-            //display.Location = new Point(x, y);
+            PictureBox display = virtualDisplay.Draw();
 
-            //return display;
+            // ---------------------------------------------------
+            // add additional features to virtual display
+            virtualDisplay.AddLabel(display, "1 | 2");
+            virtualDisplay.AddSingleClick(display, this.Panel, this.SearchBtn);
+            virtualDisplay.AddDoubleClick(display, this.Panel, this.ConfirmBtn, this.CancelBtn);
 
-            return null;
+            // ---------------------------------------------------
+            // set virtual display location (on the middle of the wall)
+            display.Location = new Point(centerPointX - (display.Width / 2), centerPointY - (display.Height / 2));
+
+            return display;
         }
 
 
@@ -250,7 +168,6 @@ namespace DualWallpaper
         /// Returns all virtual displays.
         /// </summary>
         /// <returns></returns>
-        /// <exception cref="NotImplementedException"></exception>
         public List<PictureBox> ShowAll(int centerPointX, int centerPointY)
         {
             var pictureBoxes = new List<PictureBox>();
@@ -262,6 +179,10 @@ namespace DualWallpaper
                 // ---------------------------------------------------
                 // create virtual display
                 IVirtualDisplay virtualDisplay = new VirtualDisplay(screen, this.Scale);
+
+                virtualDisplay.SetDisplayName();
+                virtualDisplay.SetResolution();
+
                 PictureBox display = virtualDisplay.Draw();
 
                 // ---------------------------------------------------
@@ -269,8 +190,8 @@ namespace DualWallpaper
                 virtualDisplay.AddLabel(display);
                 virtualDisplay.AddSingleClick(display, this.Panel, this.SearchBtn);
                 virtualDisplay.AddDoubleClick(display, this.Panel, this.ConfirmBtn, this.CancelBtn);
+                
 
-               
 
                 // --------------------------------------------------
                 // Position virtual display on panel...
@@ -322,10 +243,13 @@ namespace DualWallpaper
 
 
 
-        public int TotalHeight { get; private set; }
-        public int TotalWidth { get; private set; }
+       
 
 
+        /// <summary>
+        /// Calulates the width and height of connected virtual displays in different variations (layouts).
+        /// </summary>
+        /// <param name="secondaryVirtualDisplayLayout">Position(layout) of secondary display, e.g. second display is on the right hand side.</param>
         private void SetTotalWidthAndHeightOfVirtualDisplays(VirtualDisplayLayout secondaryVirtualDisplayLayout)
         {
             int totalWidth = 0;
@@ -411,6 +335,9 @@ namespace DualWallpaper
                     totalWidth = primaryDisplay.Bounds.Width;
                 }
             }
+
+            this.TotalWidth = totalWidth;
+            this.TotalHeight = totalHeight;
         }
 
     }
