@@ -10,9 +10,11 @@ namespace DualWallpaper.Interfaces
 {
     public interface IVirtualDisplayManager
     {
+        int Scale { get; }
         int TotalHeight { get; }
         int TotalWidth { get; }
         VirtualDisplayLayout SecondaryVirtualDisplayLayout { get; }
+
         PictureBox Show(int centerPointX, int centerPointY);
         List<PictureBox> ShowAll(int centerPointX, int centerPointY);
     }

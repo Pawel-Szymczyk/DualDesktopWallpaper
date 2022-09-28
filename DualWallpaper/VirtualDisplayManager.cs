@@ -46,11 +46,16 @@ namespace DualWallpaper
         /// </summary>
         private readonly int margin = 1;
 
-        private int Scale { get; set; }
+        
         private Panel Panel { get; set; }
         private Button SearchBtn { get; set; }
         private Button ConfirmBtn { get; set; }
         private Button CancelBtn { get; set; }
+
+        /// <summary>
+        /// Dynamic scale, used to nicely position both screens.
+        /// </summary>
+        public int Scale { get; private set; }
 
         /// <summary>
         /// Total Height of multiple displays.
@@ -107,7 +112,7 @@ namespace DualWallpaper
 
         public VirtualDisplayManager(Panel panel, Button searchBtn, Button applyBtn, Button cancelBtn)
         {
-            this.Scale = 17;
+            this.Scale = 1;
             this.Panel = panel;
             this.SearchBtn = searchBtn;
             this.ConfirmBtn = applyBtn;
@@ -170,6 +175,8 @@ namespace DualWallpaper
         /// <returns></returns>
         public List<PictureBox> ShowAll(int centerPointX, int centerPointY)
         {
+            this.RefreshScale(this.SecondaryVirtualDisplayLayout);
+
             var pictureBoxes = new List<PictureBox>();
             var realDisplayOneShiftLocation = new Point();
 
@@ -219,7 +226,7 @@ namespace DualWallpaper
                         x = realDisplayOneShiftLocation.X + (screen.Bounds.X / this.Scale);
                         y = realDisplayOneShiftLocation.Y + (screen.Bounds.Y / this.Scale) - this.margin;
                     }
-                    else if (screen.Bounds.X >= 0 && screen.Bounds.Y >= Screen.AllScreens[0].Bounds.Height)
+                    else if (screen.Bounds.X >= 0 && screen.Bounds.Y >= Screen.AllScreens[0].Bounds.Height) // AllScreen[0] is not primary screen
                     {
                         // bottom
                         x = realDisplayOneShiftLocation.X + (screen.Bounds.X / this.Scale);
@@ -241,13 +248,8 @@ namespace DualWallpaper
             return pictureBoxes;
         }
 
-
-
-       
-
-
         /// <summary>
-        /// Calulates the width and height of connected virtual displays in different variations (layouts).
+        /// Calculates the width and height of connected virtual displays in different variations (layouts).
         /// </summary>
         /// <param name="secondaryVirtualDisplayLayout">Position(layout) of secondary display, e.g. second display is on the right hand side.</param>
         private void SetTotalWidthAndHeightOfVirtualDisplays(VirtualDisplayLayout secondaryVirtualDisplayLayout)
@@ -340,24 +342,24 @@ namespace DualWallpaper
             this.TotalHeight = totalHeight;
         }
 
+        /// <summary>
+        /// Scale display screen depends on their layout.
+        /// </summary>
+        /// <param name="secondaryVirtualDisplayLayout">Position(layout) of secondary display, e.g. second display is on the right hand side.</param>
+        private void RefreshScale(VirtualDisplayLayout secondaryVirtualDisplayLayout)
+        {
+            if (secondaryVirtualDisplayLayout.Equals(VirtualDisplayLayout.Left)
+                || secondaryVirtualDisplayLayout.Equals(VirtualDisplayLayout.Right))
+            {
+                this.Scale = 13;
+            }
+            else if (secondaryVirtualDisplayLayout.Equals(VirtualDisplayLayout.Top)
+                || secondaryVirtualDisplayLayout.Equals(VirtualDisplayLayout.Bottom))
+            {
+                this.Scale = 24;
+            }
+        }
     }
 }
 
 
-//switch (secondaryVirtualDisplayLayout)
-//{
-//    case VirtualDisplayLayout.Left:
-//        break;
-
-//    case VirtualDisplayLayout.Right:
-//        break;
-
-//    case VirtualDisplayLayout.Top:
-//        break;
-
-//    case VirtualDisplayLayout.Bottom:
-//        break;
-
-//    default:
-//        break;
-//}
