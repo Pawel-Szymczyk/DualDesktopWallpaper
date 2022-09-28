@@ -1,4 +1,5 @@
-﻿using DualWallpaper.Interfaces;
+﻿using DualWallpaper.Enums;
+using DualWallpaper.Interfaces;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
@@ -7,11 +8,14 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using WallpaperManager;
+using WallpaperManager.Interfaces;
 
 namespace DualWallpaper
 {
     public class VirtualDisplay : IVirtualDisplay
     {
+        private IVirtualDisplayEventHandler virtualDisplayEventHandler;
+
         private Screen Screen { get; set; }
         private int Scale { get; set; }
         private Color BackgroundColor { get; set; }
@@ -27,6 +31,9 @@ namespace DualWallpaper
         /// </summary>
         private string DisplayName { get; set; }
 
+        private VirtualDisplayLayout VirtualDisplayLayout { get; set; }
+
+
         public VirtualDisplay() 
         {
             this.Scale = 1;
@@ -34,6 +41,7 @@ namespace DualWallpaper
             this.BorderStyle = BorderStyle.FixedSingle;
             this.Resolution = string.Empty;
             this.DisplayName = string.Empty;
+            this.VirtualDisplayLayout = VirtualDisplayLayout.None;
         }
 
         public VirtualDisplay(Screen screen, int scale)
@@ -46,6 +54,22 @@ namespace DualWallpaper
 
             this.Resolution = string.Empty;
             this.DisplayName = string.Empty;
+
+            this.VirtualDisplayLayout = VirtualDisplayLayout.None;
+        }
+
+        public VirtualDisplay(Screen screen, int scale, VirtualDisplayLayout secondaryVirtualDisplayLayout)
+        {
+            this.Screen = screen;
+            this.Scale = scale;
+
+            this.BackgroundColor = Color.LightGray;
+            this.BorderStyle = BorderStyle.FixedSingle;
+
+            this.Resolution = string.Empty;
+            this.DisplayName = string.Empty;
+
+            this.VirtualDisplayLayout = secondaryVirtualDisplayLayout;
         }
 
         /// <summary>
@@ -54,6 +78,9 @@ namespace DualWallpaper
         /// <returns>PictureBox.</returns>
         public PictureBox Draw()
         {
+            // initialize virtual display handler...
+            this.virtualDisplayEventHandler = new VirtualDisplayEventHandler(this.VirtualDisplayLayout);
+
             var size = this.GetSize();
             var location = this.GetLocation();
 
@@ -84,7 +111,10 @@ namespace DualWallpaper
 
         public void AddLabel(PictureBox pictureBox, string text)
         {
-            pictureBox.Paint += new PaintEventHandler((sender, e) => VirtualDisplayEventHandler.DrawLabel(sender, e, text));
+            if(this.virtualDisplayEventHandler.Equals(null))
+                return;
+
+            pictureBox.Paint += new PaintEventHandler((sender, e) => this.virtualDisplayEventHandler.DrawLabel(sender, e, text));
         }
 
         /// <summary>
@@ -95,7 +125,10 @@ namespace DualWallpaper
         /// <param name="searchBtn"></param>
         public void AddSingleClick(PictureBox pictureBox, Panel panel, Button searchBtn)
         {
-            pictureBox.MouseClick += new MouseEventHandler((sender, e) => VirtualDisplayEventHandler.DisplaySingleClick(sender, e, Screen.AllScreens, panel, searchBtn));
+            if (this.virtualDisplayEventHandler.Equals(null))
+                return;
+
+            pictureBox.MouseClick += new MouseEventHandler((sender, e) => this.virtualDisplayEventHandler.DisplaySingleClick(sender, e, Screen.AllScreens, panel, searchBtn));
         }
 
         /// <summary>
@@ -107,7 +140,10 @@ namespace DualWallpaper
         /// <param name="cancelBtn"></param>
         public void AddDoubleClick(PictureBox pictureBox, Panel panel, Button applyBtn, Button cancelBtn)
         {
-            pictureBox.MouseDoubleClick += new MouseEventHandler((sender, e) => VirtualDisplayEventHandler.DisplayDoubleClick(sender, e, panel, applyBtn, cancelBtn));
+            if (this.virtualDisplayEventHandler.Equals(null))
+                return;
+
+            pictureBox.MouseDoubleClick += new MouseEventHandler((sender, e) => this.virtualDisplayEventHandler.DisplayDoubleClick(sender, e, panel, applyBtn, cancelBtn));
         }
 
 

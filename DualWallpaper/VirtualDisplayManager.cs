@@ -129,8 +129,11 @@ namespace DualWallpaper
         {
             // ---------------------------------------------------
             // define sum of height and width for both screens...
-            this.SetTotalWidthAndHeightOfVirtualDisplays(SecondaryVirtualDisplayLayout);
+            this.SetTotalWidthAndHeightOfVirtualDisplays(this.SecondaryVirtualDisplayLayout);
 
+            // ---------------------------------------------------
+            // define new scale...
+            this.RefreshScale(VirtualDisplayLayout.None);
 
             // ---------------------------------------------------
             // create virtual display
@@ -175,6 +178,8 @@ namespace DualWallpaper
         /// <returns></returns>
         public List<PictureBox> ShowAll(int centerPointX, int centerPointY)
         {
+            // ---------------------------------------------------
+            // define new scale...
             this.RefreshScale(this.SecondaryVirtualDisplayLayout);
 
             var pictureBoxes = new List<PictureBox>();
@@ -185,7 +190,7 @@ namespace DualWallpaper
 
                 // ---------------------------------------------------
                 // create virtual display
-                IVirtualDisplay virtualDisplay = new VirtualDisplay(screen, this.Scale);
+                IVirtualDisplay virtualDisplay = new VirtualDisplay(screen, this.Scale, this.SecondaryVirtualDisplayLayout);
 
                 virtualDisplay.SetDisplayName();
                 virtualDisplay.SetResolution();
@@ -357,6 +362,10 @@ namespace DualWallpaper
                 || secondaryVirtualDisplayLayout.Equals(VirtualDisplayLayout.Bottom))
             {
                 this.Scale = 24;
+            }
+            else if(secondaryVirtualDisplayLayout.Equals(VirtualDisplayLayout.None))
+            {
+                this.Scale = 12;
             }
         }
     }
