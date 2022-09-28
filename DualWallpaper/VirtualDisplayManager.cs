@@ -342,24 +342,36 @@ namespace DualWallpaper
                 totalWidth = Screen.AllScreens.Sum(x => x.Bounds.Width);
 
                 // case 1 secondary display (y) is smaller or equal the primary display (y)
-                // and its height is equal or greater than the primary screen
-
+                // and its bottom is equal or greater than the primary screen
                 if(secondaryDisplay.Bounds.Y <= primaryDisplay.Bounds.Y 
-                    && secondaryDisplay.Bounds.Height >= primaryDisplay.Bounds.Height)
+                    && secondaryDisplay.Bounds.Bottom >= primaryDisplay.Bounds.Bottom)
                 {
                     totalHeight = secondaryDisplay.Bounds.Height;
                 }
 
-
                 // case 2 secondary display (y) is smaller or equal the primary display (y)
-                // and its height is smaller than the primary screen 
+                // and its bottom is smaller than the primary screen 
+                else if(secondaryDisplay.Bounds.Y <= primaryDisplay.Bounds.Y
+                    && secondaryDisplay.Bounds.Bottom < primaryDisplay.Bounds.Bottom)
+                {
+                    totalHeight = secondaryDisplay.Bounds.Height + (primaryDisplay.Bounds.Bottom - secondaryDisplay.Bounds.Bottom);
+                }
 
                 // case 3 secondary display (y) is greater than the priamry display (y)
-                // and its height is equal or greater than the primary screen
+                // and its bottom is equal or greater than the primary screen
+                else if(secondaryDisplay.Bounds.Y > primaryDisplay.Bounds.Y
+                    && secondaryDisplay.Bounds.Bottom >= primaryDisplay.Bounds.Bottom)
+                {
+                    totalHeight = secondaryDisplay.Bounds.Height + (primaryDisplay.Bounds.Y + secondaryDisplay.Bounds.Y);
+                }
 
                 // case 4 secondary display (y) is greater than the priamry display (y)
-                // and its height is smaller than the primary screen
-
+                // and its bottom is smaller than the primary screen
+                else if(secondaryDisplay.Bounds.Y > primaryDisplay.Bounds.Y
+                    && secondaryDisplay.Bounds.Bottom < primaryDisplay.Bounds.Bottom)
+                {
+                    totalHeight = primaryDisplay.Bounds.Height;
+                }
 
             }
             else if(secondaryVirtualDisplayLayout.Equals(VirtualDisplayLayout.Top)
@@ -368,19 +380,37 @@ namespace DualWallpaper
                 totalHeight = Screen.AllScreens.Sum(x => x.Bounds.Height);
 
                 // case 1 secondary display (x) is smaller equal the primary display (x)
-                // and its width is equal or greater than the primary screen 
+                // and its right is equal or greater than the primary screen 
+                if(secondaryDisplay.Bounds.X <= primaryDisplay.Bounds.X 
+                    && secondaryDisplay.Bounds.Right >= primaryDisplay.Bounds.Right)
+                {
+                    totalWidth = secondaryDisplay.Bounds.Width;
+                }
 
                 // case 2 secondary display (x) is smaller equal the primary display (x)
-                // and its width is smaller than the primary screen 
+                // and its right is smaller than the primary screen
+                else if(secondaryDisplay.Bounds.X <= primaryDisplay.Bounds.X
+                    && secondaryDisplay.Bounds.Right < primaryDisplay.Bounds.Right)
+                {
+                    totalWidth = secondaryDisplay.Bounds.Width + (primaryDisplay.Bounds.Width - secondaryDisplay.Bounds.Right);
+                }
 
                 // case 3 secondary display (x) is greater than the primary display (x)
-                // and its width is equal or greater than the primary screen
+                // and its right is equal or greater than the primary screen
+                else if (secondaryDisplay.Bounds.X > primaryDisplay.Bounds.X
+                    && secondaryDisplay.Bounds.Right >= primaryDisplay.Bounds.Right)
+                {
+                    totalWidth = secondaryDisplay.Bounds.Width + (primaryDisplay.Bounds.Width - secondaryDisplay.Bounds.X);
+                }
 
                 // case 4 secondary display (x) is greater than the primary display (x)
-                // and its width is smaller than the primary screen
+                // and its right is smaller than the primary screen
+                else if (secondaryDisplay.Bounds.X > primaryDisplay.Bounds.X
+                    && secondaryDisplay.Bounds.Right < primaryDisplay.Bounds.Right)
+                {
+                    totalWidth = primaryDisplay.Bounds.Width;
+                }
             }
-
-
         }
 
     }
