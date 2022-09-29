@@ -128,7 +128,7 @@ namespace DualWallpaper
             if (this.virtualDisplayEventHandler.Equals(null))
                 return;
 
-            pictureBox.MouseClick += new MouseEventHandler((sender, e) => this.virtualDisplayEventHandler.DisplaySingleClick(sender, e, Screen.AllScreens, panel, searchBtn));
+            pictureBox.MouseClick += new MouseEventHandler((sender, e) => this.virtualDisplayEventHandler.DisplaySingleClick(sender, e, panel, searchBtn));
         }
 
         /// <summary>
