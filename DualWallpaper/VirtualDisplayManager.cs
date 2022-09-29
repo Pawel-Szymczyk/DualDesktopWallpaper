@@ -14,42 +14,28 @@ namespace DualWallpaper
     public class VirtualDisplayManager : IVirtualDisplayManager
     {
         /// <summary>
-        /// Represents real screen scale.
-        /// </summary>
-        //private int scale = 14;
-
-        //private int Scale
-        //{
-        //    get
-        //    {
-        //        // this is not fully working scale, this solution is not working in call case scenarios 
-        //        // but for main scenarion this solution is good enough
-        //        // TODO: dynamic scale (future)
-
-        //        //if ((Screen.AllScreens[1].Bounds.X >= 0 && Screen.AllScreens[1].Bounds.Y < 0)
-        //        //|| (Screen.AllScreens[1].Bounds.X >= 0 && Screen.AllScreens[1].Bounds.Y >= Screen.AllScreens[0].Bounds.Height))
-        //        //{
-        //        //    // top or bottom
-        //        //    return 22;
-        //        //}
-
-        //        //return this.scale;
-
-        //        return 15;
-
-        //    }
-        //    set => this.scale = value;
-        //}
-
-        /// <summary>
         /// Space between drawn displays.
         /// </summary>
         private readonly int margin = 1;
 
-        
+        /// <summary>
+        /// Parent panel (the wall).
+        /// </summary>
         private Panel Panel { get; set; }
+
+        /// <summary>
+        /// Search button.
+        /// </summary>
         private Button SearchBtn { get; set; }
-        private Button ConfirmBtn { get; set; }
+
+        /// <summary>
+        /// Apply (OK) button.
+        /// </summary>
+        private Button ApplyBtn { get; set; }
+
+        /// <summary>
+        /// Cancel button.
+        /// </summary>
         private Button CancelBtn { get; set; }
 
         /// <summary>
@@ -74,7 +60,9 @@ namespace DualWallpaper
         {
             get
             {
-                // assumming that primary screen will be always at the front of the user, starting from point(0,0)
+                // ---------------------------------------------------
+                // assumming that primary screen will be always at
+                // the front of the user, starting from point(0,0)
                 var primaryDisplay = Screen.PrimaryScreen;
                 var secondaryDisplay = Screen.AllScreens.Where(x => x != primaryDisplay).FirstOrDefault();
 
@@ -96,7 +84,6 @@ namespace DualWallpaper
                     return VirtualDisplayLayout.Bottom;
                 }
             }
-
         }
 
         public VirtualDisplayManager() 
@@ -104,7 +91,7 @@ namespace DualWallpaper
             this.Scale = 1;
             this.Panel = new Panel();
             this.SearchBtn = new Button();
-            this.ConfirmBtn = new Button();
+            this.ApplyBtn = new Button();
             this.CancelBtn = new Button();
             this.TotalHeight = 0;
             this.TotalWidth = 0;
@@ -115,16 +102,18 @@ namespace DualWallpaper
             this.Scale = 1;
             this.Panel = panel;
             this.SearchBtn = searchBtn;
-            this.ConfirmBtn = applyBtn;
+            this.ApplyBtn = applyBtn;
             this.CancelBtn = cancelBtn;
             this.TotalHeight = 0;
             this.TotalWidth = 0;
         }
 
         /// <summary>
-        /// Returns single virtual display.
+        /// Draws single virtual display as merge (combain) two screens together. Strech one backround over two screens.
         /// </summary>
-        /// <returns></returns>
+        /// <param name="centerPointX">Panel (the wall) central point X.</param>
+        /// <param name="centerPointY">Panel (the wall) central point Y.</param>
+        /// <returns>Virtual display.</returns>
         public PictureBox Show(int centerPointX, int centerPointY)
         {
             // ---------------------------------------------------
@@ -148,7 +137,7 @@ namespace DualWallpaper
             // add additional features to virtual display
             virtualDisplay.AddLabel(display, "1 | 2");
             virtualDisplay.AddSingleClick(display, this.Panel, this.SearchBtn);
-            virtualDisplay.AddDoubleClick(display, this.Panel, this.ConfirmBtn, this.CancelBtn);
+            virtualDisplay.AddDoubleClick(display, this.Panel, this.ApplyBtn, this.CancelBtn);
 
             // ---------------------------------------------------
             // set virtual display location (on the middle of the wall)
@@ -157,25 +146,12 @@ namespace DualWallpaper
             return display;
         }
 
-
         /// <summary>
-        /// Draw number of displays in the parent panel, mimic screen arrangemnt set up in the Windows display settings.
+        /// Draw number of virtual displays, mimic screen arrangemnt set up in the Windows display settings.
         /// </summary>
-        /// <param name="drawSingleDiplay">
-        ///     True if user want to draw single screen (having stretched image over two monitors).
-        ///     False if user want to have all available screens (having multiple wallpapers).
-        /// </param>
-        /// <param name="parentContainerMiddleWidth">Middle of parent panel - width.</param>
-        /// <param name="parentContainerMiddleHeight">Middle of parent panel - height.</param>
-        /// <param name="panel">Parent panel.</param>
-        /// <param name="searchBtn">Search button.</param>
-        /// <returns>List of ready to display picture boxes.</returns>
-
-
-        /// <summary>
-        /// Returns all virtual displays.
-        /// </summary>
-        /// <returns></returns>
+        /// <param name="centerPointX">Panel (the wall) central point X.</param>
+        /// <param name="centerPointY">Panel (the wall) central point Y.</param>
+        /// <returns>List of virtual displays.</returns>
         public List<PictureBox> ShowAll(int centerPointX, int centerPointY)
         {
             // ---------------------------------------------------
@@ -201,10 +177,8 @@ namespace DualWallpaper
                 // add additional features to virtual display
                 virtualDisplay.AddLabel(display);
                 virtualDisplay.AddSingleClick(display, this.Panel, this.SearchBtn);
-                virtualDisplay.AddDoubleClick(display, this.Panel, this.ConfirmBtn, this.CancelBtn);
+                virtualDisplay.AddDoubleClick(display, this.Panel, this.ApplyBtn, this.CancelBtn);
                 
-
-
                 // --------------------------------------------------
                 // Position virtual display on panel...
                 if (screen.Primary)

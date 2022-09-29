@@ -16,9 +16,24 @@ namespace DualWallpaper
     {
         private IVirtualDisplayEventHandler virtualDisplayEventHandler;
 
+        /// <summary>
+        /// System information about desktop screen.
+        /// </summary>
         private Screen Screen { get; set; }
+
+        /// <summary>
+        /// Scale the virtual display size is going to be adjusted.
+        /// </summary>
         private int Scale { get; set; }
+
+        /// <summary>
+        /// Virtual display background color.
+        /// </summary>
         private Color BackgroundColor { get; set; }
+
+        /// <summary>
+        /// Virtual display border style.
+        /// </summary>
         private BorderStyle BorderStyle { get; set; }
 
         /// <summary>
@@ -31,8 +46,10 @@ namespace DualWallpaper
         /// </summary>
         private string DisplayName { get; set; }
 
+        /// <summary>
+        /// Virtual display position.
+        /// </summary>
         private VirtualDisplayLayout VirtualDisplayLayout { get; set; }
-
 
         public VirtualDisplay() 
         {
@@ -75,7 +92,7 @@ namespace DualWallpaper
         /// <summary>
         /// Create (PictureBox) virtual display.
         /// </summary>
-        /// <returns>PictureBox.</returns>
+        /// <returns>Virtual display.</returns>
         public PictureBox Draw()
         {
             // initialize virtual display handler...
@@ -100,8 +117,7 @@ namespace DualWallpaper
         /// <summary>
         /// Adds label to virtual display.
         /// </summary>
-        /// <param name="pictureBox"></param>
-        /// <param name="text"></param>
+        /// <param name="pictureBox">Virtual Display.</param>
         public void AddLabel(PictureBox pictureBox)
         {
             string text = this.Screen.DeviceName.Replace(@"\.", "").Replace(@"\", "").ToLower().Replace(@"display", "");
@@ -109,6 +125,11 @@ namespace DualWallpaper
             this.AddLabel(pictureBox, text);
         }
 
+        /// <summary>
+        /// Adds label to virtual display.
+        /// </summary>
+        /// <param name="pictureBox">Virtual Display.</param>
+        /// <param name="text">Message.</param>
         public void AddLabel(PictureBox pictureBox, string text)
         {
             if(this.virtualDisplayEventHandler.Equals(null))
@@ -120,9 +141,9 @@ namespace DualWallpaper
         /// <summary>
         /// Adds single click functionality to virtual display.
         /// </summary>
-        /// <param name="pictureBox"></param>
-        /// <param name="panel"></param>
-        /// <param name="searchBtn"></param>
+        /// <param name="pictureBox">Virtual Display.</param>
+        /// <param name="panel">Parent panel (the wall).</param>
+        /// <param name="searchBtn">Search button.</param>
         public void AddSingleClick(PictureBox pictureBox, Panel panel, Button searchBtn)
         {
             if (this.virtualDisplayEventHandler.Equals(null))
@@ -134,10 +155,10 @@ namespace DualWallpaper
         /// <summary>
         /// Adds double click functionality to virtual display.
         /// </summary>
-        /// <param name="pictureBox"></param>
-        /// <param name="panel"></param>
-        /// <param name="applyBtn"></param>
-        /// <param name="cancelBtn"></param>
+        /// <param name="pictureBox">Virtual Display.</param>
+        /// <param name="panel">Parent panel (the wall).</param>
+        /// <param name="applyBtn">Apply (OK) button.</param>
+        /// <param name="cancelBtn">Cancel button.</param>
         public void AddDoubleClick(PictureBox pictureBox, Panel panel, Button applyBtn, Button cancelBtn)
         {
             if (this.virtualDisplayEventHandler.Equals(null))
@@ -145,7 +166,6 @@ namespace DualWallpaper
 
             pictureBox.MouseDoubleClick += new MouseEventHandler((sender, e) => this.virtualDisplayEventHandler.DisplayDoubleClick(sender, e, panel, applyBtn, cancelBtn));
         }
-
 
         /// <summary>
         /// Adds system display name to virtual display.
@@ -186,6 +206,9 @@ namespace DualWallpaper
             this.Resolution = $"{width} x {height}";
         }
 
+        /// <summary>
+        /// Returns virtual display size adjusted by scale.
+        /// </summary>
         private Size GetSize()
         {
             int width = this.Screen.Bounds.Size.Width / this.Scale;
@@ -193,6 +216,9 @@ namespace DualWallpaper
             return new Size(width, height);
         }
 
+        /// <summary>
+        /// Returns virtual display location (X and Y) adjusted by scale.
+        /// </summary>
         private Point GetLocation()
         {
             int X = this.Screen.Bounds.X / this.Scale;
@@ -200,8 +226,5 @@ namespace DualWallpaper
 
             return new Point(X, Y);
         }
-
-       
-
     }
 }
