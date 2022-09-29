@@ -1,4 +1,6 @@
-﻿using Microsoft.Win32;
+﻿using DualWallpaper.Enums;
+using DualWallpaper.Interfaces;
+using Microsoft.Win32;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
@@ -10,10 +12,24 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
-namespace WallpaperManager
+namespace DualWallpaper
 {
-    public static class BackgroundManager
+    public class BackgroundManager : IBackgroundManager
     {
+        /// <summary>
+        /// Retrieves or sets the value of one of the system-wide parameters. 
+        /// This function can also update the user profile while setting a parameter.
+        /// </summary>
+        /// <param name="uAction">The system-wide parameter to be retrieved or set.</param>
+        /// <param name="uParam">See the uAction parameter.</param>
+        /// <param name="lpvParam">See the uAction parameter.</param>
+        /// <param name="fuWinIni">This parameter can be zero if you do not want to update the user profile or broadcast the WM_SETTINGCHANGE message, or it can be one or more of the following values.</param>
+        /// <returns>
+        /// If the function succeeds, the return value is a nonzero value.
+        /// If the function fails, the return value is zero.
+        /// </returns>
+        [DllImport("user32.dll", CharSet = CharSet.Auto)]
+        static extern int SystemParametersInfo(int uAction, int uParam, string lpvParam, int fuWinIni);
 
         /// <summary>
         /// SystemParametersInfo returns TRUE unless there is an error.
@@ -31,52 +47,36 @@ namespace WallpaperManager
         private const int SPIF_SENDWININICHANGE = 0x02;
 
         /// <summary>
-        /// Retrieves or sets the value of one of the system-wide parameters. 
-        /// This function can also update the user profile while setting a parameter.
+        /// Secondary virtual display position.
         /// </summary>
-        /// <param name="uAction">The system-wide parameter to be retrieved or set.</param>
-        /// <param name="uParam">See the uAction parameter.</param>
-        /// <param name="lpvParam">See the uAction parameter.</param>
-        /// <param name="fuWinIni">This parameter can be zero if you do not want to update the user profile or broadcast the WM_SETTINGCHANGE message, or it can be one or more of the following values.</param>
-        /// <returns>
-        /// If the function succeeds, the return value is a nonzero value.
-        /// If the function fails, the return value is zero.
-        /// </returns>
-        [DllImport("user32.dll", CharSet = CharSet.Auto)]
-        static extern int SystemParametersInfo(int uAction, int uParam, string lpvParam, int fuWinIni);
+        private VirtualDisplayLayout VirtualDisplayLayout { get; set; }
 
         /// <summary>
-        /// Difault position of the 2md display.
+        /// Total Height of multiple displays.
         /// </summary>
-        private static string defaultLayout = "right";
-        private static string DefaultLayout 
+        private int TotalHeight { get; set; }
+
+        /// <summary>
+        /// Total Width of multiple displays.
+        /// </summary>
+        private int TotalWidth { get; set; }
+
+        public BackgroundManager()
         {
-            get 
-            {
-                var screens = Screen.AllScreens;
-
-                // assumming that primary screen will be always at the front of the user, starting from point(0,0)
-
-                if (screens[1].Bounds.X < 0)
-                {
-                    return "left";
-                }
-                else if (screens[1].Bounds.X >= 0 && screens[1].Bounds.Y < 0)
-                {
-                    return "top";
-                }
-                else if (screens[1].Bounds.X >= 0 && screens[1].Bounds.Y >= Screen.AllScreens[0].Bounds.Height)
-                {
-                    return "bottom";
-                }
-                else
-                {
-                    return "right";
-                }
-            }
+            this.VirtualDisplayLayout = VirtualDisplayLayout.None;
         }
 
+        public BackgroundManager(VirtualDisplayLayout secondaryVirtualDisplayLayout)
+        {
+            this.VirtualDisplayLayout = secondaryVirtualDisplayLayout;
+        }
 
+        public BackgroundManager(VirtualDisplayLayout secondaryVirtualDisplayLayout, int totalHeight, int totalWidth)
+        {
+            this.VirtualDisplayLayout = secondaryVirtualDisplayLayout;
+            this.TotalHeight = totalHeight;
+            this.TotalWidth = totalWidth;
+        }
 
 
         /// <summary>
@@ -85,79 +85,129 @@ namespace WallpaperManager
         /// <param name="images">List of images.</param>
         /// <param name="screens">Array of physical screens.</param>
         /// <returns>Bitmap.</returns>
-        private static Bitmap MergePictures(List<Image> images, Screen[] screens, string layout)
+        //private Bitmap MergePictures(List<Image> images, Screen[] screens, VirtualDisplayLayout virtualDisplayLayout)
+        private Bitmap MergePictures(List<Image> images, Screen[] screens)
         {
-            int outputImageWidth = 0;
-            int outputImageHeight = 0;
+
 
             // -------------------------------------------------------------------------
-            // Define total height and width of the picture, depends on the layout.
+            // #1. Create a new Bitmap with total width, total height...
             //
-            if (layout == "top" || layout == "bottom")
-            {
-                outputImageHeight = images.Sum(i => i.Height);
-                
-                if (screens[1].Bounds.X + screens[1].Bounds.Width > screens[0].Bounds.Width) 
-                {
-                    var difference = images[0].Width - screens[1].Bounds.X ;
-                    outputImageWidth = images[0].Width + images[1].Width - difference;
-                }
-                else
-                {
-                    outputImageWidth = images[0].Width > images[1].Width ? images[0].Width : images[1].Width;
-                }
-            }
-            else if (layout == "right" || layout == "left")
-            {
-                outputImageWidth = images.Sum(i => i.Width);
+            //Bitmap outputImage = new Bitmap(outputImageWidth, outputImageHeight, PixelFormat.Format32bppArgb);
+            Bitmap outputImage = new Bitmap(this.TotalWidth, this.TotalHeight, PixelFormat.Format32bppArgb);
 
-                // when second image is upper than primary, it has negative Y value.
-                if (screens[1].Bounds.Top < 0)
-                {
-                    outputImageHeight = images[0].Height + images[1].Height - screens[1].Bounds.Bottom;
-                }
-                // when second image is lower than primary, it has positve Y value.
-                else
-                {
-                    outputImageHeight = images[0].Height > images[1].Height ? images[0].Height + screens[1].Bounds.Top : images[1].Height + screens[1].Bounds.Top;
-                }
 
-                // special case, where top is negative but bottom is grater than primarys' height
-                if (screens[1].Bounds.Top < 0 && screens[1].Bounds.Bottom > images[0].Height)
-                {
-                    outputImageHeight = images[0].Height > images[1].Height ? images[0].Height : images[1].Height;
-                }
-            }
+            var primaryDisplay = Screen.PrimaryScreen;
+            var secondaryDisplay = Screen.AllScreens.Where(x => x != primaryDisplay).FirstOrDefault();
 
-            Bitmap outputImage = new Bitmap(outputImageWidth, outputImageHeight, PixelFormat.Format32bppArgb);
-
+           
 
             // -------------------------------------------------------------------------
-            // Draw image based on the layout
+            // #2. Draw image based on the layout
             //
             using (var graphics = Graphics.FromImage(outputImage))
             {
                 graphics.Clear(Color.Transparent);
 
-                switch (layout)
+
+
+                switch (this.VirtualDisplayLayout)
                 {
-                    case "right":
-                        if (screens[1].Bounds.Top < 0)
+                    case VirtualDisplayLayout.Left:
+
+                        // case 1 secondary display (y) is smaller or equal the primary display (y)
+                        // and its bottom is equal or greater than the primary screen
+                        if (secondaryDisplay.Bounds.Y <= primaryDisplay.Bounds.Y
+                            && secondaryDisplay.Bounds.Bottom >= primaryDisplay.Bounds.Bottom)
+                        {
+                            // draw secondary display image firts...
+                            graphics.DrawImage(
+                               images[1],
+                               new Rectangle(new Point(), images[1].Size),
+                               new Rectangle(new Point(), images[1].Size),
+                               GraphicsUnit.Pixel);
+
+                            // ...draw primary display image
+                            //int image0x = images[1].Width;
+                            //int image0y = images[1].Height - primaryDisplay.Bounds.Bottom;
+                            int image0x = primaryDisplay.Bounds.X + secondaryDisplay.Bounds.Width;
+                            int image0y = images[1].Height - primaryDisplay.Bounds.Bottom;
+                            graphics.DrawImage(
+                                images[0],
+                                new Rectangle(new Point(image0x, image0y), images[0].Size),
+                                new Rectangle(new Point(), images[0].Size),
+                                GraphicsUnit.Pixel);
+
+                           
+                        }
+
+
+
+
+
+
+
+
+
+                        //if (primaryDisplay.Bounds.Top < 0)
+                        //{
+                        //    graphics.DrawImage(
+                        //        images[1],
+                        //        new Rectangle(new Point(), images[1].Size),
+                        //        new Rectangle(new Point(), images[1].Size),
+                        //        GraphicsUnit.Pixel);
+
+                        //    graphics.DrawImage(
+                        //        images[0],
+                        //        new Rectangle(new Point(images[1].Width, images[1].Height - primaryDisplay.Bounds.Bottom), images[0].Size),
+                        //        new Rectangle(new Point(), images[0].Size),
+                        //        GraphicsUnit.Pixel);
+                        //}
+                        //else
+                        //{
+                        //    graphics.DrawImage(
+                        //        images[1],
+                        //        new Rectangle(new Point(0, primaryDisplay.Bounds.Y), images[1].Size),
+                        //        new Rectangle(new Point(), images[1].Size),
+                        //        GraphicsUnit.Pixel);
+
+                        //    graphics.DrawImage(
+                        //        images[0],
+                        //        new Rectangle(new Point(images[1].Width, 0), images[0].Size),
+                        //        new Rectangle(new Point(), images[0].Size),
+                        //        GraphicsUnit.Pixel);
+
+                        //    //special case
+                        //    // where image is in left bottom corner, lack of good solution at the moment
+                        //}
+
+                        break;
+
+
+
+
+
+
+
+
+                    case VirtualDisplayLayout.Right:
+
+                        if (primaryDisplay.Bounds.Top < 0)
                         {
                             // when second image has nagative y value, then it should be tread as image 1 having starting point as (x, 0).
                             graphics.DrawImage(
-                                images[1], 
-                                new Rectangle(new Point(images[0].Width, 0), images[1].Size), 
-                                new Rectangle(new Point(), images[1].Size), 
+                                images[1],
+                                new Rectangle(new Point(images[0].Width, 0), images[1].Size),
+                                new Rectangle(new Point(), images[1].Size),
                                 GraphicsUnit.Pixel);
 
                             graphics.DrawImage(
-                                images[0], 
-                                new Rectangle(new Point(0, images[1].Height - screens[1].Bounds.Bottom), images[0].Size), 
-                                new Rectangle(new Point(), images[0].Size), 
+                                images[0],
+                                new Rectangle(new Point(0, images[1].Height - primaryDisplay.Bounds.Bottom), images[0].Size),
+                                new Rectangle(new Point(), images[0].Size),
                                 GraphicsUnit.Pixel);
                         }
-                        else 
+                        else
                         {
 
                             // primary screen is always with coordinates (0,0), so the screen we can take the height difference is one of the highier screens.
@@ -167,68 +217,38 @@ namespace WallpaperManager
                             var y = Math.Abs(higherScreen.Bounds.Y);
 
                             graphics.DrawImage(
-                                images[0], 
-                                new Rectangle(new Point(0,y), images[0].Size), 
-                                new Rectangle(new Point(), images[0].Size), 
-                                GraphicsUnit.Pixel);
-
-                            graphics.DrawImage(
-                                images[1],
-                                new Rectangle(new Point(images[0].Width, screens[1].Bounds.Y), images[1].Size),
-                                new Rectangle(new Point(), images[1].Size),
-                                GraphicsUnit.Pixel);
-                        }
-                        break;
-
-                    case "left":
-                        if (screens[1].Bounds.Top < 0)
-                        {
-                            graphics.DrawImage(
-                                images[1],
-                                new Rectangle(new Point(), images[1].Size),
-                                new Rectangle(new Point(), images[1].Size),
-                                GraphicsUnit.Pixel);
-
-                            graphics.DrawImage(
                                 images[0],
-                                new Rectangle(new Point(images[1].Width, images[1].Height - screens[1].Bounds.Bottom), images[0].Size),
-                                new Rectangle(new Point(), images[0].Size),
-                                GraphicsUnit.Pixel);
-                        }
-                        else
-                        {
-                            graphics.DrawImage(
-                                images[1],
-                                new Rectangle(new Point(0, screens[1].Bounds.Y), images[1].Size),
-                                new Rectangle(new Point(), images[1].Size),
-                                GraphicsUnit.Pixel);
-
-                            graphics.DrawImage(
-                                images[0],
-                                new Rectangle(new Point(images[1].Width, 0), images[0].Size),
+                                new Rectangle(new Point(0, y), images[0].Size),
                                 new Rectangle(new Point(), images[0].Size),
                                 GraphicsUnit.Pixel);
 
-                            //special case
-                            // where image is in left bottom corner, lack of good solution at the moment
+                            graphics.DrawImage(
+                                images[1],
+                                new Rectangle(new Point(images[0].Width, primaryDisplay.Bounds.Y), images[1].Size),
+                                new Rectangle(new Point(), images[1].Size),
+                                GraphicsUnit.Pixel);
                         }
+
                         break;
 
-                    case "top":
+                    case VirtualDisplayLayout.Top:
+
                         graphics.DrawImage(
-                            images[1],
-                            new Rectangle(new Point(screens[1].Bounds.X, 0), images[1].Size),
-                            new Rectangle(new Point(), images[1].Size),
-                            GraphicsUnit.Pixel);
+                           images[1],
+                           new Rectangle(new Point(primaryDisplay.Bounds.X, 0), images[1].Size),
+                           new Rectangle(new Point(), images[1].Size),
+                           GraphicsUnit.Pixel);
 
                         graphics.DrawImage(
                                 images[0],
-                                new Rectangle(new Point(0, screens[1].Bounds.Height), images[0].Size),
+                                new Rectangle(new Point(0, primaryDisplay.Bounds.Height), images[0].Size),
                                 new Rectangle(new Point(), images[0].Size),
                                 GraphicsUnit.Pixel);
+
                         break;
 
-                    case "bottom":
+                    case VirtualDisplayLayout.Bottom:
+
                         graphics.DrawImage(
                             images[0],
                             new Rectangle(new Point(), images[0].Size),
@@ -237,21 +257,26 @@ namespace WallpaperManager
 
                         graphics.DrawImage(
                            images[1],
-                           new Rectangle(new Point(screens[1].Bounds.X, screens[0].Bounds.Height), images[1].Size),
+                           new Rectangle(new Point(primaryDisplay.Bounds.X, screens[0].Bounds.Height), images[1].Size),
                            new Rectangle(new Point(), images[1].Size),
                            GraphicsUnit.Pixel);
+
                         break;
 
+                    case VirtualDisplayLayout.None:
+                        break;
                     default:
                         break;
                 }
+
+
             }
 
             return outputImage;
         }
 
 
-        private static Bitmap StretchBackground(Image firstImage, Screen[] screens)
+        private Bitmap StretchBackground(Image firstImage, Screen[] screens)
         {
             var firstScreen = screens[0];
             var secondScreen = screens[1];
@@ -288,27 +313,10 @@ namespace WallpaperManager
         }
 
 
-        private static void SaveBackground(Bitmap bitmap, string wallpaperStyle, string tileWallpaper)
-        {
-            // store temporary image in appdata...
-            var img = (Image)bitmap;
-            string tempPath = Path.Combine(Path.GetTempPath(), "wallpaper.bmp");
-            img.Save(tempPath, ImageFormat.Bmp);
-
-            // wallpaper styles:
-            // 0 - center
-            // 2 - streched
-            // 6 - fit
-            // 10 - fill
+        
 
 
-            RegistryKey key = Registry.CurrentUser.OpenSubKey(@"Control Panel\Desktop", true);
-            //key.SetValue(@"WallpaperStyle", 0.ToString());
-            //key.SetValue(@"TileWallpaper", 1.ToString());
-            key.SetValue(@"WallpaperStyle", wallpaperStyle);
-            key.SetValue(@"TileWallpaper", tileWallpaper);
-            SystemParametersInfo(SPI_SETDESKWALLPAPER, 0, tempPath, SPIF_UPDATEINIFILE | SPIF_SENDWININICHANGE);
-        }
+
 
 
         /// <summary>
@@ -316,7 +324,7 @@ namespace WallpaperManager
         /// </summary>
         /// <param name="panel"></param>
         /// <param name="checkBox"></param>
-        public static void SetBackground(Panel panel, CheckBox checkBox)
+        public void SaveBackground(Panel panel, CheckBox checkBox)
         {
             // get file names
             string fileName1 = panel.Controls[0].Tag != null ? panel.Controls[0].Tag.ToString() : string.Empty;
@@ -342,22 +350,25 @@ namespace WallpaperManager
 
                 if (checkBox.Checked)
                 {
-                    bm = BackgroundManager.StretchBackground(img1, Screen.AllScreens);
-                    BackgroundManager.SaveBackground(bm, "0", "1");
+                    bm = StretchBackground(img1, Screen.AllScreens);
+                    string tempPath = SaveBackgroundToFile(bm);
+                    SaveBackgroundToSystemRegistry(tempPath, "0", "1");
                 }
                 else
                 {
-                    bm = BackgroundManager.MergePictures(images, Screen.AllScreens, DefaultLayout);
-                    BackgroundManager.SaveBackground(bm, "0", "1");
+                    //bm = MergePictures(images, Screen.AllScreens, this.VirtualDisplayLayout);
+                    bm = MergePictures(images, Screen.AllScreens);
+                    string tempPath = SaveBackgroundToFile(bm);
+                    SaveBackgroundToSystemRegistry(tempPath, "0", "1");
                 }
 
-                
+
 
 
             }
         }
 
-        public static void CleanWallpapers(Panel panel)
+        public void CleanWallpapers(Panel panel)
         {
             foreach (var u in panel.Controls)
             {
@@ -369,7 +380,32 @@ namespace WallpaperManager
             }
         }
 
+        private string SaveBackgroundToFile(Bitmap bitmap)
+        {
+            // store temporary image in appdata...
+            var img = (Image)bitmap;
+            string tempPath = Path.Combine(Path.GetTempPath(), "wallpaper.bmp");
+            img.Save(tempPath, ImageFormat.Bmp);
 
+            return tempPath;
+        }
+
+        private void SaveBackgroundToSystemRegistry(string tempPath, string wallpaperStyle, string tileWallpaper)
+        {
+            // wallpaper styles:
+            // 0 - center
+            // 2 - streched
+            // 6 - fit
+            // 10 - fill
+
+
+            RegistryKey key = Registry.CurrentUser.OpenSubKey(@"Control Panel\Desktop", true);
+            //key.SetValue(@"WallpaperStyle", 0.ToString());
+            //key.SetValue(@"TileWallpaper", 1.ToString());
+            key.SetValue(@"WallpaperStyle", wallpaperStyle);
+            key.SetValue(@"TileWallpaper", tileWallpaper);
+            SystemParametersInfo(SPI_SETDESKWALLPAPER, 0, tempPath, SPIF_UPDATEINIFILE | SPIF_SENDWININICHANGE);
+        }
 
 
 

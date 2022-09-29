@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Windows.Forms;
 
-namespace WallpaperManager.Interfaces
+namespace DualWallpaper.Interfaces
 {
     public interface IVirtualDisplayEventHandler
     {

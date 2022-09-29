@@ -109,6 +109,22 @@ namespace DualWallpaper
         }
 
         /// <summary>
+        /// Set up basic functionality.
+        ///  - total width and height
+        ///  - scale
+        /// </summary>
+        public void Initialize()
+        {
+            // ---------------------------------------------------
+            // define sum of height and width for both screens...
+            this.SetTotalWidthAndHeightOfVirtualDisplays(this.SecondaryVirtualDisplayLayout);
+
+            // ---------------------------------------------------
+            // define new scale...
+            this.RefreshScale(this.SecondaryVirtualDisplayLayout);
+        }
+
+        /// <summary>
         /// Draws single virtual display as merge (combain) two screens together. Strech one backround over two screens.
         /// </summary>
         /// <param name="centerPointX">Panel (the wall) central point X.</param>
@@ -116,10 +132,6 @@ namespace DualWallpaper
         /// <returns>Virtual display.</returns>
         public PictureBox Show(int centerPointX, int centerPointY)
         {
-            // ---------------------------------------------------
-            // define sum of height and width for both screens...
-            this.SetTotalWidthAndHeightOfVirtualDisplays(this.SecondaryVirtualDisplayLayout);
-
             // ---------------------------------------------------
             // define new scale...
             this.RefreshScale(VirtualDisplayLayout.None);
@@ -163,7 +175,6 @@ namespace DualWallpaper
 
             foreach (Screen screen in Screen.AllScreens.OrderByDescending(x => x.Primary == true))
             {
-
                 // ---------------------------------------------------
                 // create virtual display
                 IVirtualDisplay virtualDisplay = new VirtualDisplay(screen, this.Scale, this.SecondaryVirtualDisplayLayout);
@@ -240,82 +251,92 @@ namespace DualWallpaper
             var primaryDisplay = Screen.PrimaryScreen;
             var secondaryDisplay = Screen.AllScreens.Where(x => x != primaryDisplay).FirstOrDefault();
 
-
-            if (secondaryVirtualDisplayLayout.Equals(VirtualDisplayLayout.Left) 
-                || secondaryVirtualDisplayLayout.Equals(VirtualDisplayLayout.Right))
+            switch (secondaryVirtualDisplayLayout)
             {
-                totalWidth = Screen.AllScreens.Sum(x => x.Bounds.Width);
+                case VirtualDisplayLayout.Left:
+                case VirtualDisplayLayout.Right:
 
-                // case 1 secondary display (y) is smaller or equal the primary display (y)
-                // and its bottom is equal or greater than the primary screen
-                if(secondaryDisplay.Bounds.Y <= primaryDisplay.Bounds.Y 
-                    && secondaryDisplay.Bounds.Bottom >= primaryDisplay.Bounds.Bottom)
-                {
-                    totalHeight = secondaryDisplay.Bounds.Height;
-                }
+                    totalWidth = Screen.AllScreens.Sum(x => x.Bounds.Width);
 
-                // case 2 secondary display (y) is smaller or equal the primary display (y)
-                // and its bottom is smaller than the primary screen 
-                else if(secondaryDisplay.Bounds.Y <= primaryDisplay.Bounds.Y
-                    && secondaryDisplay.Bounds.Bottom < primaryDisplay.Bounds.Bottom)
-                {
-                    totalHeight = secondaryDisplay.Bounds.Height + (primaryDisplay.Bounds.Bottom - secondaryDisplay.Bounds.Bottom);
-                }
+                    // case 1 secondary display (y) is smaller or equal the primary display (y)
+                    // and its bottom is equal or greater than the primary screen
+                    if (secondaryDisplay.Bounds.Y <= primaryDisplay.Bounds.Y
+                        && secondaryDisplay.Bounds.Bottom >= primaryDisplay.Bounds.Bottom)
+                    {
+                        totalHeight = secondaryDisplay.Bounds.Height;
+                    }
 
-                // case 3 secondary display (y) is greater than the priamry display (y)
-                // and its bottom is equal or greater than the primary screen
-                else if(secondaryDisplay.Bounds.Y > primaryDisplay.Bounds.Y
-                    && secondaryDisplay.Bounds.Bottom >= primaryDisplay.Bounds.Bottom)
-                {
-                    totalHeight = secondaryDisplay.Bounds.Height + (primaryDisplay.Bounds.Y + secondaryDisplay.Bounds.Y);
-                }
+                    // case 2 secondary display (y) is smaller or equal the primary display (y)
+                    // and its bottom is smaller than the primary screen 
+                    else if (secondaryDisplay.Bounds.Y <= primaryDisplay.Bounds.Y
+                        && secondaryDisplay.Bounds.Bottom < primaryDisplay.Bounds.Bottom)
+                    {
+                        totalHeight = secondaryDisplay.Bounds.Height + (primaryDisplay.Bounds.Bottom - secondaryDisplay.Bounds.Bottom);
+                    }
 
-                // case 4 secondary display (y) is greater than the priamry display (y)
-                // and its bottom is smaller than the primary screen
-                else if(secondaryDisplay.Bounds.Y > primaryDisplay.Bounds.Y
-                    && secondaryDisplay.Bounds.Bottom < primaryDisplay.Bounds.Bottom)
-                {
-                    totalHeight = primaryDisplay.Bounds.Height;
-                }
+                    // case 3 secondary display (y) is greater than the priamry display (y)
+                    // and its bottom is equal or greater than the primary screen
+                    else if (secondaryDisplay.Bounds.Y > primaryDisplay.Bounds.Y
+                        && secondaryDisplay.Bounds.Bottom >= primaryDisplay.Bounds.Bottom)
+                    {
+                        totalHeight = secondaryDisplay.Bounds.Height + (primaryDisplay.Bounds.Y + secondaryDisplay.Bounds.Y);
+                    }
 
+                    // case 4 secondary display (y) is greater than the priamry display (y)
+                    // and its bottom is smaller than the primary screen
+                    else if (secondaryDisplay.Bounds.Y > primaryDisplay.Bounds.Y
+                        && secondaryDisplay.Bounds.Bottom < primaryDisplay.Bounds.Bottom)
+                    {
+                        totalHeight = primaryDisplay.Bounds.Height;
+                    }
+
+                    break;
+
+                case VirtualDisplayLayout.Top:
+                case VirtualDisplayLayout.Bottom:
+
+                    totalHeight = Screen.AllScreens.Sum(x => x.Bounds.Height);
+
+                    // case 1 secondary display (x) is smaller equal the primary display (x)
+                    // and its right is equal or greater than the primary screen 
+                    if (secondaryDisplay.Bounds.X <= primaryDisplay.Bounds.X
+                        && secondaryDisplay.Bounds.Right >= primaryDisplay.Bounds.Right)
+                    {
+                        totalWidth = secondaryDisplay.Bounds.Width;
+                    }
+
+                    // case 2 secondary display (x) is smaller equal the primary display (x)
+                    // and its right is smaller than the primary screen
+                    else if (secondaryDisplay.Bounds.X <= primaryDisplay.Bounds.X
+                        && secondaryDisplay.Bounds.Right < primaryDisplay.Bounds.Right)
+                    {
+                        totalWidth = secondaryDisplay.Bounds.Width + (primaryDisplay.Bounds.Width - secondaryDisplay.Bounds.Right);
+                    }
+
+                    // case 3 secondary display (x) is greater than the primary display (x)
+                    // and its right is equal or greater than the primary screen
+                    else if (secondaryDisplay.Bounds.X > primaryDisplay.Bounds.X
+                        && secondaryDisplay.Bounds.Right >= primaryDisplay.Bounds.Right)
+                    {
+                        totalWidth = secondaryDisplay.Bounds.Width + (primaryDisplay.Bounds.Width - secondaryDisplay.Bounds.X);
+                    }
+
+                    // case 4 secondary display (x) is greater than the primary display (x)
+                    // and its right is smaller than the primary screen
+                    else if (secondaryDisplay.Bounds.X > primaryDisplay.Bounds.X
+                        && secondaryDisplay.Bounds.Right < primaryDisplay.Bounds.Right)
+                    {
+                        totalWidth = primaryDisplay.Bounds.Width;
+                    }
+
+                    break;
+                
+                default:
+                    totalWidth = 0;
+                    totalHeight = 0;
+                    break;
             }
-            else if(secondaryVirtualDisplayLayout.Equals(VirtualDisplayLayout.Top)
-                || secondaryVirtualDisplayLayout.Equals(VirtualDisplayLayout.Bottom))
-            {
-                totalHeight = Screen.AllScreens.Sum(x => x.Bounds.Height);
 
-                // case 1 secondary display (x) is smaller equal the primary display (x)
-                // and its right is equal or greater than the primary screen 
-                if(secondaryDisplay.Bounds.X <= primaryDisplay.Bounds.X 
-                    && secondaryDisplay.Bounds.Right >= primaryDisplay.Bounds.Right)
-                {
-                    totalWidth = secondaryDisplay.Bounds.Width;
-                }
-
-                // case 2 secondary display (x) is smaller equal the primary display (x)
-                // and its right is smaller than the primary screen
-                else if(secondaryDisplay.Bounds.X <= primaryDisplay.Bounds.X
-                    && secondaryDisplay.Bounds.Right < primaryDisplay.Bounds.Right)
-                {
-                    totalWidth = secondaryDisplay.Bounds.Width + (primaryDisplay.Bounds.Width - secondaryDisplay.Bounds.Right);
-                }
-
-                // case 3 secondary display (x) is greater than the primary display (x)
-                // and its right is equal or greater than the primary screen
-                else if (secondaryDisplay.Bounds.X > primaryDisplay.Bounds.X
-                    && secondaryDisplay.Bounds.Right >= primaryDisplay.Bounds.Right)
-                {
-                    totalWidth = secondaryDisplay.Bounds.Width + (primaryDisplay.Bounds.Width - secondaryDisplay.Bounds.X);
-                }
-
-                // case 4 secondary display (x) is greater than the primary display (x)
-                // and its right is smaller than the primary screen
-                else if (secondaryDisplay.Bounds.X > primaryDisplay.Bounds.X
-                    && secondaryDisplay.Bounds.Right < primaryDisplay.Bounds.Right)
-                {
-                    totalWidth = primaryDisplay.Bounds.Width;
-                }
-            }
 
             this.TotalWidth = totalWidth;
             this.TotalHeight = totalHeight;
@@ -327,21 +348,28 @@ namespace DualWallpaper
         /// <param name="secondaryVirtualDisplayLayout">Position(layout) of secondary display, e.g. second display is on the right hand side.</param>
         private void RefreshScale(VirtualDisplayLayout secondaryVirtualDisplayLayout)
         {
-            if (secondaryVirtualDisplayLayout.Equals(VirtualDisplayLayout.Left)
-                || secondaryVirtualDisplayLayout.Equals(VirtualDisplayLayout.Right))
+            switch(secondaryVirtualDisplayLayout)
             {
-                this.Scale = 13;
-            }
-            else if (secondaryVirtualDisplayLayout.Equals(VirtualDisplayLayout.Top)
-                || secondaryVirtualDisplayLayout.Equals(VirtualDisplayLayout.Bottom))
-            {
-                this.Scale = 24;
-            }
-            else if(secondaryVirtualDisplayLayout.Equals(VirtualDisplayLayout.None))
-            {
-                this.Scale = 12;
+                case VirtualDisplayLayout.Left:
+                case VirtualDisplayLayout.Right:
+                    this.Scale = 13;
+                    break;
+
+                case VirtualDisplayLayout.Top:
+                case VirtualDisplayLayout.Bottom:
+                    this.Scale = 24;
+                    break;
+
+                case VirtualDisplayLayout.None:
+                    this.Scale = 12;
+                    break;
+
+                default:
+                    this.Scale = 13;
+                    break;
             }
         }
+
     }
 }
 

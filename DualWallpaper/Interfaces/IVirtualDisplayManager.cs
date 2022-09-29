@@ -31,6 +31,13 @@ namespace DualWallpaper.Interfaces
         VirtualDisplayLayout SecondaryVirtualDisplayLayout { get; }
 
         /// <summary>
+        /// Set up basic functionality.
+        ///  - total width and height
+        ///  - scale
+        /// </summary>
+        void Initialize();
+
+        /// <summary>
         /// Draws single virtual display as merge (combain) two screens together. Strech one backround over two screens.
         /// </summary>
         /// <param name="centerPointX">Panel (the wall) central point X.</param>

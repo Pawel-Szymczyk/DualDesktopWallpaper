@@ -71,6 +71,7 @@
   <ItemGroup>
     <Compile Include="Const.cs" />
     <Compile Include="Enums\VirtualDisplayLayout.cs" />
+    <Compile Include="Interfaces\IBackgroundManager.cs" />
     <Compile Include="Interfaces\IVirtualDisplay.cs" />
     <Compile Include="Interfaces\IVirtualDisplayManager.cs" />
     <Compile Include="Interfaces\IVirtualDisplayEventHandler.cs" />

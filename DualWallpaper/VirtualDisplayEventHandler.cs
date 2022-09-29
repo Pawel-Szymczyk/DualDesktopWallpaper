@@ -1,12 +1,12 @@
 ﻿using DualWallpaper.Enums;
+using DualWallpaper.Interfaces;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
 using System.Windows.Forms;
-using WallpaperManager.Interfaces;
 
-namespace WallpaperManager
+namespace DualWallpaper
 {
     public class VirtualDisplayEventHandler : IVirtualDisplayEventHandler
     {

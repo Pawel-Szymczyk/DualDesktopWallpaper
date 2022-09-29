@@ -13,6 +13,7 @@ namespace WallpaperManager
 
 
         private IVirtualDisplayManager virtualDisplayManager;
+        private IBackgroundManager backgroundManager;
 
         // -------------------------------------------------------------------
         // Form
@@ -35,32 +36,26 @@ namespace WallpaperManager
             this.Version();
             this.BuildNumber();
 
-
+            
             this.virtualDisplayManager = new VirtualDisplayManager(this.wall,
                   this.searchBtn,
                   this.applyBtn,
                   this.cancelBtn);
 
-            // get displays resolutions...
-            foreach (Screen screen in Screen.AllScreens)
-            {
-                this.resolutionsList.Items.Add($"{screen.DeviceName.Replace(@"\.", "").Replace(@"\", "")}: {screen.Bounds.Width} x {screen.Bounds.Height}");
-            }
+            this.virtualDisplayManager.Initialize();
 
+
+            this.backgroundManager = new BackgroundManager(
+                this.virtualDisplayManager.SecondaryVirtualDisplayLayout,
+                this.virtualDisplayManager.TotalHeight, 
+                this.virtualDisplayManager.TotalWidth);
+
+
+            this.DisplaysResolutions();
 
             this.DrawDisplays();
-
         }
 
-       
-
-        /// <summary>
-        /// Hide controls and blank out wall on mouse single click.
-        /// </summary>
-        private void DualWallpaperApp_MouseClick(object sender, MouseEventArgs e)
-        {
-            this.HideControls();
-        }
 
 
         #endregion
@@ -70,6 +65,14 @@ namespace WallpaperManager
         // Form Event Handlers
         //
         #region Form Event Handlers
+
+        /// <summary>
+        /// Hide controls and blank out wall on mouse single click.
+        /// </summary>
+        private void DualWallpaperApp_MouseClick(object sender, MouseEventArgs e)
+        {
+            this.HideControls();
+        }
 
         private void searchBtn_Click(object sender, EventArgs e)
         {
@@ -85,9 +88,9 @@ namespace WallpaperManager
         // Merge images and store them in the windows registry.
         private void applyBtn_Click(object sender, EventArgs e)
         {
-            var x = this.virtualDisplayManager.SecondaryVirtualDisplayLayout;
+            
 
-            BackgroundManager.SetBackground(this.wall, this.mergeBtn);
+            this.backgroundManager.SaveBackground(this.wall, this.mergeBtn);
 
             this.HideControls();
         }
@@ -95,7 +98,7 @@ namespace WallpaperManager
         private void cancelBtn_Click(object sender, EventArgs e)
         {
             // clear images from pictureboxes
-            BackgroundManager.CleanWallpapers(this.wall);
+            this.backgroundManager.CleanWallpapers(this.wall);
 
             this.HideControls();
         }
@@ -144,11 +147,6 @@ namespace WallpaperManager
             this.applyBtn.Visible = false;
             this.cancelBtn.Visible = false;
             this.searchBtn.Visible = false;
-
-
-           
-
-           
 
             List<PictureBox> displays = this.virtualDisplayManager.ShowAll(this.wall.Bounds.Width / 2, this.wall.Bounds.Height / 2);
 
@@ -206,6 +204,15 @@ namespace WallpaperManager
             }
         }
 
-
+        /// <summary>
+        /// List of displays and their resolutions.
+        /// </summary>
+        private void DisplaysResolutions()
+        {
+            foreach (Screen screen in Screen.AllScreens)
+            {
+                this.resolutionsList.Items.Add($"{screen.DeviceName.Replace(@"\.", "").Replace(@"\", "")}: {screen.Bounds.Width} x {screen.Bounds.Height}");
+            }
+        }
     }
 }
