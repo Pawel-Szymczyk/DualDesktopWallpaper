@@ -1,4 +1,6 @@
-﻿using System;
+﻿using DualWallpaper;
+using DualWallpaper.Interfaces;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Windows.Forms;
@@ -8,6 +10,14 @@ namespace WallpaperManager
     public partial class DualWallpaperApp : Form
     {
         // https://devblogs.microsoft.com/oldnewthing/?p=25003 
+        // <a target="_blank" href="https://icons8.com/icon/K2njhUKeLfle/reset">Reset</a> icon by <a target="_blank" href="https://icons8.com">Icons8</a> TODO: use this link
+        // https://icons8.com/icon/K2njhUKeLfle/reset
+
+
+        private IVirtualDisplayManager virtualDisplayManager;
+        private IBackgroundManager backgroundManager;
+        private ISearch search;
+        private IDisplayIdentity displayIdentity;
 
         // -------------------------------------------------------------------
         // Form
@@ -28,23 +38,30 @@ namespace WallpaperManager
         private void DualWallpaperApp_Load(object sender, EventArgs e)
         {
             this.Version();
+            this.BuildNumber();
 
-            this.DrawDisplays(false);
+            this.virtualDisplayManager = new VirtualDisplayManager(this.wall,
+                  this.searchBtn,
+                  this.applyBtn,
+                  this.cancelBtn);
 
-            // get displays resolutions...
-            foreach (Screen screen in Screen.AllScreens)
-            {
-                this.resolutionsList.Items.Add($"{screen.DeviceName.Replace(@"\.", "").Replace(@"\", "")}: {screen.Bounds.Width} x {screen.Bounds.Height}");
-            }
+            this.virtualDisplayManager.Initialize();
+
+
+            this.backgroundManager = new BackgroundManager(
+                this.virtualDisplayManager.SecondaryVirtualDisplayLayout,
+                this.virtualDisplayManager.TotalHeight, 
+                this.virtualDisplayManager.TotalWidth);
+
+            this.search = new Search();
+
+            this.displayIdentity = new DisplayIdentity();
+
+            this.DisplaysResolutions();
+
+            this.DrawDisplays();
         }
 
-        /// <summary>
-        /// Hide controls and blank out wall on mouse single click.
-        /// </summary>
-        private void DualWallpaperApp_MouseClick(object sender, MouseEventArgs e)
-        {
-            this.HideControls();
-        }
 
 
         #endregion
@@ -55,21 +72,29 @@ namespace WallpaperManager
         //
         #region Form Event Handlers
 
+        /// <summary>
+        /// Hide controls and blank out wall on mouse single click.
+        /// </summary>
+        private void DualWallpaperApp_MouseClick(object sender, MouseEventArgs e)
+        {
+            this.HideControls();
+        }
+
         private void searchBtn_Click(object sender, EventArgs e)
         {
-            Search.GetBackgrounds(this.wall);
+            this.search.OpenDefaultBrowserWithWallpaperSearchResults(this.wall);
         }
 
         private async void identifyBtn_Click(object sender, EventArgs e)
         {
-            await DisplayIdentity.DetectIdentity(this.detectScreenBtn);
+            await this.displayIdentity.DetectIdentity(this.detectScreenBtn);
         }
 
 
         // Merge images and store them in the windows registry.
         private void applyBtn_Click(object sender, EventArgs e)
         {
-            BackgroundManager.SetBackground(this.wall, this.mergeBtn);
+            this.backgroundManager.SaveBackground(this.wall, this.mergeBtn);
 
             this.HideControls();
         }
@@ -77,26 +102,19 @@ namespace WallpaperManager
         private void cancelBtn_Click(object sender, EventArgs e)
         {
             // clear images from pictureboxes
-            BackgroundManager.CleanWallpapers(this.wall);
+            this.backgroundManager.CleanWallpapers(this.wall);
 
             this.HideControls();
         }
 
         private void mergeBtn_CheckedChanged(object sender, EventArgs e)
         {
-            // remove displays and drow 1 common for both displays 
-            // allow to click on it
+            this.SwitchBeteenModes();
+        }
 
-            // in the case checkbox is unchecked it should display two displays
-
-            if (this.mergeBtn.Checked)
-            {
-                this.DrawDisplays(true);
-            }
-            else
-            {
-                this.DrawDisplays(false);
-            }
+        private void refreshBtn_Click(object sender, EventArgs e)
+        {
+            this.SwitchBeteenModes();
         }
 
 
@@ -104,29 +122,51 @@ namespace WallpaperManager
         // -------------------------------------------------------------------
 
         /// <summary>
-        /// Dynamically draw displays.
+        /// Draw single display when merged btn clicked, otherwise draw multiple displays.
         /// </summary>
-        /// <param name="ShowSingleDisplay">True, if we want to show single monitor, otherwise false.</param>
-        private void DrawDisplays(bool ShowSingleDisplay)
+        private void SwitchBeteenModes()
+        {
+            if (this.mergeBtn.Checked)
+            {
+                this.DrawMergedDisplays();
+            }
+            else
+            {
+                this.DrawDisplays();
+            }
+        }
+
+        /// <summary>
+        /// Dynamically draw multiple displays.
+        /// </summary>
+        private void DrawDisplays()
         {
             this.wall.Controls.Clear();
             this.applyBtn.Visible = false;
             this.cancelBtn.Visible = false;
             this.searchBtn.Visible = false;
 
-            List<PictureBox> displays = new DisplayManager().ShowDisplays(
-                    ShowSingleDisplay,
-                    this.wall.Bounds.Width / 2,
-                    this.wall.Bounds.Height / 2,
-                    this.wall,
-                    this.searchBtn,
-                    this.applyBtn,
-                    this.cancelBtn);
+            List<PictureBox> displays = this.virtualDisplayManager.ShowAll(this.wall.Bounds.Width / 2, this.wall.Bounds.Height / 2);
 
             foreach (PictureBox display in displays)
             {
                 this.wall.Controls.Add(display);
             }
+        }
+
+        /// <summary>
+        /// Dynamically draw single/common display for entire screen space.
+        /// </summary>
+        private void DrawMergedDisplays()
+        {
+            this.wall.Controls.Clear();
+            this.applyBtn.Visible = false;
+            this.cancelBtn.Visible = false;
+            this.searchBtn.Visible = false;
+
+            PictureBox display = this.virtualDisplayManager.Show(this.wall.Bounds.Width / 2, this.wall.Bounds.Height / 2);
+
+            this.wall.Controls.Add(display);
         }
 
         /// <summary>
@@ -148,6 +188,15 @@ namespace WallpaperManager
         }
 
         /// <summary>
+        /// Display build number.
+        /// </summary>
+        private void BuildNumber()
+        {
+            string text = $"B u i l d: {Const.BuildNumber}";
+            this.buildLbl.Text = text;
+        }
+
+        /// <summary>
         /// Hide form controles.
         /// </summary>
         private void HideControls()
@@ -164,6 +213,17 @@ namespace WallpaperManager
             foreach (Label lbl in resolutionLabels)
             {
                 this.wall.Controls.Remove(lbl);
+            }
+        }
+
+        /// <summary>
+        /// List of displays and their resolutions.
+        /// </summary>
+        private void DisplaysResolutions()
+        {
+            foreach (Screen screen in Screen.AllScreens)
+            {
+                this.resolutionsList.Items.Add($"{screen.DeviceName.Replace(@"\.", "").Replace(@"\", "")}: {screen.Bounds.Width} x {screen.Bounds.Height}");
             }
         }
 

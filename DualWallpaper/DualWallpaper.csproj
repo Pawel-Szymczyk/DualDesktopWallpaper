@@ -12,6 +12,21 @@
     <FileAlignment>512</FileAlignment>
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
     <Deterministic>true</Deterministic>
+    <PublishUrl>publish\</PublishUrl>
+    <Install>true</Install>
+    <InstallFrom>Disk</InstallFrom>
+    <UpdateEnabled>false</UpdateEnabled>
+    <UpdateMode>Foreground</UpdateMode>
+    <UpdateInterval>7</UpdateInterval>
+    <UpdateIntervalUnits>Days</UpdateIntervalUnits>
+    <UpdatePeriodically>false</UpdatePeriodically>
+    <UpdateRequired>false</UpdateRequired>
+    <MapFileExtensions>true</MapFileExtensions>
+    <ApplicationRevision>0</ApplicationRevision>
+    <ApplicationVersion>1.0.0.%2a</ApplicationVersion>
+    <IsWebBootstrapper>false</IsWebBootstrapper>
+    <UseApplicationTrust>false</UseApplicationTrust>
+    <BootstrapperEnabled>true</BootstrapperEnabled>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <PlatformTarget>AnyCPU</PlatformTarget>
@@ -33,9 +48,14 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <PropertyGroup>
-    <ApplicationIcon>desktop.ico</ApplicationIcon>
+    <ApplicationIcon>Resources\Images\desktop.ico</ApplicationIcon>
+  </PropertyGroup>
+  <PropertyGroup>
+    <StartupObject>
+    </StartupObject>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="PresentationFramework" />
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Xml.Linq" />
@@ -49,11 +69,17 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Const.cs" />
+    <Compile Include="Enums\VirtualDisplayLayout.cs" />
+    <Compile Include="Interfaces\IDisplayIdentity.cs" />
+    <Compile Include="Interfaces\IBackgroundManager.cs" />
+    <Compile Include="Interfaces\IVirtualDisplay.cs" />
+    <Compile Include="Interfaces\IVirtualDisplayManager.cs" />
+    <Compile Include="Interfaces\IVirtualDisplayEventHandler.cs" />
+    <Compile Include="Interfaces\ISearch.cs" />
     <Compile Include="Search.cs" />
-    <Compile Include="DisplayManager.cs" />
-    <Compile Include="DisplayEventHandler.cs" />
+    <Compile Include="VirtualDisplayEventHandler.cs" />
     <Compile Include="DisplayIdentity.cs" />
-    <Compile Include="DropShadow.cs" />
     <Compile Include="DualWallpaperApp.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -63,6 +89,8 @@
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="BackgroundManager.cs" />
+    <Compile Include="VirtualDisplay.cs" />
+    <Compile Include="VirtualDisplayManager.cs" />
     <EmbeddedResource Include="DualWallpaperApp.resx">
       <DependentUpon>DualWallpaperApp.cs</DependentUpon>
     </EmbeddedResource>
@@ -90,7 +118,23 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="desktop.ico" />
+    <Content Include="Resources\Images\desktop.ico" />
+    <Content Include="Resources\Images\reset-32.png" />
+    <Content Include="Resources\Images\reset-40.png" />
+    <Content Include="Resources\Images\reset-48.png" />
+  </ItemGroup>
+  <ItemGroup />
+  <ItemGroup>
+    <BootstrapperPackage Include=".NETFramework,Version=v4.8">
+      <Visible>False</Visible>
+      <ProductName>Microsoft .NET Framework 4.8 %28x86 and x64%29</ProductName>
+      <Install>true</Install>
+    </BootstrapperPackage>
+    <BootstrapperPackage Include="Microsoft.Net.Framework.3.5.SP1">
+      <Visible>False</Visible>
+      <ProductName>.NET Framework 3.5 SP1</ProductName>
+      <Install>false</Install>
+    </BootstrapperPackage>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

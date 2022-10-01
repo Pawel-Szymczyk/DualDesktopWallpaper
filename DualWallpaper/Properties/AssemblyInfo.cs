@@ -6,7 +6,7 @@ using System.Runtime.InteropServices;
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
 [assembly: AssemblyTitle("D u a l  W a l l p a p e r")]
-[assembly: AssemblyDescription("")]
+[assembly: AssemblyDescription("Program developed to set individual wallpapers to multiple screens.")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("PS")]
 [assembly: AssemblyProduct("D u a l  W a l l p a p e r")]
@@ -33,4 +33,4 @@ using System.Runtime.InteropServices;
 // by using the '*' as shown below:
 // [assembly: AssemblyVersion("1.0.*")]
 [assembly: AssemblyVersion("1.0.0.1")]
-[assembly: AssemblyFileVersion("1.0.0.1")]
+[assembly: AssemblyFileVersion("1.1.0.1")]
