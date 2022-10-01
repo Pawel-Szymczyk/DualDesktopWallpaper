@@ -48,7 +48,7 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <PropertyGroup>
-    <ApplicationIcon>desktop.ico</ApplicationIcon>
+    <ApplicationIcon>Resources\Images\desktop.ico</ApplicationIcon>
   </PropertyGroup>
   <PropertyGroup>
     <StartupObject>
@@ -71,6 +71,7 @@
   <ItemGroup>
     <Compile Include="Const.cs" />
     <Compile Include="Enums\VirtualDisplayLayout.cs" />
+    <Compile Include="Interfaces\IDisplayIdentity.cs" />
     <Compile Include="Interfaces\IBackgroundManager.cs" />
     <Compile Include="Interfaces\IVirtualDisplay.cs" />
     <Compile Include="Interfaces\IVirtualDisplayManager.cs" />
@@ -117,7 +118,10 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="desktop.ico" />
+    <Content Include="Resources\Images\desktop.ico" />
+    <Content Include="Resources\Images\reset-32.png" />
+    <Content Include="Resources\Images\reset-40.png" />
+    <Content Include="Resources\Images\reset-48.png" />
   </ItemGroup>
   <ItemGroup />
   <ItemGroup>

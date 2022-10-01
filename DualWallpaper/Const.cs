@@ -8,6 +8,6 @@ namespace DualWallpaper
 {
     public static class Const
     {
-        public static readonly string BuildNumber = "#220929";
+        public static readonly string BuildNumber = "#221001";
     }
 }

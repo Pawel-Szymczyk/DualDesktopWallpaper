@@ -42,6 +42,7 @@
             this.label4 = new System.Windows.Forms.Label();
             this.versionLbl = new System.Windows.Forms.Label();
             this.buildLbl = new System.Windows.Forms.Label();
+            this.refreshBtn = new System.Windows.Forms.Button();
             this.SuspendLayout();
             // 
             // detectScreenBtn
@@ -196,7 +197,7 @@
             this.versionLbl.AutoSize = true;
             this.versionLbl.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.249999F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.versionLbl.ForeColor = System.Drawing.Color.Black;
-            this.versionLbl.Location = new System.Drawing.Point(26, 763);
+            this.versionLbl.Location = new System.Drawing.Point(26, 764);
             this.versionLbl.Name = "versionLbl";
             this.versionLbl.Size = new System.Drawing.Size(74, 13);
             this.versionLbl.TabIndex = 26;
@@ -207,11 +208,23 @@
             this.buildLbl.AutoSize = true;
             this.buildLbl.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.249999F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.buildLbl.ForeColor = System.Drawing.Color.Black;
-            this.buildLbl.Location = new System.Drawing.Point(655, 763);
+            this.buildLbl.Location = new System.Drawing.Point(655, 764);
             this.buildLbl.Name = "buildLbl";
             this.buildLbl.Size = new System.Drawing.Size(94, 13);
             this.buildLbl.TabIndex = 27;
             this.buildLbl.Text = "B u i l d:  #990101";
+            // 
+            // refreshBtn
+            // 
+            this.refreshBtn.FlatAppearance.BorderColor = System.Drawing.Color.White;
+            this.refreshBtn.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.refreshBtn.Image = ((System.Drawing.Image)(resources.GetObject("refreshBtn.Image")));
+            this.refreshBtn.Location = new System.Drawing.Point(716, 135);
+            this.refreshBtn.Name = "refreshBtn";
+            this.refreshBtn.Size = new System.Drawing.Size(33, 33);
+            this.refreshBtn.TabIndex = 28;
+            this.refreshBtn.UseVisualStyleBackColor = true;
+            this.refreshBtn.Click += new System.EventHandler(this.refreshBtn_Click);
             // 
             // DualWallpaperApp
             // 
@@ -219,8 +232,9 @@
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.White;
             this.ClientSize = new System.Drawing.Size(786, 786);
-            this.Controls.Add(this.buildLbl);
             this.Controls.Add(this.versionLbl);
+            this.Controls.Add(this.buildLbl);
+            this.Controls.Add(this.refreshBtn);
             this.Controls.Add(this.label4);
             this.Controls.Add(this.cancelBtn);
             this.Controls.Add(this.searchBtn);
@@ -258,6 +272,7 @@
         private System.Windows.Forms.Label label4;
         private System.Windows.Forms.Label versionLbl;
         private System.Windows.Forms.Label buildLbl;
+        private System.Windows.Forms.Button refreshBtn;
     }
 }
 
