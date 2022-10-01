@@ -1,29 +1,27 @@
-﻿using System.Windows.Forms;
+﻿using DualWallpaper.Interfaces;
+using System.Linq;
+using System.Windows.Forms;
 
-namespace WallpaperManager
+namespace DualWallpaper
 {
     /// <summary>
     /// Browser class is responsible for managing the Internet browsing.
     /// </summary>
-    public static class Search
+    public class Search : ISearch
     {
+        private readonly string searchUrl = "https://www.google.com/search?q=wallpaper+";
+
+        public Search() { }
+
         /// <summary>
         /// Search wallpaper over the Internet, with the use of default search browser.
         /// </summary>
         /// <param name="panel">Parent panel to which is added label with resolution.</param>
-        public static void GetBackgrounds(Panel panel)
+        public void OpenDefaultBrowserWithWallpaperSearchResults(Panel panel)
         {
-            string resolution = string.Empty;
+            string resolution = panel.Controls.OfType<Label>().FirstOrDefault().Text;
 
-            foreach (Control control in panel.Controls)
-            {
-                if (control is Label)
-                {
-                    resolution = control.Text;
-                }
-            }
-
-            System.Diagnostics.Process.Start(@"https://www.google.com/search?q=wallpaper+" + resolution);
+            System.Diagnostics.Process.Start($"{this.searchUrl}{resolution}");
         }
     }
 }

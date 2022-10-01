@@ -75,6 +75,7 @@
     <Compile Include="Interfaces\IVirtualDisplay.cs" />
     <Compile Include="Interfaces\IVirtualDisplayManager.cs" />
     <Compile Include="Interfaces\IVirtualDisplayEventHandler.cs" />
+    <Compile Include="Interfaces\ISearch.cs" />
     <Compile Include="Search.cs" />
     <Compile Include="VirtualDisplayEventHandler.cs" />
     <Compile Include="DisplayIdentity.cs" />

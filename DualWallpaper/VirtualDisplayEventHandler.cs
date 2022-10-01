@@ -96,7 +96,7 @@ namespace DualWallpaper
                     cancelBtn.Visible = false;
                 }
             }
-            catch(Exception ex)
+            catch(Exception)
             {
                 // TODO: bubble up error message 
                 // PROBLEM: How to catch event handler exception?

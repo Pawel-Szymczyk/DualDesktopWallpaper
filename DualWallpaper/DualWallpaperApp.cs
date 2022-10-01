@@ -14,6 +14,7 @@ namespace WallpaperManager
 
         private IVirtualDisplayManager virtualDisplayManager;
         private IBackgroundManager backgroundManager;
+        private ISearch search;
 
         // -------------------------------------------------------------------
         // Form
@@ -50,6 +51,7 @@ namespace WallpaperManager
                 this.virtualDisplayManager.TotalHeight, 
                 this.virtualDisplayManager.TotalWidth);
 
+            this.search = new Search();
 
             this.DisplaysResolutions();
 
@@ -76,7 +78,7 @@ namespace WallpaperManager
 
         private void searchBtn_Click(object sender, EventArgs e)
         {
-            Search.GetBackgrounds(this.wall);
+            this.search.OpenDefaultBrowserWithWallpaperSearchResults(this.wall);
         }
 
         private async void identifyBtn_Click(object sender, EventArgs e)
