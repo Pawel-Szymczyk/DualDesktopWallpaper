@@ -79,7 +79,6 @@
     <Compile Include="Search.cs" />
     <Compile Include="VirtualDisplayEventHandler.cs" />
     <Compile Include="DisplayIdentity.cs" />
-    <Compile Include="DropShadow.cs" />
     <Compile Include="DualWallpaperApp.cs">
       <SubType>Form</SubType>
     </Compile>
