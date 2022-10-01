@@ -155,6 +155,8 @@ namespace WallpaperManager
             {
                 this.wall.Controls.Add(display);
             }
+
+           
         }
 
         /// <summary>

@@ -4,12 +4,11 @@ using Microsoft.Win32;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
+using System.Drawing.Drawing2D;
 using System.Drawing.Imaging;
 using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace DualWallpaper
@@ -78,6 +77,54 @@ namespace DualWallpaper
             this.TotalWidth = totalWidth;
         }
 
+        /// <summary>
+        /// Set Background image for all displays.
+        /// </summary>
+        /// <param name="panel"></param>
+        /// <param name="checkBox"></param>
+        public void SaveBackground(Panel panel, CheckBox checkBox)
+        {
+            Bitmap bm;
+            List<Image> images = new List<Image>();
+
+            // return list of images...
+            foreach (PictureBox control in panel.Controls.OfType<PictureBox>())
+            {
+                string filename = control.Image.Tag.ToString(); // get filename
+                images.Add(Image.FromFile(filename));
+            }
+
+            if (checkBox.Checked)
+            {
+                bm = this.StretchPriamryDisplayBackgroundOverTwoDisplays(images.FirstOrDefault(), Screen.AllScreens);
+            }
+            else
+            {
+                bm = this.MergeTwoDesktopBackgroundsTogether(images, Screen.AllScreens);
+            }
+
+            // wallpaper styles:
+            // 0 - center
+            // 2 - streched
+            // 6 - fit
+            // 10 - fill
+            string tempPath = this.SaveBackgroundToFile(bm);
+            this.SaveBackgroundToSystemRegistry(tempPath, "0", "1");
+        }
+
+        /// <summary>
+        /// Remove background image from container (picturebox).
+        /// </summary>
+        /// <param name="panel">Container.</param>
+        public void CleanWallpapers(Panel panel)
+        {
+            foreach (PictureBox control in panel.Controls.OfType<PictureBox>())
+            {
+                control.Image = null;
+                control.Image.Tag = null;
+            }
+        }
+
 
         /// <summary>
         /// Combine two images into one and return it in form of bitmap.
@@ -85,7 +132,7 @@ namespace DualWallpaper
         /// <param name="images">List of images.</param>
         /// <param name="screens">Array of physical screens.</param>
         /// <returns>Bitmap.</returns>
-        private Bitmap MergePictures(List<Image> images, Screen[] screens)
+        private Bitmap MergeTwoDesktopBackgroundsTogether(List<Image> images, Screen[] screens)
         {
             int X = 0;
             int Y = 0;
@@ -224,6 +271,30 @@ namespace DualWallpaper
             return outputImage;
         }
 
+        /// <summary>
+        /// Stretch single image over screens and return it in form of bitmap.
+        /// </summary>
+        /// <param name="image">Image.</param>
+        /// <param name="screens">Array of physical screens.</param>
+        /// <returns>Bitmap.</returns>
+        private Bitmap StretchPriamryDisplayBackgroundOverTwoDisplays(Image image, Screen[] screens)
+        {
+            // resize image to target size...
+            Image resizedImage = this.ResizeImage(image, new Size(this.TotalWidth, this.TotalHeight));
+
+            // return target size image container...
+            Bitmap outputImage = new Bitmap(this.TotalWidth, this.TotalHeight, PixelFormat.Format32bppArgb);
+
+
+            using (var graphics = Graphics.FromImage(outputImage))
+            {
+                graphics.Clear(Color.Transparent);
+
+                this.DrawImage(graphics, resizedImage, 0, 0);
+            }
+
+            return outputImage;
+        }
 
         /// <summary>
         /// Add background image to graphics container.
@@ -240,111 +311,12 @@ namespace DualWallpaper
                 GraphicsUnit.Pixel);
         }
 
-
-        private Bitmap StretchBackground(Image firstImage, Screen[] screens)
-        {
-            var firstScreen = screens[0];
-            var secondScreen = screens[1];
-
-            var width = firstScreen.Bounds.Width + secondScreen.Bounds.Width;
-            var height = firstScreen.Bounds.Height > secondScreen.Bounds.Height ? firstScreen.Bounds.Height : secondScreen.Bounds.Height;
-            //var height = 3390;
-
-            var outputImage = new Bitmap(width, height, PixelFormat.Format32bppArgb);
-            using (var graphics = Graphics.FromImage(outputImage))
-            {
-                graphics.Clear(Color.Transparent);
-                //graphics.DrawImage(firstImage, new Rectangle(new Point(), firstImage.Size), new Rectangle(new Point(), firstImage.Size), GraphicsUnit.Pixel);
-
-                graphics.DrawImage(firstImage, new Rectangle(0, 0, width, height));
-            }
-
-            //var outputImageWidth = firstImage.Width + secondImage.Width;
-            //var outputImageHeight = firstImage.Height > secondImage.Height ? firstImage.Height : secondImage.Height;
-
-            //var outputImage = new Bitmap(outputImageWidth, outputImageHeight, PixelFormat.Format32bppArgb);
-
-            //// TODO : replace 0 and new point() with actual y position 
-
-            //    using (var graphics = Graphics.FromImage(outputImage))
-            //    {
-            //        graphics.Clear(Color.Transparent);
-            //        graphics.DrawImage(firstImage, new Rectangle(new Point(), firstImage.Size), new Rectangle(new Point(), firstImage.Size), GraphicsUnit.Pixel);
-            //        //graphics.DrawImage(secondImage, new Rectangle(new Point(firstImage.Width, 0), secondImage.Size), new Rectangle(new Point(), secondImage.Size), GraphicsUnit.Pixel);
-            //    }
-
-
-            return outputImage;
-        }
-
-
-        
-
-
-
-
-
         /// <summary>
-        /// Set Background image for all displays.
+        /// Save bitmap (background image) to temporary location.
+        /// Filename is called "wallpaper.bmp".
         /// </summary>
-        /// <param name="panel"></param>
-        /// <param name="checkBox"></param>
-        public void SaveBackground(Panel panel, CheckBox checkBox)
-        {
-            // get file names
-            string fileName1 = panel.Controls[0].Tag != null ? panel.Controls[0].Tag.ToString() : string.Empty;
-            string fileName2 = panel.Controls[1].Tag != null ? panel.Controls[1].Tag.ToString() : string.Empty;
-
-
-            if (!string.IsNullOrEmpty(fileName1)
-                && !string.IsNullOrEmpty(fileName2) || checkBox.Checked)
-            {
-
-                // merge images in bitmap
-
-
-                // Note: there is no need to save bitmap and images cos it is stored as register key
-                // without saving, setting background speed increases.
-
-                var img1 = Image.FromFile(fileName1);
-                Image img2 = !string.IsNullOrEmpty(fileName2) ? Image.FromFile(fileName2) : null;
-
-                List<Image> images = new List<Image>() { img1, img2 };
-
-                Bitmap bm;
-
-                if (checkBox.Checked)
-                {
-                    bm = StretchBackground(img1, Screen.AllScreens);
-                    string tempPath = SaveBackgroundToFile(bm);
-                    SaveBackgroundToSystemRegistry(tempPath, "0", "1");
-                }
-                else
-                {
-                    //bm = MergePictures(images, Screen.AllScreens, this.VirtualDisplayLayout);
-                    bm = MergePictures(images, Screen.AllScreens);
-                    string tempPath = SaveBackgroundToFile(bm);
-                    SaveBackgroundToSystemRegistry(tempPath, "0", "1");
-                }
-
-
-
-
-            }
-        }
-
-        public void CleanWallpapers(Panel panel)
-        {
-            foreach (var u in panel.Controls)
-            {
-                if (u is PictureBox)
-                {
-                    var obj = (PictureBox)u;
-                    obj.Image = null;
-                }
-            }
-        }
-
+        /// <param name="bitmap">Bitmap image.</param>
+        /// <returns>The path where bitmap is located.</returns>
         private string SaveBackgroundToFile(Bitmap bitmap)
         {
             // store temporary image in appdata...
@@ -355,24 +327,66 @@ namespace DualWallpaper
             return tempPath;
         }
 
+        /// <summary>
+        /// Saves iamge in Windows system registry.
+        /// </summary>
+        /// <param name="tempPath">Finished background image path.</param>
+        /// <param name="wallpaperStyle"></param>
+        /// <param name="tileWallpaper"></param>
         private void SaveBackgroundToSystemRegistry(string tempPath, string wallpaperStyle, string tileWallpaper)
         {
-            // wallpaper styles:
-            // 0 - center
-            // 2 - streched
-            // 6 - fit
-            // 10 - fill
-
-
             RegistryKey key = Registry.CurrentUser.OpenSubKey(@"Control Panel\Desktop", true);
-            //key.SetValue(@"WallpaperStyle", 0.ToString());
-            //key.SetValue(@"TileWallpaper", 1.ToString());
             key.SetValue(@"WallpaperStyle", wallpaperStyle);
             key.SetValue(@"TileWallpaper", tileWallpaper);
             SystemParametersInfo(SPI_SETDESKWALLPAPER, 0, tempPath, SPIF_UPDATEINIFILE | SPIF_SENDWININICHANGE);
         }
 
+        /// <summary>
+        /// Resize image in percentage ratio. 
+        /// </summary>
+        /// <param name="imgToResize">Originial image.</param>
+        /// <param name="size">Size, the image is going to be resized.</param>
+        /// <returns>Resized image.</returns>
+        private Image ResizeImage(Image imgToResize, Size size)
+        {
+            //Get the image current width  
+            int sourceWidth = imgToResize.Width;
 
+            //Get the image current height  
+            int sourceHeight = imgToResize.Height;
+
+            float nPercent = 0;
+            float nPercentW = 0;
+            float nPercentH = 0;
+
+            //Calculate  width with new desired size  
+            nPercentW = ((float)size.Width / (float)sourceWidth);
+
+            //Calculate height with new desired size  
+            nPercentH = ((float)size.Height / (float)sourceHeight);
+
+            if (nPercentH < nPercentW)
+                nPercent = nPercentH;
+            else
+                nPercent = nPercentW;
+
+            //New Width  
+            int destWidth = (int)(sourceWidth * nPercent);
+
+            //New Height  
+            int destHeight = (int)(sourceHeight * nPercent);
+
+            Bitmap b = new Bitmap(destWidth, destHeight);
+
+            Graphics g = Graphics.FromImage((Image)b);
+            g.InterpolationMode = InterpolationMode.HighQualityBicubic;
+
+            // Draw image with new width and height  
+            g.DrawImage(imgToResize, 0, 0, destWidth, destHeight);
+            g.Dispose();
+
+            return (Image)b;
+        }
 
     }
 }

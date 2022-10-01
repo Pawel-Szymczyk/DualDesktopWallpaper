@@ -59,40 +59,49 @@ namespace DualWallpaper
         /// <param name="cancelBtn">Cancel button.</param>
         public void DisplayDoubleClick(object sender, EventArgs e, Panel panel, Button applyBtn, Button cancelBtn)
         {
-            var pictureBox = (PictureBox)sender;
-            var dialog = new OpenFileDialog();
-
-            if (dialog.ShowDialog() == DialogResult.OK)
+            try
             {
-                var img = Image.FromFile(dialog.FileName);
-                pictureBox.Image = img;
-                pictureBox.SizeMode = PictureBoxSizeMode.Zoom;
-                pictureBox.Tag = dialog.FileName;
-            }
+                var pictureBox = (PictureBox)sender;
+                var dialog = new OpenFileDialog();
 
-
-            // check if both images are set 
-            var list = new List<PictureBox>();
-
-            foreach (object u in panel.Controls)
-            {
-                if (u is PictureBox)
+                if (dialog.ShowDialog() == DialogResult.OK)
                 {
-                    list.Add((PictureBox)u);
+                    var img = Image.FromFile(dialog.FileName);
+                    pictureBox.Image = img;
+                    pictureBox.Image.Tag = dialog.FileName;
+                    pictureBox.SizeMode = PictureBoxSizeMode.Zoom;
+                }
+
+                // check if both images are set 
+                var list = new List<PictureBox>();
+
+                foreach (object u in panel.Controls)
+                {
+                    if (u is PictureBox)
+                    {
+                        list.Add((PictureBox)u);
+                    }
+                }
+
+                bool o = list.All(x => x.Image != null);
+                if (o)
+                {
+                    // show buttons
+                    applyBtn.Visible = true;
+                    cancelBtn.Visible = true;
+                }
+                else
+                {
+                    applyBtn.Visible = false;
+                    cancelBtn.Visible = false;
                 }
             }
+            catch(Exception ex)
+            {
+                // TODO: bubble up error message 
+                // PROBLEM: How to catch event handler exception?
 
-            bool o = list.All(x => x.Image != null);
-            if (o)
-            {
-                // show buttons
-                applyBtn.Visible = true;
-                cancelBtn.Visible = true;
-            }
-            else
-            {
-                applyBtn.Visible = false;
-                cancelBtn.Visible = false;
+                // TEMPORARY SOLUTION: do nothing, at least it will not break the program.
             }
         }
 
