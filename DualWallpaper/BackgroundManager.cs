@@ -28,7 +28,7 @@ namespace DualWallpaper
         /// If the function fails, the return value is zero.
         /// </returns>
         [DllImport("user32.dll", CharSet = CharSet.Auto)]
-        static extern int SystemParametersInfo(int uAction, int uParam, string lpvParam, int fuWinIni);
+        private static extern int SystemParametersInfo(int uAction, int uParam, string lpvParam, int fuWinIni);
 
         /// <summary>
         /// SystemParametersInfo returns TRUE unless there is an error.
@@ -59,6 +59,7 @@ namespace DualWallpaper
         /// Total Width of multiple displays.
         /// </summary>
         private int TotalWidth { get; set; }
+
 
         public BackgroundManager()
         {

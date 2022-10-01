@@ -170,7 +170,7 @@ namespace DualWallpaper
         /// Adds system display name to virtual display.
         /// Note: Must be used before "Draw" method.
         /// </summary>
-        public void  SetDisplayName()
+        public void SetDisplayName()
         {
             this.SetDisplayName(this.Screen.DeviceName.Replace(@"\.", "").Replace(@"\", "").ToLower());
         }
