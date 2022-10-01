@@ -1,16 +1,46 @@
-﻿using System;
+﻿using DualWallpaper.Interfaces;
 using System.Collections.Generic;
 using System.Drawing;
-using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
-namespace WallpaperManager
+namespace DualWallpaper
 {
-    public static class DisplayIdentity
+    public class DisplayIdentity : IDisplayIdentity
     {
-        private static async Task<Form> DisplayIdentityBox(Screen screen, int monitor)
+        public DisplayIdentity() { }
+
+        /// <summary>
+        /// Displays identity number on each of physical screens.
+        /// </summary>
+        /// <param name="button">Identity button.</param>
+        public async Task DetectIdentity(Button button)
+        {
+            button.Enabled = false;
+
+            int monitor = 0;
+            var formList = new List<Form>();
+            foreach (Screen screen in Screen.AllScreens)
+            {
+                monitor++;
+                Form form = await this.DisplayIdentityBox(screen, monitor);
+                formList.Add(form);
+            }
+
+            // wait 2 seconds before close forms.
+            await Task.Delay(2000);
+
+            foreach (Form form in formList)
+            {
+                await Task.Delay(0);
+                form.Close();
+            }
+
+            button.Enabled = true;
+        }
+
+
+        private async Task<Form> DisplayIdentityBox(Screen screen, int monitor)
         {
 
             // ----------FORM--------------
@@ -47,32 +77,6 @@ namespace WallpaperManager
             identityBox.Show();
 
             return identityBox;
-        }
-
-
-        public static async Task DetectIdentity(Button button)
-        {
-            button.Enabled = false;
-
-            int monitor = 0;
-            var formList = new List<Form>();
-            foreach (Screen screen in Screen.AllScreens)
-            {
-                monitor++;
-                Form form = await DisplayIdentity.DisplayIdentityBox(screen, monitor);
-                formList.Add(form);
-            }
-
-            // wait 3 seconds before close forms.
-            await Task.Delay(2000);
-
-            foreach (Form form in formList)
-            {
-                await Task.Delay(0);
-                form.Close();
-            }
-
-            button.Enabled = true;
         }
 
 

@@ -15,6 +15,7 @@ namespace WallpaperManager
         private IVirtualDisplayManager virtualDisplayManager;
         private IBackgroundManager backgroundManager;
         private ISearch search;
+        private IDisplayIdentity displayIdentity;
 
         // -------------------------------------------------------------------
         // Form
@@ -53,6 +54,8 @@ namespace WallpaperManager
 
             this.search = new Search();
 
+            this.displayIdentity = new DisplayIdentity();
+
             this.DisplaysResolutions();
 
             this.DrawDisplays();
@@ -83,7 +86,7 @@ namespace WallpaperManager
 
         private async void identifyBtn_Click(object sender, EventArgs e)
         {
-            await DisplayIdentity.DetectIdentity(this.detectScreenBtn);
+            await this.displayIdentity.DetectIdentity(this.detectScreenBtn);
         }
 
 
