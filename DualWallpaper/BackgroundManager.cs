@@ -85,22 +85,18 @@ namespace DualWallpaper
         /// <param name="images">List of images.</param>
         /// <param name="screens">Array of physical screens.</param>
         /// <returns>Bitmap.</returns>
-        //private Bitmap MergePictures(List<Image> images, Screen[] screens, VirtualDisplayLayout virtualDisplayLayout)
         private Bitmap MergePictures(List<Image> images, Screen[] screens)
         {
-
+            int X = 0;
+            int Y = 0;
 
             // -------------------------------------------------------------------------
             // #1. Create a new Bitmap with total width, total height...
             //
-            //Bitmap outputImage = new Bitmap(outputImageWidth, outputImageHeight, PixelFormat.Format32bppArgb);
             Bitmap outputImage = new Bitmap(this.TotalWidth, this.TotalHeight, PixelFormat.Format32bppArgb);
-
 
             var primaryDisplay = Screen.PrimaryScreen;
             var secondaryDisplay = Screen.AllScreens.Where(x => x != primaryDisplay).FirstOrDefault();
-
-           
 
             // -------------------------------------------------------------------------
             // #2. Draw image based on the layout
@@ -109,157 +105,112 @@ namespace DualWallpaper
             {
                 graphics.Clear(Color.Transparent);
 
-
-
                 switch (this.VirtualDisplayLayout)
                 {
                     case VirtualDisplayLayout.Left:
 
-                        // case 1 secondary display (y) is smaller or equal the primary display (y)
-                        // and its bottom is equal or greater than the primary screen
-                        if (secondaryDisplay.Bounds.Y <= primaryDisplay.Bounds.Y
-                            && secondaryDisplay.Bounds.Bottom >= primaryDisplay.Bounds.Bottom)
+                        X = primaryDisplay.Bounds.X + secondaryDisplay.Bounds.Width;
+
+                        if (secondaryDisplay.Bounds.Y <= primaryDisplay.Bounds.Y)
                         {
                             // draw secondary display image firts...
-                            graphics.DrawImage(
-                               images[1],
-                               new Rectangle(new Point(), images[1].Size),
-                               new Rectangle(new Point(), images[1].Size),
-                               GraphicsUnit.Pixel);
+                            this.DrawImage(graphics, images[1], 0, 0);
 
+                            // Return coordinate Y where screen Y position is smaller or equal 0
+                            Y = Math.Abs(screens.Where(h => h.Bounds.Y <= 0).FirstOrDefault().Bounds.Y);
+                            
                             // ...draw primary display image
-                            //int image0x = images[1].Width;
-                            //int image0y = images[1].Height - primaryDisplay.Bounds.Bottom;
-                            int image0x = primaryDisplay.Bounds.X + secondaryDisplay.Bounds.Width;
-                            int image0y = images[1].Height - primaryDisplay.Bounds.Bottom;
-                            graphics.DrawImage(
-                                images[0],
-                                new Rectangle(new Point(image0x, image0y), images[0].Size),
-                                new Rectangle(new Point(), images[0].Size),
-                                GraphicsUnit.Pixel);
-
-                           
-                        }
-
-
-
-
-
-
-
-
-
-                        //if (primaryDisplay.Bounds.Top < 0)
-                        //{
-                        //    graphics.DrawImage(
-                        //        images[1],
-                        //        new Rectangle(new Point(), images[1].Size),
-                        //        new Rectangle(new Point(), images[1].Size),
-                        //        GraphicsUnit.Pixel);
-
-                        //    graphics.DrawImage(
-                        //        images[0],
-                        //        new Rectangle(new Point(images[1].Width, images[1].Height - primaryDisplay.Bounds.Bottom), images[0].Size),
-                        //        new Rectangle(new Point(), images[0].Size),
-                        //        GraphicsUnit.Pixel);
-                        //}
-                        //else
-                        //{
-                        //    graphics.DrawImage(
-                        //        images[1],
-                        //        new Rectangle(new Point(0, primaryDisplay.Bounds.Y), images[1].Size),
-                        //        new Rectangle(new Point(), images[1].Size),
-                        //        GraphicsUnit.Pixel);
-
-                        //    graphics.DrawImage(
-                        //        images[0],
-                        //        new Rectangle(new Point(images[1].Width, 0), images[0].Size),
-                        //        new Rectangle(new Point(), images[0].Size),
-                        //        GraphicsUnit.Pixel);
-
-                        //    //special case
-                        //    // where image is in left bottom corner, lack of good solution at the moment
-                        //}
-
-                        break;
-
-
-
-
-
-
-
-
-                    case VirtualDisplayLayout.Right:
-
-                        if (primaryDisplay.Bounds.Top < 0)
-                        {
-                            // when second image has nagative y value, then it should be tread as image 1 having starting point as (x, 0).
-                            graphics.DrawImage(
-                                images[1],
-                                new Rectangle(new Point(images[0].Width, 0), images[1].Size),
-                                new Rectangle(new Point(), images[1].Size),
-                                GraphicsUnit.Pixel);
-
-                            graphics.DrawImage(
-                                images[0],
-                                new Rectangle(new Point(0, images[1].Height - primaryDisplay.Bounds.Bottom), images[0].Size),
-                                new Rectangle(new Point(), images[0].Size),
-                                GraphicsUnit.Pixel);
+                            this.DrawImage(graphics, images[0], X, Y);
                         }
                         else
                         {
+                            // draw secondary display image firts...
+                            this.DrawImage(graphics, images[1], 0, secondaryDisplay.Bounds.Y);
 
-                            // primary screen is always with coordinates (0,0), so the screen we can take the height difference is one of the highier screens.
-                            // grab that hight, ensure it's a positive number, as use as looking for Y.
-                            // take higher picture as reference 
-                            var higherScreen = screens.OrderByDescending(item => item.Bounds.Height).First();
-                            var y = Math.Abs(higherScreen.Bounds.Y);
+                            // ...draw primary display image
+                            this.DrawImage(graphics, images[0], X, primaryDisplay.Bounds.Y);
+                        }
 
-                            graphics.DrawImage(
-                                images[0],
-                                new Rectangle(new Point(0, y), images[0].Size),
-                                new Rectangle(new Point(), images[0].Size),
-                                GraphicsUnit.Pixel);
+                        break;
 
-                            graphics.DrawImage(
-                                images[1],
-                                new Rectangle(new Point(images[0].Width, primaryDisplay.Bounds.Y), images[1].Size),
-                                new Rectangle(new Point(), images[1].Size),
-                                GraphicsUnit.Pixel);
+                    case VirtualDisplayLayout.Right:
+
+                        X = secondaryDisplay.Bounds.X;
+
+                        if (secondaryDisplay.Bounds.Y <= primaryDisplay.Bounds.Y)
+                        {
+                            // draw secondary display image firts...
+                            this.DrawImage(graphics, images[1], X, 0);
+
+                            // Return coordinate Y where screen Y position is smaller or equal 0
+                            Y = Math.Abs(screens.Where(h => h.Bounds.Y <= 0).FirstOrDefault().Bounds.Y);
+
+                            // ...draw primary display image
+                            this.DrawImage(graphics, images[0], primaryDisplay.Bounds.X, Y);
+                        }
+                        else
+                        {
+                            // draw secondary display image firts...
+                            this.DrawImage(graphics, images[1], X, secondaryDisplay.Bounds.Y);
+
+                            // ...draw primary display image
+                            this.DrawImage(graphics, images[0], primaryDisplay.Bounds.X, primaryDisplay.Bounds.Y);
                         }
 
                         break;
 
                     case VirtualDisplayLayout.Top:
 
-                        graphics.DrawImage(
-                           images[1],
-                           new Rectangle(new Point(primaryDisplay.Bounds.X, 0), images[1].Size),
-                           new Rectangle(new Point(), images[1].Size),
-                           GraphicsUnit.Pixel);
+                        Y = Math.Abs(secondaryDisplay.Bounds.Y);
 
-                        graphics.DrawImage(
-                                images[0],
-                                new Rectangle(new Point(0, primaryDisplay.Bounds.Height), images[0].Size),
-                                new Rectangle(new Point(), images[0].Size),
-                                GraphicsUnit.Pixel);
+                        if (secondaryDisplay.Bounds.X <= primaryDisplay.Bounds.X)
+                        {
+                            // draw secondary display image firts...
+                            this.DrawImage(graphics, images[1], 0, 0);
+
+                            X = Math.Abs(screens.Where(h => h.Bounds.X <= 0).FirstOrDefault().Bounds.X);
+
+                            // ...draw primary display image
+                            this.DrawImage(graphics, images[0], X, Y);
+                        }
+                        else
+                        {
+                            // draw secondary display image firts...
+                            this.DrawImage(graphics, images[1], secondaryDisplay.Bounds.X, 0);
+
+                            X = Math.Abs(screens.Where(h => h.Bounds.X <= 0).FirstOrDefault().Bounds.X);
+
+                            // ...draw primary display image
+                            this.DrawImage(graphics, images[0], X, Y);
+                        }
 
                         break;
 
                     case VirtualDisplayLayout.Bottom:
 
-                        graphics.DrawImage(
-                            images[0],
-                            new Rectangle(new Point(), images[0].Size),
-                            new Rectangle(new Point(), images[0].Size),
-                            GraphicsUnit.Pixel);
+                        Y = Math.Abs(secondaryDisplay.Bounds.Y);
 
-                        graphics.DrawImage(
-                           images[1],
-                           new Rectangle(new Point(primaryDisplay.Bounds.X, screens[0].Bounds.Height), images[1].Size),
-                           new Rectangle(new Point(), images[1].Size),
-                           GraphicsUnit.Pixel);
+                        if (secondaryDisplay.Bounds.X <= primaryDisplay.Bounds.X)
+                        {
+                            // draw secondary display image firts...
+                            this.DrawImage(graphics, images[1], 0, Y);
+
+                            X = Math.Abs(screens.Where(h => h.Bounds.X <= 0).FirstOrDefault().Bounds.X);
+
+                            // ...draw primary display image
+                            this.DrawImage(graphics, images[0], X, 0);
+                        }
+                        else
+                        {
+                            // draw secondary display image firts...
+
+                            this.DrawImage(graphics, images[1], secondaryDisplay.Bounds.X, Y);
+
+                            X = Math.Abs(screens.Where(h => h.Bounds.X <= 0).FirstOrDefault().Bounds.X);
+
+                            // ...draw primary display image
+                            this.DrawImage(graphics, images[0], X, 0);
+                        }
 
                         break;
 
@@ -268,11 +219,25 @@ namespace DualWallpaper
                     default:
                         break;
                 }
-
-
             }
 
             return outputImage;
+        }
+
+
+        /// <summary>
+        /// Add background image to graphics container.
+        /// </summary>
+        /// <param name="graphics">Parent component.</param>
+        /// <param name="image">Image.</param>
+        /// <param name="X">Coordinate X.</param>
+        /// <param name="Y">Coordinate Y.</param>
+        private void DrawImage(Graphics graphics, Image image, int X, int Y)
+        {
+            graphics.DrawImage(image,
+                new Rectangle(new Point(X, Y), image.Size),
+                new Rectangle(new Point(), image.Size),
+                GraphicsUnit.Pixel);
         }
 
 

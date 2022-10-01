@@ -318,7 +318,7 @@ namespace DualWallpaper
                     else if (secondaryDisplay.Bounds.X > primaryDisplay.Bounds.X
                         && secondaryDisplay.Bounds.Right >= primaryDisplay.Bounds.Right)
                     {
-                        totalWidth = secondaryDisplay.Bounds.Width + (primaryDisplay.Bounds.Width - secondaryDisplay.Bounds.X);
+                        totalWidth = primaryDisplay.Bounds.Width + (secondaryDisplay.Bounds.Width - (primaryDisplay.Bounds.Width - secondaryDisplay.Bounds.X));
                     }
 
                     // case 4 secondary display (x) is greater than the primary display (x)
